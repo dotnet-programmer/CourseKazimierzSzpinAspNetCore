@@ -34,12 +34,24 @@ var app = builder.Build();
 // INFO - w tym miejscu trzeba dodaæ UseInfrastructure
 app.UseInfrastructure();
 
+// INFO - ustawienia zale¿ne od wartoœci klucza ASPNETCORE_ENVIRONMENT - czyli prze³¹czanie miêdzy trybem produkcyjnym a deweloperskim
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Home/Error");
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
+}
+
+// INFO - testowe zalogowanie który tryb aplikacji jest ustawiony - produkcja/dev
+var logger = app.Services.GetService<ILogger<Program>>();
+if (app.Environment.IsDevelopment())
+{
+	logger.LogInformation("Development mode");
+}
+else
+{
+	logger.LogInformation("Production mode");
 }
 
 app.UseHttpsRedirection();
