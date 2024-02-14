@@ -1,6 +1,7 @@
 using GymManager.Application;
 using GymManager.Infrastructure;
 using GymManager.UI.Extensions;
+using GymManager.UI.Middlewares;
 using NLog.Web;
 
 //INFO - Program.cs - kod odpowiedzialny za utworzenie, skonfigurowanie i uruchomienie aplikacji
@@ -54,12 +55,14 @@ else
 	logger.LogInformation("Production mode");
 }
 
+// INFO - middleware
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
+
+// INFO - dodanie w³asnego middleware do globalnej obs³ugi wyj¹tków
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllerRoute(
 	name: "default",

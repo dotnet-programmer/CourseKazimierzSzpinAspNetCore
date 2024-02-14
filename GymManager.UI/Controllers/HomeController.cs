@@ -16,14 +16,17 @@ public class HomeController : BaseController
 
 	public async Task<IActionResult> Index()
 	{
-		// INFO - wywo�anie kwerendy
+		// symulacja błędu
+		throw new Exception("Nieobsłużony błąd!");
+
+		// INFO - wywołanie kwerendy
 		// parametr to nazwa kwerendy, czyli klasa Query
 		var ticket = await Mediator.Send(new GetTicketByIdQuery { TicketId = 1 });
 
-		// INFO - wywo�anie kwerendy
+		// INFO - wywołanie kwerendy
 		await Mediator.Send(new AddTicketCommand { Name = "Ticket1" });
 
-		// INFO - u�ycie NLog
+		// INFO - użycie NLog
 		_logger.LogInformation("LogInformation");
 		_logger.LogError(new Exception("LogError"), null);
 
