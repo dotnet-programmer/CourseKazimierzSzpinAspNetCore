@@ -9,11 +9,6 @@ using NLog.Web;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// INFO - dodanie w³asnych serwisów z innych projektów
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
 
 // INFO - sposoby dodawania (wstrzykiwania implementacji) Dependency Injection, czyli oznaczenie cyklu ¿ycia
 // AddSingleton - jedna instancja tej klasy w ca³ej aplikacji
@@ -21,14 +16,23 @@ builder.Services.AddInfrastructure();
 // AddTransient - nowa instancja dla ka¿dego kontrolera czy ka¿dego serwisu, czyli zawsze jest nowa instancja
 //builder.Services.AddScoped<IEmail, Email>();
 
-// INFO - dodanie NLog
-builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(LogLevel.Information);
-builder.Logging.AddNLogWeb();
+builder.Services.AddControllersWithViews();
+
+// INFO - dodanie w³asnych serwisów z innych projektów
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 
 // INFO - jedna aplikacja (wiele ró¿nych szablonów) dla wielu klientów
 // Konfiguracja silnika Razor jak i gdzie szukaæ widoków dla poszczególnych klientów
 builder.Services.DefineViewLocation(builder.Configuration);
+
+// INFO - Globalizacja - wiele wersji jêzykowych
+builder.Services.AddCulture();
+
+// INFO - dodanie NLog
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Logging.AddNLogWeb();
 
 var app = builder.Build();
 

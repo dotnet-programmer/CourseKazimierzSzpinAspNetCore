@@ -17,7 +17,7 @@ public class HomeController : BaseController
 	public async Task<IActionResult> Index()
 	{
 		// symulacja błędu
-		throw new Exception("Nieobsłużony błąd!");
+		//throw new Exception("Nieobsłużony błąd!");
 
 		// INFO - wywołanie kwerendy
 		// parametr to nazwa kwerendy, czyli klasa Query
