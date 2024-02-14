@@ -1,5 +1,6 @@
 using GymManager.Application;
 using GymManager.Infrastructure;
+using GymManager.UI.Extensions;
 using NLog.Web;
 
 //INFO - Program.cs - kod odpowiedzialny za utworzenie, skonfigurowanie i uruchomienie aplikacji
@@ -23,6 +24,10 @@ builder.Services.AddInfrastructure();
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Logging.AddNLogWeb();
+
+// INFO - jedna aplikacja (wiele ró¿nych szablonów) dla wielu klientów
+// Konfiguracja silnika Razor jak i gdzie szukaæ widoków dla poszczególnych klientów
+builder.Services.DefineViewLocation(builder.Configuration);
 
 var app = builder.Build();
 
