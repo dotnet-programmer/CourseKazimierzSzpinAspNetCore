@@ -1,7 +1,9 @@
 using GymManager.Application;
 using GymManager.Infrastructure;
+using NLog.Web;
 
-//INFO - kod odpowiedzialny za utworzenie i uruchomienie aplikacji
+//INFO - Program.cs - kod odpowiedzialny za utworzenie, skonfigurowanie i uruchomienie aplikacji
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +12,17 @@ builder.Services.AddControllersWithViews();
 // INFO - dodanie w³asnych serwisów z innych projektów
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+
+// INFO - sposoby dodawania (wstrzykiwania implementacji) Dependency Injection, czyli oznaczenie cyklu ¿ycia
+// AddSingleton - jedna instancja tej klasy w ca³ej aplikacji
+// AddScoped - jedna instancja tej klasy bêdzie wspólna dla ca³ego requesta
+// AddTransient - nowa instancja dla ka¿dego kontrolera czy ka¿dego serwisu, czyli zawsze jest nowa instancja
+//builder.Services.AddScoped<IEmail, Email>();
+
+// INFO - dodanie NLog
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Logging.AddNLogWeb();
 
 var app = builder.Build();
 
