@@ -19,6 +19,9 @@ public static class DependencyInjection
 		// INFO - Logowanie wszystkich requestów aplikacji
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
+		// INFO - badanie wydajności aplikacji
+		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+
 		return services;
 	}
 }
