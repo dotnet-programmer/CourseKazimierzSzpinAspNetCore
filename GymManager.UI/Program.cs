@@ -20,7 +20,7 @@ builder.Services.AddControllersWithViews();
 
 // INFO - dodanie w³asnych serwisów z innych projektów
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // INFO - jedna aplikacja (wiele ró¿nych szablonów) dla wielu klientów
 // Konfiguracja silnika Razor jak i gdzie szukaæ widoków dla poszczególnych klientów
@@ -68,6 +68,7 @@ app.UseAuthorization();
 // INFO - dodanie w³asnego middleware do globalnej obs³ugi wyj¹tków
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
+// INFO - routing
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
