@@ -14,17 +14,31 @@ public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand>
 		_logger = logger;
 	}
 
-	public async Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
+	//public async Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
+	//{
+	//	// tutaj można np. dodać do bazy nowy obiekt
+	//	//var ticket = new Ticket();
+	//	//ticket.Name = request.Name;
+	//	// zapis w bd
+	//	// jeśli nic się nie zwraca, to zwraca się Unit.Value - UWAGA!!! tylko do MediatR wersji 11, od 12 zwraca się Task.CompletedTask
+	//	//return Unit.Value;
+
+	//	_logger.LogInformation("Log from AddTicketCommandHandler");
+
+	//	await Task.CompletedTask;
+	//}
+
+	public Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
 	{
 		// tutaj można np. dodać do bazy nowy obiekt
 		//var ticket = new Ticket();
 		//ticket.Name = request.Name;
 		// zapis w bd
-		// jeśli nic się nie zwraca, to zwraca się Unit.Value
+		// jeśli nic się nie zwraca, to zwraca się Unit.Value - UWAGA!!! tylko do MediatR wersji 11, od 12 zwraca się Task.CompletedTask
 		//return Unit.Value;
 
 		_logger.LogInformation("Log from AddTicketCommandHandler");
 
-		await Task.CompletedTask;
+		return Task.CompletedTask;
 	}
 }

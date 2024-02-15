@@ -8,7 +8,7 @@ namespace GymManager.UI.Controllers;
 
 // INFO - routing - można go definiować nad nazwą kontrolera
 // wtedy dotyczy wszystkich akcji w kontrolerze, które nie mają nadpisanego routingu
-[Route("test/[controller]/[action]")]
+//[Route("test/[controller]/[action]")]
 public class HomeController : BaseController
 {
 	private readonly ILogger _logger;
@@ -25,7 +25,7 @@ public class HomeController : BaseController
 
 		// INFO - wywołanie kwerendy
 		// parametr to nazwa kwerendy, czyli klasa Query
-		var ticket = await Mediator.Send(new GetTicketByIdQuery { TicketId = 1 });
+		//var ticket = await Mediator.Send(new GetTicketByIdQuery { TicketId = 1 });
 
 		// INFO - wywołanie kwerendy
 		await Mediator.Send(new AddTicketCommand { Name = "Ticket1" });
@@ -63,7 +63,7 @@ public class HomeController : BaseController
 	// to adres nie musi zawierać całej ścieżki i nie łączy tych adresów
 	// przykład: kontroler - [Route("test/[controller]/[action]")], akcja - [HttpGet("/[controller]/[action]/{test}")]
 	// efekt: www.adres.pl/test/home/index2/wartosc
-	public async Task<IActionResult> Index2(string test)
+	public IActionResult Index2(string test)
 	{
 		return View("Index");
 	}
