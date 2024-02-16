@@ -1,3 +1,4 @@
+using GymManager.Application.Contacts.Commands.SendContactEmail;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
@@ -30,7 +31,17 @@ public class HomeController : BaseController
 	// widok kontakt
 	public IActionResult Contact()
 	{
-		return View();
+		return View(new SendContactEmailCommand());
+	}
+
+	// wysyłanie danych z formularza do kontrolera 
+	[ValidateAntiForgeryToken]
+	[HttpPost]
+	public async Task<IActionResult> Contact(SendContactEmailCommand sendContactEmailCommand)
+	{
+		await Mediator.Send(sendContactEmailCommand);
+
+		return RedirectToAction("Contact");
 	}
 
 	// testowa akcja Index
