@@ -14,7 +14,6 @@
       ]
     },
     {
-      "provider": "cdnjs",
       "library": "globalize@1.7.0",
       "destination": "wwwroot/lib/globalize/",
       "files": [
@@ -66,6 +65,13 @@
         "main/en/numbers.json",
         "main/pl/currencies.json",
         "main/pl/numbers.json"
+      ]
+    },
+    {
+      "library": "js-cookie@3.0.5",
+      "destination": "wwwroot/lib/js-cookie/",
+      "files": [
+        "js.cookie.min.js"
       ]
     }
   ]
