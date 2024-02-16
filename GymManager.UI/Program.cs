@@ -1,4 +1,5 @@
 using GymManager.Application;
+using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
 using GymManager.UI.Extensions;
 using GymManager.UI.Middlewares;
@@ -36,8 +37,16 @@ builder.Logging.AddNLogWeb();
 
 var app = builder.Build();
 
-// INFO - w tym miejscu trzeba dodaæ UseInfrastructure
-app.UseInfrastructure();
+// INFO - w tym miejscu trzeba dodaæ UseInfrastructure, ¿eby wykonywaæ dzia³ania podczas uruchamiania aplikacji
+// jako parametry metody bêd¹ u¿yte wstrzykniête implementacje
+using (var scope = app.Services.CreateScope())
+{
+	// wstrzykiwanie odpowiednich serwisów
+	app.UseInfrastructure(
+		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
+		app.Services.GetService<IAppSettingsService>()
+		);
+}
 
 // INFO - ustawienia zale¿ne od wartoœci klucza ASPNETCORE_ENVIRONMENT - czyli prze³¹czanie miêdzy trybem produkcyjnym a deweloperskim
 // Configure the HTTP request pipeline.
