@@ -1,0 +1,72 @@
+﻿@using GymManager.Application.Contacts.Commands.SendContactEmail
+
+@* wstrzyknięcie interfejsu IConfiguration, żeby używać appsettings.json *@
+@inject IConfiguration configuration
+
+@model SendContactEmailCommand
+
+@{
+	// pobranie wartości klucza z appsettings.json
+	var templateKey = configuration.GetSection("TemplateKey").Value;
+
+	// wskazanie gdzie znajduje się Layout
+	Layout = $"/Views/{templateKey}/Shared/_LayoutMain.cshtml";
+
+	ViewData["Title"] = "Kontakt";
+}
+
+<div id="carouselExampleControls" class="carousel slide mt-3 mb-3 " data-bs-ride="carousel">
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<img src="~/images/carousel-personal.png" class="d-block w-100" alt="carousel-personal">
+		</div>
+		<div class="carousel-item">
+			<img src="~/images/carousel-strength.png" class="d-block w-100" alt="carousel-strength">
+		</div>
+		<div class="carousel-item">
+			<img src="~/images/carousel-interval.png" class="d-block w-100" alt="carousel-interval">
+		</div>
+	</div>
+	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</div>
+
+<div class="container">
+	<div class="row mt-3 mb-5">
+
+		<h2>@ViewBag.Title</h2>
+
+		@using (Html.BeginForm("Contact", "Home"))
+		{
+			// zabezpieczenie przed atakami XSRF
+			@Html.AntiForgeryToken()
+
+			<div class="form-group mt-3">
+				@* powiązanie pola TextBox z właściwością konkretnego modelu, czyli konkretnej komendy *@
+				@Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder = "Imię i nazwisko" })
+			</div>
+
+			<div class="form-group mt-3">
+				@Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "E-mail" })
+			</div>
+
+			<div class="form-group mt-3">
+				@Html.TextBoxFor(x => x.Title, new { @class = "form-control", placeholder = "Tytuł wiadomości" })
+			</div>
+
+			<div class="form-group mt-3">
+				@Html.TextAreaFor(x => x.Message, new { @class = "form-control", placeholder = "Wiadomość", @rows = 8 })
+			</div>
+
+			<button type="submit" class="btn btn-primary btn-lg mt-4">
+				Wyślij wiadomość
+			</button>
+		}
+	</div>
+</div>
