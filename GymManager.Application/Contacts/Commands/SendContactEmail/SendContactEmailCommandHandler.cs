@@ -6,11 +6,11 @@ namespace GymManager.Application.Contacts.Commands.SendContactEmail;
 
 public class SendContactEmailCommandHandler : IRequestHandler<SendContactEmailCommand>
 {
-	private readonly IEmail _email;
+	private readonly IEmailService _email;
 	private readonly IAppSettingsService _appSettings;
 
 	// wstrzyknięcie klasy Email odpowiedzialnej za wysyłkę emaili
-	public SendContactEmailCommandHandler(IEmail email, IAppSettingsService appSettings)
+	public SendContactEmailCommandHandler(IEmailService email, IAppSettingsService appSettings)
 	{
 		_email = email;
 		_appSettings = appSettings;

@@ -44,7 +44,8 @@ using (var scope = app.Services.CreateScope())
 	// wstrzykiwanie odpowiednich serwisów
 	app.UseInfrastructure(
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
-		app.Services.GetService<IAppSettingsService>()
+		app.Services.GetService<IAppSettingsService>(),
+		app.Services.GetService<IEmailService>()
 		);
 }
 

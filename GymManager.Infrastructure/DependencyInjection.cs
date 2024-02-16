@@ -28,8 +28,11 @@ public static class DependencyInjection
 			.EnableSensitiveDataLogging());
 
 		// dependency injection - używaj AppSettingsService wszędzie tam gdzie jest IAppSettingsService, 
-		// singleton, bo chcemy pracować tylko na 1 słowniku z ustawieniami
+		// singleton, bo aplikacja będzie pracować tylko na 1 słowniku z ustawieniami
 		services.AddSingleton<IAppSettingsService, AppSettingsService>();
+
+		// singleton, bo apliakcja będzie pracować tylko na 1 obiekcie wysyłającym emaile
+		services.AddSingleton<IEmailService, EmailService>();
 
 		return services;
 	}
@@ -37,12 +40,16 @@ public static class DependencyInjection
 	// tutaj będą wywoływane metody podczas startu aplikacji
 	public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder appBuilder,
 		IApplicationDbContext context,
-		IAppSettingsService appSettingsService)
+		IAppSettingsService appSettingsService,
+		IEmailService emailService)
 	{
 		// wywołując metodę asynchroniczną w metodzie, która nie jest asynchroniczna, trzeba dodać .GetAwaiter().GetResult()
 
 		// na starcie aplikacji wywołana metoda Update i uzupełnienie słownika z ustawieniami
 		appSettingsService.Update(context).GetAwaiter().GetResult();
+
+		// na starcie aplikacji wywołana metoda Update i uzupełnienie danych do wysyłki maili z ustawień
+		emailService.Update(appSettingsService).GetAwaiter().GetResult();
 
 		return appBuilder;
 	}
