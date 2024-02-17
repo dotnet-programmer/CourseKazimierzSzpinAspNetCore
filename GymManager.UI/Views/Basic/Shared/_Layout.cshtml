@@ -24,69 +24,9 @@
 			<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-secondary">
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 collapse">
 
-					<ul class="client-panel nav nav-pills flex-column mb-sm-auto align-items-center align-items-sm-start mb-4" id="menu">
+					@* widok częściowy *@
+					<partial name="_NavigationPartial" />
 
-						<li class="nav-item">
-							<a href="/" class="nav-link align-middle px-0 text-white my-3">
-								<i class="fas fa-solid fa-house"></i><span class="d-none d-sm-inline">Strona Główna</span>
-							</a>
-						</li>
-
-						<li class="nav-item active">
-							<a asp-controller="Client" asp-action="Dashboard" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-earth-americas"></i><span class="d-none d-sm-inline">Pulpit</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Ticket" asp-action="Tickets" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-calendar-check"></i><span class="d-none d-sm-inline">Karnety</span>
-							</a>
-						</li>
-
-						<li class="nav-item mb-4">
-							<a asp-controller="Client" asp-action="Client" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-user"></i><span class="d-none d-sm-inline">Moje dane</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Client" asp-action="Clients" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-users"></i><span class="d-none d-sm-inline">Klienci</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Calendar" asp-action="Calendar" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-calendar-days"></i><span class="d-none d-sm-inline">Grafik</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Employee" asp-action="Employees" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-user-shield"></i><span class="d-none d-sm-inline">Pracownicy</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Role" asp-action="Roles" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-unlock-keyhole"></i><span class="d-none d-sm-inline">Role</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="File" asp-action="Files" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-file-lines"></i><span class="d-none d-sm-inline">Pliki</span>
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a asp-controller="Settings" asp-action="Settings" class="nav-link align-middle px-0 text-white">
-								<i class="fas fa-solid fa-screwdriver-wrench"></i><span class="d-none d-sm-inline">Ustawienia</span>
-							</a>
-						</li>
-
-					</ul>
 				</div>
 			</div>
 

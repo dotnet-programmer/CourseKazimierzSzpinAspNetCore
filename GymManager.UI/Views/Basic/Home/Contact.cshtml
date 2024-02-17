@@ -95,9 +95,6 @@
 
 	@* INFO - powiadomienia - biblioteka toastr.js *@
 	<script src="~/lib/toastr.js/toastr.min.js"></script>
-	<script>
-		if ('@TempData["Success"]') {
-			toastr.success('@TempData["Success"]')
-		}
-	</script>
+	<partial name="_NotificationPartial" />
+
 }
