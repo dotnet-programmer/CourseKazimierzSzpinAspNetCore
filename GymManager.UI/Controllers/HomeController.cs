@@ -95,6 +95,8 @@ public class HomeController : BaseController
 			return View(sendContactEmailCommand);
 		}
 
+		TempData["Success"] = "Wiadomość została wysłana do administratora.";
+
 		return RedirectToAction("Contact");
 	}
 
