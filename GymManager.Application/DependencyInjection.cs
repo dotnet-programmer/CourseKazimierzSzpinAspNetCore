@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentValidation;
 using GymManager.Application.Common.Behaviors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,10 @@ public static class DependencyInjection
 
 		// INFO - badanie wydajności aplikacji
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+
+		// INFO - dodanie FluentValidator do dependency injection
+		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 		return services;
 	}

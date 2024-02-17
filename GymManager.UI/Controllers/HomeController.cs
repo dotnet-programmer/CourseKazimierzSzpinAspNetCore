@@ -34,12 +34,38 @@ public class HomeController : BaseController
 		return View(new SendContactEmailCommand());
 	}
 
-	// wysyłanie danych z formularza do kontrolera 
+	// wysyłanie danych z formularza do kontrolera
 	[ValidateAntiForgeryToken]
 	[HttpPost]
 	public async Task<IActionResult> Contact(SendContactEmailCommand sendContactEmailCommand)
 	{
-		await Mediator.Send(sendContactEmailCommand);
+		// zwykłe wysłanie maila
+		//await Mediator.Send(sendContactEmailCommand);
+
+		// TODO - dlaczego nie działa?
+		//var result = await MediatorSendValidate(sendContactEmailCommand);
+
+		// powinno być przeniesione do BaseController, ale wtedy nie działa
+		try
+		{
+			if (ModelState.IsValid)
+			{
+				await Mediator.Send(sendContactEmailCommand);
+			}
+			else
+			{
+				return View(sendContactEmailCommand);
+			}
+		}
+		catch (Application.Common.Exceptions.ValidationException exception)
+		{
+			foreach (var item in exception.Errors)
+			{
+				// przekazanie wszystkich błędów z powrotem do widoku
+				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
+			}
+			return View(sendContactEmailCommand);
+		}
 
 		return RedirectToAction("Contact");
 	}

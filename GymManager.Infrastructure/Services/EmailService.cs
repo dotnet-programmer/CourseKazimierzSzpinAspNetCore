@@ -6,7 +6,7 @@ using MimeKit;
 namespace GymManager.Infrastructure.Services;
 
 // INFO - implementacja wysyłki email
-internal class EmailService : IEmailService
+public class EmailService : IEmailService
 {
 	private int _port;
 	private string _hostSmtp;
