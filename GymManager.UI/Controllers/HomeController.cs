@@ -1,5 +1,8 @@
+using AspNetCore.ReCaptcha;
 using GymManager.Application.Contacts.Commands.SendContactEmail;
+using GymManager.UI.Models;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GymManager.UI.Controllers;
 
@@ -36,6 +39,7 @@ public class HomeController : BaseController
 
 	// wysyłanie danych z formularza do kontrolera
 	[ValidateAntiForgeryToken]
+	[ValidateReCaptcha]
 	[HttpPost]
 	public async Task<IActionResult> Contact(SendContactEmailCommand sendContactEmailCommand)
 	{
@@ -46,15 +50,34 @@ public class HomeController : BaseController
 		//var result = await MediatorSendValidate(sendContactEmailCommand);
 
 		// powinno być przeniesione do BaseController, ale wtedy nie działa
+		//try
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		await Mediator.Send(sendContactEmailCommand);
+		//	}
+		//	else
+		//	{
+		//		return View(sendContactEmailCommand);
+		//	}
+		//}
+		//catch (Application.Common.Exceptions.ValidationException exception)
+		//{
+		//	foreach (var item in exception.Errors)
+		//	{
+		//		// przekazanie wszystkich błędów z powrotem do widoku
+		//		ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
+		//	}
+		//	return View(sendContactEmailCommand);
+		//}
+
+		bool isValid = false;
 		try
 		{
 			if (ModelState.IsValid)
 			{
 				await Mediator.Send(sendContactEmailCommand);
-			}
-			else
-			{
-				return View(sendContactEmailCommand);
+				isValid = true;
 			}
 		}
 		catch (Application.Common.Exceptions.ValidationException exception)
@@ -64,6 +87,11 @@ public class HomeController : BaseController
 				// przekazanie wszystkich błędów z powrotem do widoku
 				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
 			}
+		}
+
+		if (!isValid)
+		{
+			ModelState.AddModelError("AntySpamResult", "Wypełnij pole ReCaptcha (zabezpieczenie przez spamem)");
 			return View(sendContactEmailCommand);
 		}
 
