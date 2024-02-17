@@ -5,6 +5,8 @@ namespace GymManager.UI.Extensions;
 
 public static class IServiceCollectionExtensions
 {
+	// INFO - jedna aplikacja (wiele różnych szablonów) dla wielu klientów
+	// Konfiguracja silnika Razor jak i gdzie szukać widoków dla poszczególnych klientów
 	public static void DefineViewLocation(this IServiceCollection services, IConfiguration configuration)
 	{
 		// pobranie wartości klucza TemplateKey z configa

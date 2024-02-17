@@ -2,7 +2,6 @@ using AspNetCore.ReCaptcha;
 using GymManager.Application.Contacts.Commands.SendContactEmail;
 using GymManager.UI.Models;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GymManager.UI.Controllers;
 
