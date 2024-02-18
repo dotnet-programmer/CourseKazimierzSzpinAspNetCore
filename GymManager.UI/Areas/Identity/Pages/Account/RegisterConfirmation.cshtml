@@ -1,23 +1,47 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+	ViewData["Title"] = "Potwierdź e-mail";
+	Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
-    }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - GymManager</title>
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/GymManager.UI.styles.css" asp-append-version="true" />
+	<style>
+		Html, body {
+			height: 100%;
+		}
+	</style>
+</head>
 
+<body class="bg-light">
+
+	<div class="center-div-parent-container">
+		<div class="center-div-container">
+			<div class="card card-border-top">
+				<h3 class="card-header bg-transparent mt-3 pb-3 text-center">@ViewBag.Title</h3>
+				<div class="card-body">
+					<div class="alert alert-success text-center" role="alert">
+						<b>Twoje konto zostało utworzone.</b><br />
+						Wysłaliśmy do Ciebie e-mail z linkiem aktywacyjnym. <br />
+						Sprawdź swoją skrzynkę i powierdź e-mail!
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>
