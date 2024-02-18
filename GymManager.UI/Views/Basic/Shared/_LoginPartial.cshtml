@@ -1,0 +1,23 @@
+﻿@using GymManager.Domain.Entities
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+	@if (SignInManager.IsSignedIn(User))
+	{
+		<li class="nav-item">
+			<a class="nav-link text-white" asp-action="Dashboard" asp-asp-controller="Client" title="Moje konto">Moje konto</a>
+		</li>
+	}
+	else
+	{
+		<li class="nav-item">
+			<a class="nav-link text-white" id="register" asp-area="Identity" asp-page="/Account/Register">Rejestracja</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-white" id="login" asp-area="Identity" asp-page="/Account/Login">Logowanie</a>
+		</li>
+	}
+</ul>
