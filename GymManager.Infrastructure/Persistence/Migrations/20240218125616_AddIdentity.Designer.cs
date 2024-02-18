@@ -4,6 +4,7 @@ using GymManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManager.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240218125616_AddIdentity")]
+    partial class AddIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -808,29 +811,6 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "C854A873-3D75-4973-AD7E-A83C95726133",
-                            ConcurrencyStamp = "C778085D-D407-4936-8A19-350C6817AA5D",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "EC23C152-A1C5-4D9A-B8D4-FAE62D5F059D",
-                            ConcurrencyStamp = "A1277894-E24D-490E-A3BA-83F9CF5F838D",
-                            Name = "Klient",
-                            NormalizedName = "KLIENT"
-                        },
-                        new
-                        {
-                            Id = "ADE32A3F-6149-475A-8155-CFE5D69ACA42",
-                            ConcurrencyStamp = "B50B7D83-F6E6-4DE3-8346-7D0E8501EEB5",
-                            Name = "Pracownik",
-                            NormalizedName = "PRACOWNIK"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
