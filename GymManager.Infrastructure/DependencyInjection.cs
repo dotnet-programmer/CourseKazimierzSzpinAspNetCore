@@ -1,7 +1,10 @@
 ﻿using GymManager.Application.Common.Interfaces;
+using GymManager.Domain.Entities;
+using GymManager.Infrastructure.Identity;
 using GymManager.Infrastructure.Persistence;
 using GymManager.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +29,27 @@ public static class DependencyInjection
 			.UseSqlServer(connectionString)
 			// dodane żeby można było podejrzeć parametry przekazywane do kwerend i komend
 			.EnableSensitiveDataLogging());
+
+		// INFO - konfiguracja Identity - użytkownicy w aplikacji
+		services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+		{
+			options.SignIn.RequireConfirmedAccount = true;
+			options.Password = new PasswordOptions
+			{
+				RequireDigit = true,
+				RequiredLength = 8,
+				RequireLowercase = true,
+				RequireUppercase = true,
+				RequireNonAlphanumeric = true,
+			};
+		})
+		// zdefiniowanie wiadomości walidacyjnych
+		.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
+		// zarządzanie rolami
+		.AddRoleManager<RoleManager<IdentityRole>>()
+		.AddEntityFrameworkStores<ApplicationDbContext>()
+		.AddDefaultUI()
+		.AddDefaultTokenProviders();
 
 		// dependency injection - używaj AppSettingsService wszędzie tam gdzie jest IAppSettingsService, 
 		// singleton, bo aplikacja będzie pracować tylko na 1 słowniku z ustawieniami

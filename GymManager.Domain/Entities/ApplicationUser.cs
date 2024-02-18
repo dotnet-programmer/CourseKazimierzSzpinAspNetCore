@@ -1,8 +1,10 @@
-﻿namespace GymManager.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class ApplicationUser
+namespace GymManager.Domain.Entities;
+
+// INFO - konfiguracja Identity - ApplicationUser musi dziedziczyć po IdentityUser
+public class ApplicationUser : IdentityUser
 {
-	public string ApplicationUserId { get; set; }
 	public string FirstName { get; set; }
 	public string LastName { get; set; }
 	public DateTime RegisterDateTime { get; set; }

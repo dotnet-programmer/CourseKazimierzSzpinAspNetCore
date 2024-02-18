@@ -2,12 +2,14 @@
 using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
 using GymManager.Infrastructure.Persistence.Extensions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using File = GymManager.Domain.Entities.File;
 
 namespace GymManager.Infrastructure.Persistence;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+// INFO - konfiguracja Identity - zamiast po DbContext trzeba dziedziczyć po IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
 	// wszystkie ustawienia przekazywane za pomocą Dependency Injection
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
