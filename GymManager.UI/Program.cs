@@ -1,4 +1,4 @@
-using AspNetCore.ReCaptcha;
+ï»¿using AspNetCore.ReCaptcha;
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
@@ -12,23 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// INFO - sposoby dodawania (wstrzykiwania implementacji) Dependency Injection, czyli oznaczenie cyklu ¿ycia
-// AddSingleton - jedna instancja tej klasy w ca³ej aplikacji
-// AddScoped - jedna instancja tej klasy bêdzie wspólna dla ca³ego requesta
-// AddTransient - nowa instancja dla ka¿dego kontrolera czy ka¿dego serwisu, czyli zawsze jest nowa instancja
+// INFO - sposoby dodawania (wstrzykiwania implementacji) Dependency Injection, czyli oznaczenie cyklu Å¼ycia
+// AddSingleton - jedna instancja tej klasy w caÅ‚ej aplikacji
+// AddScoped - jedna instancja tej klasy bÄ™dzie wspÃ³lna dla caÅ‚ego requesta
+// AddTransient - nowa instancja dla kaÅ¼dego kontrolera czy kaÅ¼dego serwisu, czyli zawsze jest nowa instancja
 //builder.Services.AddScoped<IEmail, Email>();
 
 builder.Services.AddControllersWithViews();
 
-// INFO - dodanie w³asnych serwisów z innych projektów
+// INFO - dodanie wÅ‚asnych serwisÃ³w z innych projektÃ³w
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// INFO - jedna aplikacja (wiele ró¿nych szablonów) dla wielu klientów
-// Konfiguracja silnika Razor jak i gdzie szukaæ widoków dla poszczególnych klientów
+// INFO - jedna aplikacja (wiele rÃ³Å¼nych szablonÃ³w) dla wielu klientÃ³w
+// Konfiguracja silnika Razor jak i gdzie szukaÄ‡ widokÃ³w dla poszczegÃ³lnych klientÃ³w
 builder.Services.DefineViewLocation(builder.Configuration);
 
-// INFO - Globalizacja - wiele wersji jêzykowych
+// INFO - Globalizacja - wiele wersji jÄ™zykowych
 builder.Services.AddCulture();
 
 // INFO - dodanie NLog
@@ -41,11 +41,11 @@ builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
 var app = builder.Build();
 
-// INFO - w tym miejscu trzeba dodaæ UseInfrastructure, ¿eby wykonywaæ dzia³ania podczas uruchamiania aplikacji
-// jako parametry metody bêd¹ u¿yte wstrzykniête implementacje
+// INFO - w tym miejscu trzeba dodaÄ‡ UseInfrastructure, Å¼eby wykonywaÄ‡ dziaÅ‚ania podczas uruchamiania aplikacji
+// jako parametry metody bÄ™dÄ… uÅ¼yte wstrzykniÄ™te implementacje
 using (var scope = app.Services.CreateScope())
 {
-	// wstrzykiwanie odpowiednich serwisów
+	// wstrzykiwanie odpowiednich serwisÃ³w
 	app.UseInfrastructure(
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
 		app.Services.GetService<IAppSettingsService>(),
@@ -53,7 +53,7 @@ using (var scope = app.Services.CreateScope())
 		);
 }
 
-// INFO - ustawienia zale¿ne od wartoœci klucza ASPNETCORE_ENVIRONMENT - czyli prze³¹czanie miêdzy trybem produkcyjnym a deweloperskim
+// INFO - ustawienia zaleÅ¼ne od wartoÅ›ci klucza ASPNETCORE_ENVIRONMENT - czyli przeÅ‚Ä…czanie miÄ™dzy trybem produkcyjnym a deweloperskim
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -62,7 +62,7 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-// INFO - testowe zalogowanie który tryb aplikacji jest ustawiony - produkcja/dev
+// INFO - testowe zalogowanie ktÃ³ry tryb aplikacji jest ustawiony - produkcja/dev
 var logger = app.Services.GetService<ILogger<Program>>();
 if (app.Environment.IsDevelopment())
 {
@@ -74,17 +74,25 @@ else
 }
 
 // INFO - middleware
+// Redirects HTTP requests to HTTPS.
 app.UseHttpsRedirection();
+// Enables static files, such as HTML, CSS, images, and JavaScript to be served.
 app.UseStaticFiles();
+// Adds route matching to the middleware pipeline.
 app.UseRouting();
+// Authorizes a user to access secure resources. This app doesn't use authorization, therefore this line could be removed.
 app.UseAuthorization();
 
-// INFO - dodanie w³asnego middleware do globalnej obs³ugi wyj¹tków
+// INFO - dodanie wÅ‚asnego middleware do globalnej obsÅ‚ugi wyjÄ…tkÃ³w
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // INFO - routing
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// INFO - dodanie Identity poprzez Scaffolding - potrzebne ï¿½eby widoki zostaï¿½y wczytane po wpisaniu adresu URL
+// Configures endpoint routing for Razor Pages.
+app.MapRazorPages();
 
 app.Run();

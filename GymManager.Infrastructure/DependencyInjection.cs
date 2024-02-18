@@ -43,11 +43,11 @@ public static class DependencyInjection
 				RequireNonAlphanumeric = true,
 			};
 		})
+			// zarządzanie rolami
+			.AddRoleManager<RoleManager<IdentityRole>>()
+		.AddEntityFrameworkStores<ApplicationDbContext>()
 		// zdefiniowanie wiadomości walidacyjnych
 		.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
-		// zarządzanie rolami
-		.AddRoleManager<RoleManager<IdentityRole>>()
-		.AddEntityFrameworkStores<ApplicationDbContext>()
 		.AddDefaultUI()
 		.AddDefaultTokenProviders();
 
