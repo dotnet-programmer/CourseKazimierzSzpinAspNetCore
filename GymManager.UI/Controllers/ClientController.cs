@@ -8,4 +8,9 @@ public class ClientController : BaseController
 	{
 		return View();
 	}
+
+	public IActionResult Client()
+	{
+		return View();
+	}
 }
