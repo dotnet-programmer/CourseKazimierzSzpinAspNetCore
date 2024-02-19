@@ -58,12 +58,15 @@ public static class DependencyInjection
 		// singleton, bo apliakcja będzie pracować tylko na 1 obiekcie wysyłającym emaile
 		services.AddSingleton<IEmailService, EmailService>();
 
-		// dodanie serwisu z datą 
+		// INFO - dodanie serwisu z datą 
 		services.AddScoped<IDateTimeService, DateTimeService>();
 
 		// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
 		services.AddHttpContextAccessor();
 		services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
+		// INFO - abstrakcja / nakładka na RoleManager z Identity
+		services.AddScoped<IRoleManagerService, RoleManagerService>();
 
 		return services;
 	}

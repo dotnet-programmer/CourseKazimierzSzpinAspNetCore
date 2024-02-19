@@ -1,0 +1,75 @@
+﻿@using GymManager.Application.Roles.Queries.GetRoles
+@using System.Globalization
+
+@model IEnumerable<RoleDto>
+
+@{
+	ViewData["Title"] = "Role";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<partial name="Styles/_DataTablesStylesPartial" />
+}
+
+<div class="card card-primary card-border-top">
+	<div class="card-body">
+
+		<a href='/Role/AddRole' class="btn btn-primary mb-3" role="button">
+			<i class="fas fa-solid fa-circle-plus"></i>Dodaj role
+		</a>
+
+		<table id="roles" class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Nazwa roli</th>
+					<th class="desktop"></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var role in Model)
+				{
+					<tr>
+						<td>
+							<a class="edit-link" href='/Role/EditRole?id=@role.Id'>@role.Name</a>
+						</td>
+						<td>
+							<a class="btn btn-success btn-sm" role="button" href="/Role/EditRole?id=@role.Id">
+								<i class="fas fa-solid fa-magnifying-glass"></i>Edytuj
+							</a>
+
+							<button class="btn btn-danger btn-sm" onclick="deleteRole('@role.Id', this)">
+								<i class="fas fa-solid fa-trash-can"></i>Usuń
+							</button>
+
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="Scripts/_DataTablesScriptsPartial" />
+
+	<script>
+		// wywołanie funkcji po załadowaniu się strony
+		$(document).ready(function () {
+			roles = $('#roles').DataTable({
+				paging: true,
+				ordering: true,
+				info: true,
+				responsive: true,
+				autoWidth: false,
+				lengthChange: true,
+				language: {
+					// https://datatables.net/plug-ins/i18n/
+					url: `/lib/datatables/lang/${'@locale'}.json`
+				},
+				order: [[0, "asc"]]
+			});
+		});
+	</script>
+}

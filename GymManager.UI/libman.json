@@ -83,7 +83,6 @@
       ]
     },
     {
-      "provider": "cdnjs",
       "library": "font-awesome@6.5.1",
       "destination": "wwwroot/lib/font-awesome/",
       "files": [
@@ -96,6 +95,46 @@
         "webfonts/fa-solid-900.woff2",
         "webfonts/fa-v4compatibility.ttf",
         "webfonts/fa-v4compatibility.woff2"
+      ]
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/",
+      "files": [
+        "js/jquery.dataTables.min.js"
+      ]
+    },
+    {
+      "library": "datatables.net-bs5@2.0.0",
+      "destination": "wwwroot/lib/datatables.net-bs5/",
+      "files": [
+        "dataTables.bootstrap5.min.js",
+        "dataTables.bootstrap5.min.css"
+      ]
+    },
+    {
+      "library": "datatables.net-responsive-bs5@3.0.0",
+      "destination": "wwwroot/lib/datatables.net-responsive-bs5/",
+      "files": [
+        "responsive.bootstrap5.min.js",
+        "responsive.bootstrap5.min.css"
+      ]
+    },
+    {
+      "library": "datatables-responsive@3.0.0",
+      "destination": "wwwroot/lib/datatables-responsive/",
+      "files": [
+        "dataTables.responsive.min.js"
+      ]
+    },
+    {
+      "library": "datatables-buttons@3.0.0",
+      "destination": "wwwroot/lib/datatables-buttons/",
+      "files": [
+        "js/dataTables.buttons.min.js",
+        "js/buttons.html5.min.js",
+        "js/buttons.print.min.js",
+        "js/buttons.colVis.min.js"
       ]
     }
   ]
