@@ -61,6 +61,10 @@ public static class DependencyInjection
 		// dodanie serwisu z datą 
 		services.AddScoped<IDateTimeService, DateTimeService>();
 
+		// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
+		services.AddHttpContextAccessor();
+		services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
 		return services;
 	}
 
