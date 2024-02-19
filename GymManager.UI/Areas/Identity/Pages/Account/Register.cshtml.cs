@@ -32,13 +32,15 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
+		private readonly IDateTimeService _dateTimeService;
 
-        public RegisterModel(
+		public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-			IEmailService emailService)
+			IEmailService emailService,
+			IDateTimeService dateTimeService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,7 +48,8 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
 			_emailService = emailService;
-        }
+			_dateTimeService = dateTimeService;
+		}
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -120,7 +123,7 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
             {
 				// tworzenie użytkownika - nowa instancja ApplicationUser
                 var user = CreateUser();
-				user.RegisterDateTime = DateTime.UtcNow;
+				user.RegisterDateTime = _dateTimeService.Now;
 
 				// ustawianie nazwy użytkownika
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

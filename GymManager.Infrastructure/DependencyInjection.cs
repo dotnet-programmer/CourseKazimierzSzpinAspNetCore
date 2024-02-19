@@ -58,6 +58,9 @@ public static class DependencyInjection
 		// singleton, bo apliakcja będzie pracować tylko na 1 obiekcie wysyłającym emaile
 		services.AddSingleton<IEmailService, EmailService>();
 
+		// dodanie serwisu z datą 
+		services.AddScoped<IDateTimeService, DateTimeService>();
+
 		return services;
 	}
 
