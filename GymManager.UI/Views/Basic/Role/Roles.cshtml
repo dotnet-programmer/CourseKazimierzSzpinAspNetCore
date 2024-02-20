@@ -74,5 +74,34 @@
 				order: [[0, "asc"]]
 			});
 		});
+
+		function callAjax() {
+			// wywołanie ajax - użycie jQuery - $
+			$.ajax({
+				// tutaj przekazuje się różne parametry
+
+				// typ metody, która ma zostać wywołana w kontrolerze
+				type: "POST",
+
+				// wskazanie na adres URL który ma zostać wywołany (czyli tej metody POST)
+				url: "",
+				
+				// przekazanie różnych danych np. za pomocą jsona do tego kontrolera
+				data: {
+				},
+
+				// gdy wszystko się powiedzie to zostanie wywołana ta metoda:
+				success: function (data) {
+				},
+
+				// gdy wystąpi jakiś błąd to zostanie wywołana ta metoda:
+				error: function (data) {
+				},
+
+				// wskazanie typu odpowiedzi który ma zostać zwrócony
+				dataType: "json"
+			});
+		}
+
 	</script>
 }
