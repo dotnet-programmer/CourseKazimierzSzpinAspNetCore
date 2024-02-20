@@ -31,6 +31,39 @@ public class RoleManagerService : IRoleManagerService
 		}
 	}
 
+	public async Task UpdateAsync(RoleDto role)
+	{
+		// pobranie roli która będzie aktualizowana
+		var roleDb = await _roleManager.FindByIdAsync(role.Id);
+
+		// jeśli nazwa się zmieniła, to trzeba sprawdzić czy jest poprawna
+		if (roleDb.Name != role.Name)
+		{
+			await ValidateRoleName(role.Name);
+		}
+
+		roleDb.Name = role.Name;
+
+		var result = await _roleManager.UpdateAsync(roleDb);
+
+		if (!result.Succeeded)
+		{
+			throw new Exception(string.Join(". ", result.Errors.Select(x => x.Description)));
+		}
+	}
+
+	public async Task<RoleDto> FindByIdAsync(string id)
+	{
+		var role = await _roleManager.FindByIdAsync(id);
+
+		if (role == null)
+		{
+			throw new Exception($"Brak roli o podanym id: {id}.");
+		}
+
+		return new RoleDto { Id = role.Id, Name = role.Name };
+	}
+
 	private async Task ValidateRoleName(string roleName)
 	{
 		if (await _roleManager.RoleExistsAsync(roleName))
