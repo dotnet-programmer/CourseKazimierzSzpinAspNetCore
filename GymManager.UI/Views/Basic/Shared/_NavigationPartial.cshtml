@@ -45,7 +45,8 @@
 		</a>
 	</li>
 
-	<li class="nav-item" @Url.MakeActiveClass("Role", "Roles")>
+	@* TODO - nie działa tak jak na filmie, sprawdzić metodę MakeActiveClass(); a może wystarczy zrobić jakiegoś JavaScripta? *@
+	<li class="nav-item" @Url.MakeActiveClass("Role", "Roles,AddRole")>
 		<a asp-controller="Role" asp-action="Roles" class="nav-link align-middle px-0 text-white">
 			<i class="fas fa-solid fa-unlock-keyhole"></i><span class="d-none d-sm-inline">Role</span>
 		</a>

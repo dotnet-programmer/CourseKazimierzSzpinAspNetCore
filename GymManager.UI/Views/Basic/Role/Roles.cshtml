@@ -23,6 +23,7 @@
 			<thead>
 				<tr>
 					<th>Nazwa roli</th>
+					@* class="desktop" oznacza, że kolumna jest widoczna na dyżych ekranach, a jeżeli będzie telefon to będą widoczne kolumny bez tej klasy *@
 					<th class="desktop"></th>
 				</tr>
 			</thead>
@@ -61,7 +62,10 @@
 				paging: true,
 				ordering: true,
 				info: true,
+
+				// to ustawienie oznacza wersję na telefon
 				responsive: true,
+
 				autoWidth: false,
 				lengthChange: true,
 				language: {
