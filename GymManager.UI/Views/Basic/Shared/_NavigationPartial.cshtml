@@ -1,4 +1,5 @@
-﻿@using GymManager.UI.Extensions
+﻿@using GymManager.Application.Dictionaries
+@using GymManager.UI.Extensions
 
 @* widok częściowy *@
 <ul class="client-panel nav nav-pills flex-column mb-sm-auto align-items-center align-items-sm-start mb-4" id="menu">
@@ -15,53 +16,58 @@
 		</a>
 	</li>
 
-	<li class="nav-item">
+	<li class="nav-item @Url.MakeActiveClass("Ticket", "Tickets,AddTicket")">
 		<a asp-controller="Ticket" asp-action="Tickets" class="nav-link align-middle px-0 text-white">
 			<i class="fas fa-solid fa-calendar-check"></i><span class="d-none d-sm-inline">Karnety</span>
 		</a>
 	</li>
 
-	<li class="nav-item mb-4 @Url.MakeActiveClass("Client", "Client")">
+	<li class="nav-item mb-4 @Url.MakeActiveClass("Client", "Client,EditClient")">
 		<a asp-controller="Client" asp-action="Client" class="nav-link align-middle px-0 text-white">
 			<i class="fas fa-solid fa-user"></i><span class="d-none d-sm-inline">Moje dane</span>
 		</a>
 	</li>
 
-	<li class="nav-item">
-		<a asp-controller="Client" asp-action="Clients" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-users"></i><span class="d-none d-sm-inline">Klienci</span>
-		</a>
-	</li>
+	@if (User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Pracownik))
+	{
+		<li class="nav-item @Url.MakeActiveClass("Client", "Clients,AddClient,EditAdminClient")">
+			<a asp-controller="Client" asp-action="Clients" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-users"></i><span class="d-none d-sm-inline">Klienci</span>
+			</a>
+		</li>
 
-	<li class="nav-item">
-		<a asp-controller="Calendar" asp-action="Calendar" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-calendar-days"></i><span class="d-none d-sm-inline">Grafik</span>
-		</a>
-	</li>
+		<li class="nav-item @Url.MakeActiveClass("Calendar", "Calendar")">
+			<a asp-controller="Calendar" asp-action="Calendar" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-calendar-days"></i><span class="d-none d-sm-inline">Grafik</span>
+			</a>
+		</li>
+	}
 
-	<li class="nav-item">
-		<a asp-controller="Employee" asp-action="Employees" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-user-shield"></i><span class="d-none d-sm-inline">Pracownicy</span>
-		</a>
-	</li>
+	@if (User.IsInRole(RolesDict.Administrator))
+	{
+		<li class="nav-item @Url.MakeActiveClass("Employee", "Employees,AddEmployee,EditEmployee")">
+			<a asp-controller="Employee" asp-action="Employees" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-user-shield"></i><span class="d-none d-sm-inline">Pracownicy</span>
+			</a>
+		</li>
 
-	@* TODO - nie działa tak jak na filmie, sprawdzić metodę MakeActiveClass(); a może wystarczy zrobić jakiegoś JavaScripta? *@
-	<li class="nav-item @Url.MakeActiveClass("Role", "Roles,AddRole,EditRole")">
-		<a asp-controller="Role" asp-action="Roles" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-unlock-keyhole"></i><span class="d-none d-sm-inline">Role</span>
-		</a>
-	</li>
+		<li class="nav-item @Url.MakeActiveClass("Role", "Roles,AddRole,EditRole")">
+			<a asp-controller="Role" asp-action="Roles" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-unlock-keyhole"></i><span class="d-none d-sm-inline">Role</span>
+			</a>
+		</li>
 
-	<li class="nav-item">
-		<a asp-controller="File" asp-action="Files" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-file-lines"></i><span class="d-none d-sm-inline">Pliki</span>
-		</a>
-	</li>
+		<li class="nav-item @Url.MakeActiveClass("File", "Files")">
+			<a asp-controller="File" asp-action="Files" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-file-lines"></i><span class="d-none d-sm-inline">Pliki</span>
+			</a>
+		</li>
 
-	<li class="nav-item">
-		<a asp-controller="Settings" asp-action="Settings" class="nav-link align-middle px-0 text-white">
-			<i class="fas fa-solid fa-screwdriver-wrench"></i><span class="d-none d-sm-inline">Ustawienia</span>
-		</a>
-	</li>
+		<li class="nav-item @Url.MakeActiveClass("Settings", "Settings")">
+			<a asp-controller="Settings" asp-action="Settings" class="nav-link align-middle px-0 text-white">
+				<i class="fas fa-solid fa-screwdriver-wrench"></i><span class="d-none d-sm-inline">Ustawienia</span>
+			</a>
+		</li>
+	}
 
 </ul>

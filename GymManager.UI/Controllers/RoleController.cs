@@ -1,14 +1,17 @@
 ﻿using GymManager.Application.Common.Exceptions;
 using GymManager.Application.Contacts.Commands.SendContactEmail;
+using GymManager.Application.Dictionaries;
 using GymManager.Application.Roles.Commands.AddRole;
 using GymManager.Application.Roles.Commands.DeleteRole;
 using GymManager.Application.Roles.Commands.EditRole;
 using GymManager.Application.Roles.Queries.GetEditRole;
 using GymManager.Application.Roles.Queries.GetRoles;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
 
+[Authorize(Roles = RolesDict.Administrator)]
 public class RoleController : BaseController
 {
 	private readonly ILogger _logger;
