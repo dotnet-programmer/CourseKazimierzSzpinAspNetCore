@@ -1,5 +1,7 @@
-﻿using GymManager.Application.Contacts.Commands.SendContactEmail;
+﻿using GymManager.Application.Common.Exceptions;
+using GymManager.Application.Contacts.Commands.SendContactEmail;
 using GymManager.Application.Roles.Commands.AddRole;
+using GymManager.Application.Roles.Commands.DeleteRole;
 using GymManager.Application.Roles.Commands.EditRole;
 using GymManager.Application.Roles.Queries.GetEditRole;
 using GymManager.Application.Roles.Queries.GetRoles;
@@ -9,6 +11,11 @@ namespace GymManager.UI.Controllers;
 
 public class RoleController : BaseController
 {
+	private readonly ILogger _logger;
+
+	public RoleController(ILogger<RoleController> logger) => 
+		_logger = logger;
+
 	public async Task<IActionResult> Roles() =>
 		View(await Mediator.Send(new GetRolesQuery()));
 
@@ -52,8 +59,8 @@ public class RoleController : BaseController
 		return RedirectToAction("Roles");
 	}
 
+	// pobranie roli o podanym Id z bazy danych
 	public async Task<IActionResult> EditRole(string id) =>
-		// pobranie roli o podanym Id z bazy danych
 		View(await Mediator.Send(new GetEditRoleQuery { Id = id }));
 
 	[HttpPost]
@@ -90,5 +97,25 @@ public class RoleController : BaseController
 		TempData["Success"] = "Role zostały zaktualizowane";
 
 		return RedirectToAction("Roles");
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> DeleteRole(string id)
+	{
+		try
+		{
+			await Mediator.Send(new DeleteRoleCommand { Id = id });
+
+			return Json(new { success = true });
+		}
+		catch (ValidationException exception)
+		{
+			return Json(new { success = false, message = string.Join(". ", exception.Errors.Select(x => string.Join(". ", x.Value.Select(y => y)))) });
+		}
+		catch (Exception exception)
+		{
+			_logger.LogError(exception, null);
+			return Json(new { success = false });
+		}
 	}
 }

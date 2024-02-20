@@ -10,8 +10,13 @@ namespace GymManager.Infrastructure.Services;
 public class RoleManagerService : IRoleManagerService
 {
 	private readonly RoleManager<IdentityRole> _roleManager;
+	private readonly IUserRoleManagerService _userRoleManagerService;
 
-	public RoleManagerService(RoleManager<IdentityRole> roleManager) => _roleManager = roleManager;
+	public RoleManagerService(RoleManager<IdentityRole> roleManager, IUserRoleManagerService userRoleManagerService)
+	{
+		_roleManager = roleManager;
+		_userRoleManagerService = userRoleManagerService;
+	}
 
 	public IEnumerable<RoleDto> GetRoles() =>
 		_roleManager.Roles
@@ -56,12 +61,24 @@ public class RoleManagerService : IRoleManagerService
 	{
 		var role = await _roleManager.FindByIdAsync(id);
 
-		if (role == null)
-		{
-			throw new Exception($"Brak roli o podanym id: {id}.");
-		}
+		return role == null ? 
+			throw new Exception($"Brak roli o podanym id: {id}.") : 
+			new RoleDto { Id = role.Id, Name = role.Name };
+	}
 
-		return new RoleDto { Id = role.Id, Name = role.Name };
+	public async Task DeleteAsync(string id)
+	{
+		var roleDb = await _roleManager.FindByIdAsync(id);
+
+		// INFO - walidacja przeniesiona do klasy DeleteRoleCommandValidator
+		//await ValidateRoleToDelete(roleDb.Name);
+
+		var result = await _roleManager.DeleteAsync(roleDb);
+
+		if (!result.Succeeded)
+		{
+			throw new Exception(string.Join(". ", result.Errors.Select(x => x.Description)));
+		}
 	}
 
 	private async Task ValidateRoleName(string roleName)
@@ -71,4 +88,18 @@ public class RoleManagerService : IRoleManagerService
 			throw new ValidationException(new List<ValidationFailure> { new("Name", $"Rola o nazwie '{roleName}' już istnieje.") });
 		}
 	}
+
+	// INFO - walidacja przeniesiona do klasy DeleteRoleCommandValidator
+	//private async Task ValidateRoleToDelete(string roleName)
+	//{
+	//	var userInRole = await _userRoleManagerService.GetUsersInRoleAsync(roleName);
+
+	//	if (userInRole.Any())
+	//	{
+	//		throw new ValidationException(new List<ValidationFailure> 
+	//		{ 
+	//			new("Name", $"Nie można usunąć wybranej roli, ponieważ są do niej przypisani użytkownicy. Jeżeli chcesz usunąć wybraną rolę, to najpierw wypisz z niej wszystkich użytkowników.") 
+	//		});
+	//	}
+	//}
 }

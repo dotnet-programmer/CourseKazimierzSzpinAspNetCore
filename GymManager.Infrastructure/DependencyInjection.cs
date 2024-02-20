@@ -68,6 +68,9 @@ public static class DependencyInjection
 		// INFO - abstrakcja / nakładka na RoleManager z Identity
 		services.AddScoped<IRoleManagerService, RoleManagerService>();
 
+		// INFO - abstrakcja / nakładka na UserManager z Identity
+		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
+
 		return services;
 	}
 
