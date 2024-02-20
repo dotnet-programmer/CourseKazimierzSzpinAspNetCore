@@ -12,6 +12,16 @@
 	<partial name="Styles/_DataTablesStylesPartial" />
 }
 
+<partial 
+	name="Modals/_ModalConfirmPartial"
+	model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź usuwanie",
+        Description = "Czy na pewno chcesz usunąć wybraną role?"
+    })"
+/>
+
 <div class="card card-primary card-border-top">
 	<div class="card-body">
 
@@ -57,6 +67,7 @@
 	<script>
 		// wywołanie funkcji po załadowaniu się strony
 		$(document).ready(function () {
+
 			roles = $('#roles').DataTable({
 				paging: true,
 				ordering: true,
@@ -75,7 +86,13 @@
 			});
 		});
 
-		function callAjax() {
+		$('#modal-confirm-delete-btn').on('click', function (e) 
+		{
+			$('#modal-confirm-delete').modal('hide');
+		});
+
+		function callAjax() 
+		{
 			// wywołanie ajax - użycie jQuery - $
 			$.ajax({
 				// tutaj przekazuje się różne parametry
@@ -102,6 +119,5 @@
 				dataType: "json"
 			});
 		}
-
 	</script>
 }
