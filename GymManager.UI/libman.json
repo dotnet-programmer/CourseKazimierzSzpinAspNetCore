@@ -136,6 +136,13 @@
         "js/buttons.print.min.js",
         "js/buttons.colVis.min.js"
       ]
+    },
+    {
+      "library": "inputmask@4.0.9",
+      "destination": "wwwroot/lib/inputmask/",
+      "files": [
+        "jquery.inputmask.bundle.min.js"
+      ]
     }
   ]
 }

@@ -1,0 +1,77 @@
+﻿@using System.Globalization
+
+@{
+	ViewData["Title"] = "Karnety";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<partial name="Styles/_DataTablesStyles" />
+}
+
+<div class="card card-primary card-border-top">
+	<div class="card-body">
+
+		<table id="tickets" class="table table-bordered"></table>
+
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="Scripts/_DataTablesScripts" />
+
+	<script>
+		// INFO - tabele renderowane po stronie serwera
+		$(document).ready(function () 
+		{
+			$('#tickets').dataTable({
+				searching: false,
+				info: true,
+				responsive: true,
+				rowReorder: {
+					selector: 'td:nth-child(2)'
+				},
+				autoWidth: false,
+				lengthChange: true,
+				language: {
+					url: `/lib/datatables/lang/${'@locale'}.json`
+				},
+				order: [[1, "desc"]],
+				processing: true,
+				// renderowanie po stronie serwera
+				serverSide: true,
+				// adres skąd mają być pobierane rekordy
+				ajax: "/Ticket/TicketsDataTable",
+				// opis jak mają wyglądać kolumny
+				columns: [
+					// dla każdej klamry osobna kolumna
+					{
+						name: 'StartDate',
+						data: 'startDate',
+						title: "Data od",
+						className: "desktop"
+					},
+					{
+						name: 'EndDate',
+						data: 'endDate',
+						title: "Data do"
+					},
+					{
+						name: 'operations',
+						data: null,
+						title: '',
+						className: "desktop",
+						sortable: false,
+						searchable: false,
+						render: function (data, type, row) {
+							var payBtn = '';
+							payBtn = '<span class="badge bg-warning text-dark">Weryfikacja</span>';
+							return payBtn;
+						}
+					}
+				]
+			});
+		});
+	</script>
+}
+

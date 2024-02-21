@@ -87,7 +87,8 @@
 
 @section Scripts {
 	<partial name="Scripts/_ValidationScriptsPartial" />
-	@* 	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script> *@
+	@* INFO - Input Mask *@
+	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
 
 	<script>
 		// jak strona zostanie wczytana to sprawdzana wartość właściwości IsPrivateAccount
@@ -96,7 +97,8 @@
 			if ('@Model.IsPrivateAccount.ToString().ToUpper()' == 'FALSE') {
 				$("#divNipNumber").show();
 			}
-			//$("#ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+			// INFO - Input Mask
+			$("#ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
 		});
 
 		// po zmianie wartości checkboxa:
