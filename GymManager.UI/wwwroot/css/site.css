@@ -113,6 +113,14 @@ ul.client-panel {
 	font-weight: bold;
 }
 
+.card-body .form-group:not(:first-child) {
+	margin-top: 1rem;
+}
+
+.card-body .form-check {
+	margin-top: 1.5rem;
+}
+
 a.edit-link {
 	color: black;
 }
