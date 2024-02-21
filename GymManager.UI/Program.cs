@@ -1,4 +1,5 @@
 ﻿using AspNetCore.ReCaptcha;
+using DataTables.AspNet.AspNetCore;
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
@@ -23,6 +24,9 @@ builder.Services.AddControllersWithViews();
 // INFO - dodanie własnych serwisów z innych projektów
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// INFO - paginacja po stronie serwera
+builder.Services.RegisterDataTables();
 
 // INFO - jedna aplikacja (wiele różnych szablonów) dla wielu klientów
 // Konfiguracja silnika Razor jak i gdzie szukać widoków dla poszczególnych klientów

@@ -6,7 +6,7 @@
 }
 
 @section Styles {
-	<partial name="Styles/_DataTablesStyles" />
+	<partial name="Styles/_DataTablesStylesPartial" />
 }
 
 <div class="card card-primary card-border-top">
@@ -18,10 +18,11 @@
 </div>
 
 @section Scripts {
-	<partial name="Scripts/_DataTablesScripts" />
+	<partial name="Scripts/_DataTablesScriptsPartial" />
 
 	<script>
 		// INFO - tabele renderowane po stronie serwera
+		// TODO - NIE DZIAŁA !!!!!!
 		$(document).ready(function () 
 		{
 			$('#tickets').dataTable({
