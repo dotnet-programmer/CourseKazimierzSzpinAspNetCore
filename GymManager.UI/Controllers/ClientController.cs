@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GymManager.Application.Clients.Queries.GetClient;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
@@ -9,6 +10,6 @@ public class ClientController : BaseController
 	public IActionResult Dashboard() =>
 		View();
 
-	public IActionResult Client() =>
-		View();
+	public async Task<IActionResult> Client() => 
+		View(await Mediator.Send(new GetClientQuery { UserId = UserId }));
 }

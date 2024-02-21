@@ -1,4 +1,5 @@
-﻿using GymManager.UI.Models;
+﻿using System.Security.Claims;
+using GymManager.UI.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,14 +7,16 @@ namespace GymManager.UI.Controllers;
 
 public abstract class BaseController : Controller
 {
-	private ISender _mediator;
 
 	// INFO - pole Mediator w bazowym kontrolerze
 	// na tym polu są bezpośrednio wywoływane kwerendy i komendy w kontrolerach dziedziczących po tej klasie
+	private ISender _mediator;
 	protected ISender Mediator =>
 		//since C# 8.0 the ??= null coalescing assignment operator: some_Value ??= some_Value2;
 		//Which is a more concise version of: some_Value = some_Value ?? some_Value2;
 		_mediator ??= HttpContext.RequestServices.GetService<ISender>();
+
+	protected string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 	// walidacja danych przed wysłaniem komendy
 	protected async Task<MediatorValidateResponse<T>> MediatorSendValidate<T>(IRequest<T> request)

@@ -19,6 +19,7 @@ public interface IApplicationDbContext : IDisposable
 	DbSet<Language> Languages { get; set; }
 	DbSet<TicketTypeTranslation> TicketTypeTranslations { get; set; }
 	DbSet<Invoice> Invoices { get; set; }
+	DbSet<ApplicationUser> Users { get; set; }
 
 	// ta klasa jest wewnątrz DbContext
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

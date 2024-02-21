@@ -1,9 +1,43 @@
-﻿@{
-	ViewData["Title"] = "Klient";
+﻿@using GymManager.Application.Clients.Queries.GetClient
+
+@model ClientDto
+
+@{
+	ViewData["Title"] = "Moje dane";
 }
 
 <div class="card card-primary card-border-top">
 	<div class="card-body">
-		KLIENT
+
+@* 		<a href="/Client/EditClient" class="btn btn-primary mb-3" role="button">
+			<i class="fas fa-solid fa-circle-plus"></i>Aktualizuj swoje dane
+		</a> *@
+
+		@if (string.IsNullOrWhiteSpace(Model.FirstName))
+		{
+			<p class="text-danger mt-2"><b>Uzupełnij proszę swoje dane.</b></p>
+			<p>Adres e-mail: <b>@Model.Email</b></p>
+		}
+		else
+		{
+			<h3 class="mt-2">@Model.FirstName @Model.LastName</h3>
+			<p class="mt-4">Adres e-mail: <b>@Model.Email</b></p>
+
+			@if (Model.IsPrivateAccount)
+			{
+				<p><b>Konto prywatne</b></p>
+			}
+			else
+			{
+				<p><b>Konto firmowe</b></p>
+				<p>NIP: <b>@Model.NipNumber</b></p>
+			}
+
+			<p class="mt-5">Adres zamieszkania:</p>
+			<p>@Model.Country</p>
+			<p>@Model.ZipCode @Model.City</p>
+			<p>@Model.Street @Model.StreetNumber</p>
+			<p class="mt-4">Data rejestracji: <b>@Model.RegisterDateTime.ToLongDateString()r.</b></p>
+		}
 	</div>
 </div>
