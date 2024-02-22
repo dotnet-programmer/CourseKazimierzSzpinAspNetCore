@@ -76,6 +76,9 @@ public static class DependencyInjection
 		services.AddHttpClient<IPrzelewy24, Przelewy24>();
 		services.AddSingleton<IHttpContext, MyHttpContext>();
 
+		// INFO - serwis do generowania kodów QR
+		services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
+
 		return services;
 	}
 
