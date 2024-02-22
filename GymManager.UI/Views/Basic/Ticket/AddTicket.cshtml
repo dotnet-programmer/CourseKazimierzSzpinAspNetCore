@@ -10,6 +10,7 @@
 
 @section Styles {
 	<partial name="Styles/_DateTimeStylesPartial" />
+	<partial name="Styles/_SelectStylesPartial" />
 }
 
 <div class="card card-primary card-border-top">
@@ -17,18 +18,37 @@
 	{
 		@Html.AntiForgeryToken()
 
+		@for (int i = 0; i < Model.AvailableTicketTypes.Count(); i++)
+		{
+			@Html.HiddenFor(model => Model.AvailableTicketTypes[i].Id)
+			@Html.HiddenFor(model => Model.AvailableTicketTypes[i].Name)
+			@Html.HiddenFor(model => Model.AvailableTicketTypes[i].Price)
+		}
+
 		<div class="card-body">
 
-		<div class="form-group">
-			@Html.LabelFor(x => x.Ticket.StartDate)
-			<div class="input-group date" id="dtpStartDate" data-target-input="nearest">
-				<input asp-for="Ticket.StartDate" type="text" class="form-control datetimepicker-input" data-target="#dtpStartDate" />
-				<div class="input-group-append" data-target="#dtpStartDate" data-toggle="datetimepicker">
-					<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Ticket.StartDate)
+				<div class="input-group date" id="dtpStartDate" data-target-input="nearest">
+					<input asp-for="Ticket.StartDate" type="text" class="form-control datetimepicker-input" data-target="#dtpStartDate" />
+					<div class="input-group-append" data-target="#dtpStartDate" data-toggle="datetimepicker">
+						<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+				@Html.ValidationMessageFor(x => x.Ticket.StartDate)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Ticket.TicketTypeId)
+				<div class="select2-blue">
+					@Html.DropDownList(
+										"Ticket.TicketTypeId",
+										@Model.AvailableTicketTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString())),
+										null,
+										htmlAttributes: new { @class = "form-control select2-TicketTypeId", style = "width: 100%;" })
+					@Html.ValidationMessageFor(x => x.Ticket.TicketTypeId)
 				</div>
 			</div>
-			@Html.ValidationMessageFor(x => x.Ticket.StartDate)
-		</div>
 
 			<div class="form-group">
 				@Html.LabelFor(x => x.Ticket.Price)
@@ -48,6 +68,7 @@
 @section Scripts {
 	<partial name="Scripts/_ValidationScriptsPartial" />
 	<partial name="Scripts/_DateTimeScriptsPartial" />
+	<partial name="Scripts/_SelectScriptsPartial" />
 
 	<script>
 
@@ -57,7 +78,29 @@
 				format: 'L',
 				locale: '@locale'
 			});
+
+			$('.select2-TicketTypeId').select2({
+				theme: 'bootstrap-5'
+			});
+
+			$('#Ticket_TicketTypeId').change(function () {
+				updatePrice(this.value);
+			});
 		});
+
+		$(document).on("globalizeHasBeenLoadedEvent", function () {
+			updatePrice($('#Ticket_TicketTypeId').val());
+		});
+
+		// zapisanie informacji o liście dostępnych typów karnetów
+		var availableTickets = @Html.Raw(Json.Serialize(Model.AvailableTicketTypes));
+
+		function updatePrice(val) {
+			var price = availableTickets.find(element => element.id == val).price;
+			var formatter = Globalize.numberFormatter();
+			price = formatter(price);
+			$('#Ticket_Price').val(price);
+		}
 
 	</script>
 }
