@@ -107,23 +107,17 @@ public class Przelewy24 : IPrzelewy24
 		}
 	}
 
-	// *******************************************************************************************************************
-
-	//public async Task<P24TransactionVerifyResponse> TransactionVerifyAsync(P24TransactionVerifyRequest data)
-	//{
-	//	var signString = $"{{\"sessionId\":\"{data.SessionId}\",\"orderId\":{data.OrderId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
-
-	//	data.Sign = GenerateSign(signString);
-
-	//	var jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
-
-	//	var stringContent = new StringContent(jsonContent, UnicodeEncoding.UTF8, "application/json");
-
-	//	var response = await _httpClient.PutAsync("/api/v1/transaction/verify", stringContent);
-
-	//	if (!response.IsSuccessStatusCode)
-	//		_logger.LogError(response.RequestMessage.ToString(), null);
-
-	//	return JsonConvert.DeserializeObject<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
-	//}
+	public async Task<P24TransactionVerifyResponse> TransactionVerifyAsync(P24TransactionVerifyRequest data)
+	{
+		string signString = $"{{\"sessionId\":\"{data.SessionId}\",\"orderId\":{data.OrderId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
+		data.Sign = GenerateSign(signString);
+		string jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
+		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
+		var response = await _httpClient.PutAsync("/api/v1/transaction/verify", stringContent);
+		if (!response.IsSuccessStatusCode)
+		{
+			_logger.LogError(response.RequestMessage.ToString(), null);
+		}
+		return JsonConvert.DeserializeObject<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
+	}
 }
