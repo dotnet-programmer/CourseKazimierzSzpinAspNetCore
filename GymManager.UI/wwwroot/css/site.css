@@ -124,3 +124,7 @@ ul.client-panel {
 a.edit-link {
 	color: black;
 }
+
+.input-group-text.calendar {
+	font-size: 1.5rem;
+}

@@ -8,12 +8,28 @@
 	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 
+@section Styles {
+	<partial name="Styles/_DateTimeStylesPartial" />
+}
+
 <div class="card card-primary card-border-top">
 	@using (Html.BeginForm("AddTicket", "Ticket"))
 	{
 		@Html.AntiForgeryToken()
 
 		<div class="card-body">
+
+		<div class="form-group">
+			@Html.LabelFor(x => x.Ticket.StartDate)
+			<div class="input-group date" id="dtpStartDate" data-target-input="nearest">
+				<input asp-for="Ticket.StartDate" type="text" class="form-control datetimepicker-input" data-target="#dtpStartDate" />
+				<div class="input-group-append" data-target="#dtpStartDate" data-toggle="datetimepicker">
+					<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+				</div>
+			</div>
+			@Html.ValidationMessageFor(x => x.Ticket.StartDate)
+		</div>
+
 			<div class="form-group">
 				@Html.LabelFor(x => x.Ticket.Price)
 				@Html.TextBoxFor(x => x.Ticket.Price, new { @class = "form-control", @readonly = "readonly" })
@@ -31,4 +47,17 @@
 
 @section Scripts {
 	<partial name="Scripts/_ValidationScriptsPartial" />
+	<partial name="Scripts/_DateTimeScriptsPartial" />
+
+	<script>
+
+		$(document).ready(function () 
+		{
+			$('#dtpStartDate').datetimepicker({
+				format: 'L',
+				locale: '@locale'
+			});
+		});
+
+	</script>
 }
