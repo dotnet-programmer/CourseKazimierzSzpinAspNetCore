@@ -1,6 +1,7 @@
 ﻿using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
 using GymManager.Infrastructure.Identity;
+using GymManager.Infrastructure.Payments;
 using GymManager.Infrastructure.Persistence;
 using GymManager.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
@@ -70,6 +71,10 @@ public static class DependencyInjection
 
 		// INFO - abstrakcja / nakładka na UserManager z Identity
 		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
+		
+		// - INFO - zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
+		services.AddHttpClient<IPrzelewy24, Przelewy24>();
+		services.AddSingleton<IHttpContext, MyHttpContext>();
 
 		return services;
 	}
