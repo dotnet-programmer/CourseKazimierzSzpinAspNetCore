@@ -3,6 +3,7 @@ using GymManager.Application.Clients.Queries.GetClient;
 using GymManager.Application.Tickets.Commands.AddTicket;
 using GymManager.Application.Tickets.Queries.GetAddTicket;
 using GymManager.Application.Tickets.Queries.GetClientsTickets;
+using GymManager.Application.Tickets.Queries.GetPrintTicket;
 using GymManager.UI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,5 +67,16 @@ public class TicketController : BaseController
 		TempData["Success"] = "Nowy karnet został utworzony, oczekiwanie na zweryfikowanie płatności.";
 
 		return Redirect($"{_configuration.GetValue<string>("Przelewy24:BaseUrl")}/trnRequest/{result.Model}");
+	}
+
+	public async Task<IActionResult> TicketPreview(string id)
+	{
+		var ticket = await Mediator.Send(new GetPrintTicketQuery
+			{
+				TicketId = id,
+				UserId = UserId
+			});
+
+		return View(ticket);
 	}
 }

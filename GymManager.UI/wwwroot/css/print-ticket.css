@@ -1,0 +1,40 @@
+﻿@page {
+	size: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+header, footer, .privacy-policy-info {
+	display: none !important;
+}
+
+@media print {
+	@page {
+		margin: 0;
+	}
+
+	body {
+		margin: 1.6px
+	}
+}
+
+.ticket-template {
+	max-width: 400px;
+	font-size: 18px;
+	text-align: center;
+	padding-bottom: 15px;
+	color: black !important;
+}
+
+	.ticket-template div {
+		margin-top: 20px;
+	}
+
+.top-line {
+	border-top: 1px solid black;
+	margin-top: 5px;
+}
+
+.contact-info {
+	font-size: 14px;
+}

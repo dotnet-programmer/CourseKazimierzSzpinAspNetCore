@@ -81,9 +81,13 @@
 						sortable: false,
 						searchable: false,
 						render: function (data, type, row) {
-							var payBtn = '';
-							payBtn = '<span class="badge bg-warning text-dark">Weryfikacja</span>';
-							return payBtn;
+							var payBtn = '', previewBtn = '';
+							if (row.isPaid) {
+								previewBtn = '<a class="btn btn-success btn-sm" role="button" href="/Ticket/TicketPreview?Id=' + row.id + '"><i class="fas fa-solid fa-square-check"></i>Zobacz</a>';
+							} else {
+								payBtn = '<span class="badge bg-warning text-dark">Weryfikacja</span>';
+							}
+							return payBtn + previewBtn;
 						}
 					}
 				]
