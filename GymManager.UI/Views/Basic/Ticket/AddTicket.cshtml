@@ -1,0 +1,34 @@
+﻿@using GymManager.Application.Tickets.Queries.GetAddTicket
+@using System.Globalization
+
+@model AddTicketVm
+
+@{
+	ViewData["Title"] = "Zakup nowego karnetu";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+<div class="card card-primary card-border-top">
+	@using (Html.BeginForm("AddTicket", "Ticket"))
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="card-body">
+			<div class="form-group">
+				@Html.LabelFor(x => x.Ticket.Price)
+				@Html.TextBoxFor(x => x.Ticket.Price, new { @class = "form-control", @readonly = "readonly" })
+				@Html.ValidationMessageFor(x => x.Ticket.Price)
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-cart-shopping"></i>Przejdź do płatności
+			</button>
+		</div>
+	}
+</div>
+
+@section Scripts {
+	<partial name="Scripts/_ValidationScriptsPartial" />
+}

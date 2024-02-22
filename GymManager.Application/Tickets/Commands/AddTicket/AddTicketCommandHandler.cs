@@ -1,18 +1,17 @@
 ﻿using MediatR;
 
 // NuGet Package: Microsoft.Extensions.Logging.Abstractions
-using Microsoft.Extensions.Logging;
 
 namespace GymManager.Application.Tickets.Commands.AddTicket;
 
-public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand>
+public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand, string>
 {
-	private readonly ILogger _logger;
+	//private readonly ILogger _logger;
 
-	public AddTicketCommandHandler(ILogger<AddTicketCommandHandler> logger)
-    {
-		_logger = logger;
-	}
+	//public AddTicketCommandHandler(ILogger<AddTicketCommandHandler> logger)
+	//   {
+	//	_logger = logger;
+	//}
 
 	//public async Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
 	//{
@@ -28,17 +27,21 @@ public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand>
 	//	await Task.CompletedTask;
 	//}
 
-	public Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
+	//public Task Handle(AddTicketCommand request, CancellationToken cancellationToken)
+	//{
+	//	// tutaj można np. dodać do bazy nowy obiekt
+	//	//var ticket = new Ticket();
+	//	//ticket.Name = request.Name;
+	//	// zapis w bd
+	//	// jeśli nic się nie zwraca, to zwraca się Unit.Value - UWAGA!!! tylko do MediatR wersji 11, od 12 zwraca się Task.CompletedTask
+	//	//return Unit.Value;
+
+	//	_logger.LogInformation("Log from AddTicketCommandHandler");
+
+	//	return Task.CompletedTask;
+	//}
+	public async Task<string> Handle(AddTicketCommand request, CancellationToken cancellationToken)
 	{
-		// tutaj można np. dodać do bazy nowy obiekt
-		//var ticket = new Ticket();
-		//ticket.Name = request.Name;
-		// zapis w bd
-		// jeśli nic się nie zwraca, to zwraca się Unit.Value - UWAGA!!! tylko do MediatR wersji 11, od 12 zwraca się Task.CompletedTask
-		//return Unit.Value;
-
-		_logger.LogInformation("Log from AddTicketCommandHandler");
-
-		return Task.CompletedTask;
+		throw new NotImplementedException();
 	}
 }
