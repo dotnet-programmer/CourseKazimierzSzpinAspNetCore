@@ -19,7 +19,13 @@ var builder = WebApplication.CreateBuilder(args);
 // AddTransient - nowa instancja dla każdego kontrolera czy każdego serwisu, czyli zawsze jest nowa instancja
 //builder.Services.AddScoped<IEmail, Email>();
 
-builder.Services.AddControllersWithViews();
+builder.Services
+	.AddControllersWithViews()
+	// INFO - żeby przechowywać w TempData duże pliki
+	.AddSessionStateTempDataProvider();
+
+// INFO - żeby przechowywać w TempData duże pliki
+builder.Services.AddSession();
 
 // INFO - dodanie własnych serwisów z innych projektów
 builder.Services.AddApplication();
@@ -45,6 +51,9 @@ builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
 var app = builder.Build();
 
+// INFO - żeby przechowywać w TempData duże pliki
+app.UseSession();
+
 // INFO - w tym miejscu trzeba dodać UseInfrastructure, żeby wykonywać działania podczas uruchamiania aplikacji
 // jako parametry metody będą użyte wstrzyknięte implementacje
 using (var scope = app.Services.CreateScope())
@@ -53,7 +62,8 @@ using (var scope = app.Services.CreateScope())
 	app.UseInfrastructure(
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
 		app.Services.GetService<IAppSettingsService>(),
-		app.Services.GetService<IEmailService>()
+		app.Services.GetService<IEmailService>(),
+		app.Services.GetService<IWebHostEnvironment>()
 		);
 }
 

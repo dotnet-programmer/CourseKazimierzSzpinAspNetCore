@@ -2,13 +2,16 @@
 using GymManager.Domain.Entities;
 using GymManager.Infrastructure.Identity;
 using GymManager.Infrastructure.Payments;
+using GymManager.Infrastructure.Pdf;
 using GymManager.Infrastructure.Persistence;
 using GymManager.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rotativa.AspNetCore;
 
 namespace GymManager.Infrastructure;
 
@@ -79,6 +82,9 @@ public static class DependencyInjection
 		// INFO - serwis do generowania kodów QR
 		services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 
+		// INFO - serwid do generowania PDF
+		services.AddScoped<IPdfFileGenerator, RotativaPdfGenerator>();
+
 		return services;
 	}
 
@@ -86,7 +92,8 @@ public static class DependencyInjection
 	public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder appBuilder,
 		IApplicationDbContext context,
 		IAppSettingsService appSettingsService,
-		IEmailService emailService)
+		IEmailService emailService,
+		IWebHostEnvironment webHostEnvironment)
 	{
 		// wywołując metodę asynchroniczną w metodzie, która nie jest asynchroniczna, trzeba dodać .GetAwaiter().GetResult()
 
@@ -95,6 +102,9 @@ public static class DependencyInjection
 
 		// na starcie aplikacji wywołana metoda Update i uzupełnienie danych do wysyłki maili z ustawień
 		emailService.Update(appSettingsService).GetAwaiter().GetResult();
+
+		// konfiguracja Rotativy do generowania PDF
+		RotativaConfiguration.Setup(webHostEnvironment.WebRootPath, "Rotativa");
 
 		return appBuilder;
 	}

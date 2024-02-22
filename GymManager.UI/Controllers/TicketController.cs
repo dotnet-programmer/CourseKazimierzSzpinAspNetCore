@@ -3,6 +3,7 @@ using GymManager.Application.Clients.Queries.GetClient;
 using GymManager.Application.Tickets.Commands.AddTicket;
 using GymManager.Application.Tickets.Queries.GetAddTicket;
 using GymManager.Application.Tickets.Queries.GetClientsTickets;
+using GymManager.Application.Tickets.Queries.GetPdfTicket;
 using GymManager.Application.Tickets.Queries.GetPrintTicket;
 using GymManager.UI.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -44,7 +45,7 @@ public class TicketController : BaseController
 		return request.GetResponse(tickets);
 	}
 
-	public async Task<IActionResult> AddTicket() => 
+	public async Task<IActionResult> AddTicket() =>
 		View(await Mediator.Send(new GetAddTicketQuery()));
 
 	[HttpPost]
@@ -52,12 +53,12 @@ public class TicketController : BaseController
 	public async Task<IActionResult> AddTicket(AddTicketVm vm)
 	{
 		var result = await MediatorSendValidate(new AddTicketCommand
-			{
-				StartDate = vm.Ticket.StartDate,
-				TicketTypeId = vm.Ticket.TicketTypeId,
-				UserId = UserId,
-				Price = vm.Ticket.Price,
-			});
+		{
+			StartDate = vm.Ticket.StartDate,
+			TicketTypeId = vm.Ticket.TicketTypeId,
+			UserId = UserId,
+			Price = vm.Ticket.Price,
+		});
 
 		if (!result.IsValid)
 		{
@@ -72,11 +73,48 @@ public class TicketController : BaseController
 	public async Task<IActionResult> TicketPreview(string id)
 	{
 		var ticket = await Mediator.Send(new GetPrintTicketQuery
-			{
-				TicketId = id,
-				UserId = UserId
-			});
+		{
+			TicketId = id,
+			UserId = UserId
+		});
 
 		return View(ticket);
+	}
+
+	public async Task<IActionResult> TicketToPdf(string id)
+	{
+		try
+		{
+			var ticketPdfVm = await Mediator.Send(new GetPdfTicketQuery
+			{
+				TicketId = id,
+				UserId = UserId,
+				Context = ControllerContext
+			});
+
+			TempData.Put(ticketPdfVm.Handle, ticketPdfVm.PdfContent);
+
+			return Json(new
+			{
+				success = true,
+				fileGuid = ticketPdfVm.Handle,
+				fileName = ticketPdfVm.FileName
+			});
+		}
+		catch (Exception exception)
+		{
+			_logger.LogError(exception, null);
+			return Json(new { success = false });
+		}
+	}
+
+	public IActionResult DownloadTicketPdf(string fileGuid, string fileName)
+	{
+		if (TempData[fileGuid] == null)
+		{
+			throw new Exception("Błąd przy próbie eksportu karnetu do PDF.");
+		}
+
+		return File(TempData.Get<byte[]>(fileGuid), "application/pdf", fileName);
 	}
 }
