@@ -128,3 +128,12 @@ a.edit-link {
 .input-group-text.calendar {
 	font-size: 1.5rem;
 }
+
+.announcements-header {
+	margin-top: 3rem;
+}
+
+.announcements-position {
+	padding-left: 0;
+	padding-right: 0;
+}

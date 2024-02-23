@@ -1,9 +1,52 @@
-﻿@{
-	ViewData["Title"] = "Pulpit";
+﻿@using GymManager.Application.Clients.Queries.GetClientDashboard
+
+@model GetClientDashboardVm
+
+@{
+    ViewData["Title"] = "Pulpit";
 }
 
-<div class="card card-primary card-border-top">
-	<div class="card-body">
-		PULPIT
+@* podział pionowy na 2 części *@
+
+@* z lewej strony ogłoszenia *@
+<div class="col-12 col-xl-6">
+	<div class="card card-primary card-border-top">
+		<div class="card-body">
+			<h3>Witaj @Model.Email</h3>
+			@if (@Model.TicketEndDate.HasValue)
+			{
+				<h4 class="mt-4">Masz <span class="text-success">aktywny</span> karnet<br>(data wygaśnięcia: @Model.TicketEndDate.Value.ToLongDateString())</h4>
+			}
+			else
+			{
+				<h4 class="mt-4">Twój karnet jest <span class="text-danger">nieaktywny</span></h4>
+			}
+			<h6 class="announcements-header">Najnowsze ogłoszenia:</h6>
+			<ul class="announcements-position no-decoration">
+				@foreach (var announcement in Model.Announcements.Items)
+				{
+					<li><i class="fa-solid fa-check me-2"></i>@announcement.Date.ToLongDateString() <span>-</span> @announcement.Description</li>
+				}
+			</ul>
+		</div>
 	</div>
+</div>
+
+@* z prawej strony wykresy *@
+<div class="col-12 col-xl-6">
+
+@*     <div class="card card-primary card-border-top">
+        <div class="card-body">
+            <h3 class="mb-3">Ilość Twoich treningów:</h3>
+            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+        </div>
+    </div>
+
+    <div class="card card-primary card-border-top">
+        <div class="card-body">
+            <h3 class="mb-3">Najpopularniejsze treningi:</h3>
+            <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+        </div>
+    </div> *@
+
 </div>
