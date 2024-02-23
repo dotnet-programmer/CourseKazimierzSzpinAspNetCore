@@ -3,7 +3,7 @@
 @model GetClientDashboardVm
 
 @{
-    ViewData["Title"] = "Pulpit";
+	ViewData["Title"] = "Pulpit";
 }
 
 @* podział pionowy na 2 części *@
@@ -35,18 +35,61 @@
 @* z prawej strony wykresy *@
 <div class="col-12 col-xl-6">
 
-@*     <div class="card card-primary card-border-top">
-        <div class="card-body">
-            <h3 class="mb-3">Ilość Twoich treningów:</h3>
-            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
-        </div>
-    </div>
+	<div class="card card-primary card-border-top">
+		<div class="card-body">
+			<h3 class="mb-3">Ilość Twoich treningów:</h3>
+			<canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+		</div>
+	</div>
 
-    <div class="card card-primary card-border-top">
-        <div class="card-body">
-            <h3 class="mb-3">Najpopularniejsze treningi:</h3>
-            <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
-        </div>
-    </div> *@
+	<div class="card card-primary card-border-top">
+		<div class="card-body">
+			<h3 class="mb-3">Najpopularniejsze treningi:</h3>
+			<canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+		</div>
+	</div>
 
 </div>
+
+@section Scripts {
+	<script src=~/lib/Chart.js/chart.min.js></script>
+
+	<script>
+		const ctxBar = document.getElementById('barChart').getContext('2d');
+		const barChart = new Chart(ctxBar, {
+			type: 'bar',
+			data: {
+				labels: JSON.parse('@Html.Raw(Json.Serialize(Model.TrainingCountChart.Positions.Select(x => x.Label)))'),
+				datasets: [{
+					label: '@Html.Raw(Model.TrainingCountChart.Label)',
+					data: JSON.parse('@Html.Raw(Json.Serialize(Model.TrainingCountChart.Positions.Select(x => x.Data)))'),
+					backgroundColor: JSON.parse('@Html.Raw(Json.Serialize(Model.TrainingCountChart.Positions.Select(x => x.Color)))'),
+					borderColor: JSON.parse('@Html.Raw(Json.Serialize(Model.TrainingCountChart.Positions.Select(x => x.BorderColor)))'),
+					borderWidth: 1,
+				}]
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+
+		const ctxPie = document.getElementById('pieChart').getContext('2d');
+		const pieChart = new Chart(ctxPie, {
+			type: 'pie',
+			data: {
+				labels: JSON.parse('@Html.Raw(Json.Serialize(Model.TheBestTrainingsChart.Positions.Select(x => x.Label)))'),
+				datasets: [{
+					data: JSON.parse('@Html.Raw(Json.Serialize(Model.TheBestTrainingsChart.Positions.Select(x => x.Data)))'),
+					backgroundColor: JSON.parse('@Html.Raw(Json.Serialize(Model.TheBestTrainingsChart.Positions.Select(x => x.Color)))'),
+					borderColor: JSON.parse('@Html.Raw(Json.Serialize(Model.TheBestTrainingsChart.Positions.Select(x => x.BorderColor)))'),
+					borderWidth: 1,
+					hoverOffset: 4
+				}]
+			}
+		});
+	</script>
+}

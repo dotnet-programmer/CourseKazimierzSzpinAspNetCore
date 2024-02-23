@@ -175,6 +175,13 @@
       "files": [
         "select2-bootstrap-5-theme.min.css"
       ]
+    },
+    {
+      "library": "Chart.js@3.7.1",
+      "destination": "wwwroot/lib/Chart.js/",
+      "files": [
+        "chart.min.js"
+      ]
     }
   ]
 }
