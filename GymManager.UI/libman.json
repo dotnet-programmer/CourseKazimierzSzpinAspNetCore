@@ -182,6 +182,14 @@
       "files": [
         "chart.min.js"
       ]
+    },
+    {
+      "library": "dropzone@5.9.3",
+      "destination": "wwwroot/lib/dropzone/",
+      "files": [
+        "dropzone.min.js",
+        "dropzone.min.css"
+      ]
     }
   ]
 }

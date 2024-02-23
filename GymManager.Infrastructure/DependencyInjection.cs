@@ -55,14 +55,14 @@ public static class DependencyInjection
 		.AddDefaultUI()
 		.AddDefaultTokenProviders();
 
-		// dependency injection - używaj AppSettingsService wszędzie tam gdzie jest IAppSettingsService, 
+		// dependency injection - używaj AppSettingsService wszędzie tam gdzie jest IAppSettingsService,
 		// singleton, bo aplikacja będzie pracować tylko na 1 słowniku z ustawieniami
 		services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
 		// singleton, bo apliakcja będzie pracować tylko na 1 obiekcie wysyłającym emaile
 		services.AddSingleton<IEmailService, EmailService>();
 
-		// INFO - dodanie serwisu z datą 
+		// INFO - dodanie serwisu z datą
 		services.AddScoped<IDateTimeService, DateTimeService>();
 
 		// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
@@ -74,7 +74,7 @@ public static class DependencyInjection
 
 		// INFO - abstrakcja / nakładka na UserManager z Identity
 		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
-		
+
 		// - INFO - zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
 		services.AddHttpClient<IPrzelewy24, Przelewy24>();
 		services.AddSingleton<IHttpContext, MyHttpContext>();
@@ -84,6 +84,9 @@ public static class DependencyInjection
 
 		// INFO - serwid do generowania PDF
 		services.AddScoped<IPdfFileGenerator, RotativaPdfGenerator>();
+
+		// INFO - serwis do obsługi plików na serwerze
+		services.AddSingleton<IFileManagerService, FileManagerService>();
 
 		return services;
 	}
