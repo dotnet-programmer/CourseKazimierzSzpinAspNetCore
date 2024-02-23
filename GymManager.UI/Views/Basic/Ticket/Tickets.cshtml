@@ -24,7 +24,7 @@
 		{
 			<div class="alert alert-danger mb-4" role="alert">
 				W celu kupienia karnetu, uzupełnij proszę najpierw swoje dane 
-				<a href='/Client/Client' class="text-danger"> [<b>tutaj</b>] </a>.
+				<a href='/Client/Client' class="text-danger">[<b>tutaj</b>]</a>.
 			</div>
 		}
 
@@ -38,9 +38,7 @@
 
 	<script>
 		// INFO - tabele renderowane po stronie serwera
-		// TODO - NIE DZIAŁA !!!!!!
-		$(document).ready(function () 
-		{
+		$(document).ready(function () {
 			$('#tickets').dataTable({
 				searching: false,
 				info: true,
@@ -55,13 +53,9 @@
 				},
 				order: [[1, "desc"]],
 				processing: true,
-				// renderowanie po stronie serwera
 				serverSide: true,
-				// adres skąd mają być pobierane rekordy
 				ajax: "/Ticket/TicketsDataTable",
-				// opis jak mają wyglądać kolumny
 				columns: [
-					// dla każdej klamry osobna kolumna
 					{
 						name: 'StartDate',
 						data: 'startDate',
@@ -81,24 +75,22 @@
 						sortable: false,
 						searchable: false,
 						render: function (data, type, row) {
-							var payBtn = '', previewBtn = '', pdfBtn = '';
-
+							var payBtn = '', previewBtn = '', pdfBtn = '', printBtn = '';
 							if (row.isPaid) {
 								previewBtn = '<a class="btn btn-success btn-sm" role="button" href="/Ticket/TicketPreview?Id=' + row.id + '"><i class="fas fa-solid fa-square-check"></i>Zobacz</a>';
 								pdfBtn = '<button class="btn btn-secondary btn-sm ms-1" onclick="generateTicket(\'' + row.id + '\')"><i class="fas fa-solid fa-file-pdf"></i>PDF</button>';
+								printBtn = '<button class="btn btn-secondary btn-sm ms-1" onclick="printTicket(\'' + row.id + '\')"><i class="fas fa-solid fa-print"></i>Drukuj</button>';
 							} else {
 								payBtn = '<span class="badge bg-warning text-dark">Weryfikacja</span>';
 							}
-
-							return previewBtn + payBtn + pdfBtn;
+							return previewBtn + payBtn + pdfBtn + printBtn;
 						}
 					}
 				]
 			});
 		});
 
-		function generateTicket(id) 
-		{
+		function generateTicket(id) {
 			$.ajax({
 				type: "POST",
 				url: "/Ticket/TicketToPdf",
@@ -118,6 +110,17 @@
 				dataType: "json",
 				cache: false
 			});
+		}
+
+		function printTicket(id) {
+			var url = '@Url.Action("PrintTicket", "Ticket")' + '?id=' + id;
+			var myWindow = window.open(url, '', 'width=800,height=600');
+			myWindow.onload = function () {
+				myWindow.print();
+				myWindow.onafterprint = function () {
+					myWindow.close();
+				};
+			};
 		}
 
 	</script>
