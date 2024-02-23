@@ -1,4 +1,5 @@
-﻿using GymManager.Application.Dictionaries;
+﻿using GymManager.Application.Common.Exceptions;
+using GymManager.Application.Dictionaries;
 using GymManager.Application.Files.Commands.UploadFile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,10 @@ public class FileController : BaseController
 			await Mediator.Send(new UploadFileCommand { Files = files });
 
 			return Json(new { success = true });
+		}
+		catch (ValidationException exception)
+		{
+			return Json(new { success = false, message = string.Join(". ", exception.Errors.Select(x => string.Join(". ", x.Value.Select(y => y)))) });
 		}
 		catch (Exception)
 		{
