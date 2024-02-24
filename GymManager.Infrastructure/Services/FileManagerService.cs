@@ -40,4 +40,10 @@ public class FileManagerService : IFileManagerService
 			}
 		}
 	}
+
+	public void Delete(string name)
+	{
+		var fileFullPath = Path.Combine(_webHostEnvironment.WebRootPath, "Content", "Files", name);
+		File.Delete(fileFullPath);
+	}
 }
