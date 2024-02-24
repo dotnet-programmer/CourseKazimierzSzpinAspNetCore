@@ -137,3 +137,12 @@ a.edit-link {
 	padding-left: 0;
 	padding-right: 0;
 }
+
+.file-name {
+	line-height: 1rem;
+}
+
+small, .small {
+	font-size: 0.7rem;
+	font-weight: 400;
+}

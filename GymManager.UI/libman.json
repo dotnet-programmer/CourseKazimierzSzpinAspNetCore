@@ -190,6 +190,14 @@
         "dropzone.min.js",
         "dropzone.min.css"
       ]
+    },
+    {
+      "library": "venobox@2.1.6",
+      "destination": "wwwroot/lib/venobox/",
+      "files": [
+        "venobox.min.js",
+        "venobox.min.css"
+      ]
     }
   ]
 }
