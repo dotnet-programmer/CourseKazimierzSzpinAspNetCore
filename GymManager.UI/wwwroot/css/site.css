@@ -146,3 +146,17 @@ small, .small {
 	font-size: 0.7rem;
 	font-weight: 400;
 }
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+	background-color: #007bff;
+	border-color: #006fe6;
+	color: #fff;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+	color: #fff;
+}
+
+.fileBrowse:hover {
+	cursor: pointer;
+}

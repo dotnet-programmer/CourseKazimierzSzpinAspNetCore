@@ -46,4 +46,7 @@ public class EditAdminClientCommand : IRequest
 	[Required(ErrorMessage = "Pole 'Kod pocztowy' jest wymagane")]
 	[DisplayName("Kod pocztowy")]
 	public string ZipCode { get; set; }
+
+	[DisplayName("Wybrane role")]
+	public List<string> RoleIds { get; set; } = [];
 }

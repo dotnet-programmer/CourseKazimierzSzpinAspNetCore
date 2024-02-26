@@ -4,114 +4,143 @@
 @model EditAdminClientVm
 
 @{
-    ViewData["Title"] = "Edytowanie danych klienta";
+	ViewData["Title"] = "Edytowanie danych klienta";
+}
+
+@section Styles {
+	<partial name="Styles/_SelectStylesPartial" />
 }
 
 <div class="card card-primary card-border-top">
 
-    @using (Html.BeginForm("EditAdminClient", "Client"))
-    {
-        @Html.AntiForgeryToken()
+	@using (Html.BeginForm("EditAdminClient", "Client"))
+	{
+		@Html.AntiForgeryToken()
 
-        @Html.HiddenFor(x => x.Client.Id)
+		@Html.HiddenFor(x => x.Client.Id)
 
-        <div class="card-body">
+		@* ukryte informacje o rolach 
+			potrzebne do sytuacji, w której jest jakiś błąd na formularzu i następuje powrót na tą stronę, 
+			to nie wywoła się jeszcze raz pobranie info o rolach dlatego muszą być przekazane jako ukryte pola
+		*@
+		@for (int i = 0; i < Model.AvailableRoles.Count(); i++)
+		{
+			@Html.HiddenFor(x => x.AvailableRoles[i].Id)
+			@Html.HiddenFor(x => x.AvailableRoles[i].Name)
+		}
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.Email)
-                @Html.TextBoxFor(x => x.Client.Email, new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.Client.Email)
-            </div>            
+		<div class="card-body">
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.FirstName)
-                @Html.TextBoxFor(x => x.Client.FirstName, new { @class = "form-control", placeholder="Wprowadź imię"})
-                @Html.ValidationMessageFor(x => x.Client.FirstName)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.Email)
+				@Html.TextBoxFor(x => x.Client.Email, new { @class = "form-control" })
+				@Html.ValidationMessageFor(x => x.Client.Email)
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.LastName)
-                @Html.TextBoxFor(x => x.Client.LastName, new { @class = "form-control", placeholder="Wprowadź nazwisko"})
-                @Html.ValidationMessageFor(x => x.Client.LastName)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.FirstName)
+				@Html.TextBoxFor(x => x.Client.FirstName, new { @class = "form-control", placeholder = "Wprowadź imię" })
+				@Html.ValidationMessageFor(x => x.Client.FirstName)
+			</div>
 
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.Client.IsPrivateAccount, new { @class = "form-check-input" })
-                @Html.LabelFor(x => x.Client.IsPrivateAccount, new { @class = "form-check-label font-weight-bold" })
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.LastName)
+				@Html.TextBoxFor(x => x.Client.LastName, new { @class = "form-control", placeholder = "Wprowadź nazwisko" })
+				@Html.ValidationMessageFor(x => x.Client.LastName)
+			</div>
 
-            <div class="form-group" id="divNipNumber" style="display: none;">
-                @Html.LabelFor(x => x.Client.NipNumber)
-                @Html.TextBoxFor(x => x.Client.NipNumber, new { @class = "form-control", placeholder="Wprowadź NIP"})
-                @Html.ValidationMessageFor(x => x.Client.NipNumber)
-            </div>
+			<div class="form-check">
+				@Html.CheckBoxFor(x => x.Client.IsPrivateAccount, new { @class = "form-check-input" })
+				@Html.LabelFor(x => x.Client.IsPrivateAccount, new { @class = "form-check-label font-weight-bold" })
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.Country)
-                @Html.TextBoxFor(x => x.Client.Country, new { @class = "form-control", placeholder="Wprowadź kraj zamieszkania"})
-                @Html.ValidationMessageFor(x => x.Client.Country)
-            </div>
+			<div class="form-group" id="divNipNumber" style="display: none;">
+				@Html.LabelFor(x => x.Client.NipNumber)
+				@Html.TextBoxFor(x => x.Client.NipNumber, new { @class = "form-control", placeholder = "Wprowadź NIP" })
+				@Html.ValidationMessageFor(x => x.Client.NipNumber)
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.City)
-                @Html.TextBoxFor(x => x.Client.City, new { @class = "form-control", placeholder="Wprowadź miejscowość zamieszkania"})
-                @Html.ValidationMessageFor(x => x.Client.City)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.Country)
+				@Html.TextBoxFor(x => x.Client.Country, new { @class = "form-control", placeholder = "Wprowadź kraj zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Client.Country)
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.ZipCode)
-                @Html.TextBoxFor(x => x.Client.ZipCode, new { @class = "form-control", placeholder="Wprowadź kod pocztowy"})
-                @Html.ValidationMessageFor(x => x.Client.ZipCode)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.City)
+				@Html.TextBoxFor(x => x.Client.City, new { @class = "form-control", placeholder = "Wprowadź miejscowość zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Client.City)
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.Street)
-                @Html.TextBoxFor(x => x.Client.Street, new { @class = "form-control", placeholder="Wprowadź ulicę"})
-                @Html.ValidationMessageFor(x => x.Client.Street)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.ZipCode)
+				@Html.TextBoxFor(x => x.Client.ZipCode, new { @class = "form-control", placeholder = "Wprowadź kod pocztowy" })
+				@Html.ValidationMessageFor(x => x.Client.ZipCode)
+			</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Client.StreetNumber)
-                @Html.TextBoxFor(x => x.Client.StreetNumber, new { @class = "form-control", placeholder="Wprowadź numer domu"})
-                @Html.ValidationMessageFor(x => x.Client.StreetNumber)
-            </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.Street)
+				@Html.TextBoxFor(x => x.Client.Street, new { @class = "form-control", placeholder = "Wprowadź ulicę" })
+				@Html.ValidationMessageFor(x => x.Client.Street)
+			</div>
 
-        </div>
+			<div class="form-group">
+				@Html.LabelFor(x => x.Client.StreetNumber)
+				@Html.TextBoxFor(x => x.Client.StreetNumber, new { @class = "form-control", placeholder = "Wprowadź numer domu" })
+				@Html.ValidationMessageFor(x => x.Client.StreetNumber)
+			</div>
 
-        <div class="card-footer">
-             <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-solid fa-circle-check"></i>Zapisz
-            </button>
-        </div>
-    }
+			@if (User.IsInRole(RolesDict.Administrator))
+			{
+				<div class="form-group">
+					@Html.LabelFor(x => x.Client.RoleIds)
+					<select data-dropdown-css-class="select2-blue"
+							class="form-control select2 select2-RoleIds"
+							multiple="multiple"
+							data-placeholder="Wybierz role"
+							style="width: 100%;"
+							asp-for="@Model.Client.RoleIds"
+							asp-items="@Model.AvailableRoles.Select(x => new SelectListItem(x.Name, x.Id))">
+					</select>
+					@Html.ValidationMessageFor(x => x.Client.RoleIds)
+				</div>
+			}
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-circle-check"></i>Zapisz
+			</button>
+		</div>
+	}
 
 </div>
 
 
 @section Scripts {
 
-    <partial name="Scripts/_ValidationScriptsPartial" />
-    <script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+	<partial name="Scripts/_ValidationScriptsPartial" />
+	<partial name="Scripts/_SelectScriptsPartial" />
+	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
+	<script>
+		$(document).ready(function () {
+			$('.select2-RoleIds').select2();
 
-            if ('@Model.Client.IsPrivateAccount.ToString().ToUpper()' == 'FALSE'){
-                $("#divNipNumber").show();
-            }
+			if ('@Model.Client.IsPrivateAccount.ToString().ToUpper()' == 'FALSE') {
+				$("#divNipNumber").show();
+			}
 
-            $("#Client_ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+			$("#Client_ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+		});
 
-        });
-
-        $('#Client_IsPrivateAccount').click(function() {
-            if ($('#Client_IsPrivateAccount').is(':checked')) {
-                $("#divNipNumber").hide();
-            }
-            else {
-                $("#divNipNumber").show();
-            }
-        });
-
-    </script>
+		$('#Client_IsPrivateAccount').click(function () {
+			if ($('#Client_IsPrivateAccount').is(':checked')) {
+				$("#divNipNumber").hide();
+			}
+			else {
+				$("#divNipNumber").show();
+			}
+		});
+	</script>
 }

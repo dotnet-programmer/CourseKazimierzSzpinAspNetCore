@@ -33,6 +33,13 @@ public class GetEditAdminClientQueryHandler : IRequestHandler<GetEditAdminClient
 			.ToEditAdminClientCommand()
 		};
 
+		vm.Client.RoleIds = (await _userRoleManagerService
+			.GetRolesAsync(request.UserId))
+			.Select(x => x.Id).ToList();
+
+		// wszystkie role z bazy danych
+		vm.AvailableRoles = _roleManagerService.GetRoles().ToList();
+
 		return vm;
 	}
 }
