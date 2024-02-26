@@ -3,10 +3,12 @@ using GymManager.Application.Clients.Commands.EditClient;
 using GymManager.Application.Clients.Queries.GetClient;
 using GymManager.Application.Clients.Queries.GetClientDashboard;
 using GymManager.Application.Clients.Queries.GetClientsBasics;
+using GymManager.Application.Clients.Queries.GetEditAdminClient;
 using GymManager.Application.Clients.Queries.GetEditClient;
 using GymManager.Application.Dictionaries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GymManager.UI.Controllers;
 
@@ -98,6 +100,48 @@ public class ClientController : BaseController
 		if (!isValid)
 		{
 			return View(command);
+		}
+
+		TempData["Success"] = "Dane o klientach zostały zaktualizowane";
+
+		return RedirectToAction("Clients");
+	}
+
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+	public async Task<IActionResult> EditAdminClient(string clientId) => 
+		View(await Mediator.Send(new GetEditAdminClientQuery { UserId = clientId }));
+
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+	public async Task<IActionResult> EditAdminClient(EditAdminClientVm vm)
+	{
+		//var result = await MediatorSendValidate(vm.Client);
+
+		//if (!result.IsValid)
+		//	return View(vm);
+
+		bool isValid = false;
+		try
+		{
+			if (ModelState.IsValid)
+			{
+				await Mediator.Send(vm.Client);
+				isValid = true;
+			}
+		}
+		catch (Application.Common.Exceptions.ValidationException exception)
+		{
+			foreach (var item in exception.Errors)
+			{
+				// przekazanie wszystkich błędów z powrotem do widoku
+				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
+			}
+		}
+		// przesłanie z powrotem wypełnionych pól do formularza, dzięki temu nie będzie musiał wyepłniać całego od nowa
+		if (!isValid)
+		{
+			return View(vm);
 		}
 
 		TempData["Success"] = "Dane o klientach zostały zaktualizowane";
