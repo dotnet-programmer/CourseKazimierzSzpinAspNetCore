@@ -72,8 +72,11 @@ public static class DependencyInjection
 		// INFO - abstrakcja / nakładka na RoleManager z Identity
 		services.AddScoped<IRoleManagerService, RoleManagerService>();
 
-		// INFO - abstrakcja / nakładka na UserManager z Identity
+		// INFO - abstrakcja / nakładka na UserRoleManager z Identity
 		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
+
+		// INFO - abstrakcja / nakładka na UserManager z Identity
+		services.AddScoped<IUserManagerService, UserManagerService>();
 
 		// - INFO - zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
 		services.AddHttpClient<IPrzelewy24, Przelewy24>();

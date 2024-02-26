@@ -1,0 +1,117 @@
+﻿@using GymManager.Application.Clients.Commands.AddClient
+
+@model AddClientCommand
+
+@{
+	ViewData["Title"] = "Dodawanie nowego klienta";
+}
+
+<div class="card card-primary card-border-top">
+	@using (Html.BeginForm("AddClient", "Client"))
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="card-body">
+			<div class="form-group">
+				@Html.LabelFor(x => x.Email)
+				@Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "Wprowadź e-mail" })
+				@Html.ValidationMessageFor(x => x.Email)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Password)
+				@Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder = "Wprowadź hasło", value = Model.Password })
+				@Html.ValidationMessageFor(x => x.Password)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.ConfirmPassword)
+				@Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder = "Wprowadź ponownie hasło", value = Model.ConfirmPassword })
+				@Html.ValidationMessageFor(x => x.ConfirmPassword)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.FirstName)
+				@Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "Wprowadź imię" })
+				@Html.ValidationMessageFor(x => x.FirstName)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.LastName)
+				@Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Wprowadź nazwisko" })
+				@Html.ValidationMessageFor(x => x.LastName)
+			</div>
+
+			<div class="form-check">
+				@Html.CheckBoxFor(x => x.IsPrivateAccount, new { @class = "form-check-input" })
+				@Html.LabelFor(x => x.IsPrivateAccount, new { @class = "form-check-label font-weight-bold" })
+			</div>
+
+			<div class="form-group" id="divNipNumber" style="display: none;">
+				@Html.LabelFor(x => x.NipNumber)
+				@Html.TextBoxFor(x => x.NipNumber, new { @class = "form-control", placeholder = "Wprowadź NIP" })
+				@Html.ValidationMessageFor(x => x.NipNumber)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Country)
+				@Html.TextBoxFor(x => x.Country, new { @class = "form-control", placeholder = "Wprowadź kraj zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Country)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.City)
+				@Html.TextBoxFor(x => x.City, new { @class = "form-control", placeholder = "Wprowadź miejscowość zamieszkania" })
+				@Html.ValidationMessageFor(x => x.City)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.ZipCode)
+				@Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control", placeholder = "Wprowadź kod pocztowy" })
+				@Html.ValidationMessageFor(x => x.ZipCode)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Street)
+				@Html.TextBoxFor(x => x.Street, new { @class = "form-control", placeholder = "Wprowadź ulicę" })
+				@Html.ValidationMessageFor(x => x.Street)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.StreetNumber)
+				@Html.TextBoxFor(x => x.StreetNumber, new { @class = "form-control", placeholder = "Wprowadź numer domu" })
+				@Html.ValidationMessageFor(x => x.StreetNumber)
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-circle-check"></i>Zapisz
+			</button>
+		</div>
+	}
+</div>
+
+
+@section Scripts {
+	<partial name="Scripts/_ValidationScriptsPartial" />
+	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			if ('@Model.IsPrivateAccount.ToString().ToUpper()' == 'FALSE') {
+				$("#divNipNumber").show();
+			}
+			$("#ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+		});
+
+		$('#IsPrivateAccount').click(function () {
+			if ($('#IsPrivateAccount').is(':checked')) {
+				$("#divNipNumber").hide();
+			}
+			else {
+				$("#divNipNumber").show();
+			}
+		});
+	</script>
+}
