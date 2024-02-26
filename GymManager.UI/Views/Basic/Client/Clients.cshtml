@@ -1,0 +1,93 @@
+﻿@using GymManager.Application.Clients.Queries.GetClientsBasics
+@using System.Globalization
+
+@model IEnumerable<ClientBasicsDto>
+
+@{
+	ViewData["Title"] = "Klienci";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<partial name="Styles/_DataTablesStylesPartial" />
+}
+
+<partial name="Modals/_ModalConfirmPartial"
+		 model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybranego klienta?"
+    })" />
+
+<div class="card card-primary card-border-top">
+
+	<div class="card-body">
+
+		<a href='/Client/AddClient' class="btn btn-primary mb-3" role="button">
+			<i class="fas fa-solid fa-circle-plus"></i>Dodaj klienta
+		</a>
+
+		<table id="clients" class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Nazwa klienta</th>
+					<th class="desktop">Email</th>
+					<th class="desktop"></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var client in Model)
+				{
+					<tr>
+						<td>
+							<a class="edit-link" href='/Client/EditAdminClient?clientId=@client.Id'>@client.Name</a>
+						</td>
+						<td>
+							@client.Email
+						</td>
+						<td>
+						</td>
+						<td>
+							<a class="btn btn-success btn-sm" role="button" href="/Client/EditAdminClient?clientId=@client.Id">
+								<i class="fas fa-solid fa-magnifying-glass"></i>Edytuj
+							</a>
+
+							<button class="btn btn-danger btn-sm" onclick="deleteClient('@client.Id', this)">
+								<i class="fas fa-solid fa-trash-can"></i>Usuń
+							</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+</div>
+
+@section Scripts {
+	<partial name="Scripts/_DataTablesScriptsPartial" />
+
+	<script>
+
+		var selectedRow;
+		var selectedClientId = 0;
+		var clients;
+
+		$(document).ready(function () {
+			clients = $('#clients').DataTable({
+				paging: true,
+				ordering: true,
+				info: true,
+				responsive: true,
+				autoWidth: false,
+				lengthChange: true,
+				language: {
+					url: `/lib/datatables/lang/${'@locale'}.json`
+				},
+				order: [[0, "asc"]]
+			});
+		});
+	</script>
+}
