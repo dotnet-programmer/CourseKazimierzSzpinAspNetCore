@@ -53,9 +53,12 @@
 								<i class="fas fa-solid fa-magnifying-glass"></i>Edytuj
 							</a>
 
-							<button class="btn btn-danger btn-sm" onclick="deleteClient('@client.Id', this)">
-								<i class="fas fa-solid fa-trash-can"></i>Usuń
-							</button>
+							@if (!client.IsDeleted)
+							{
+								<button class="btn btn-danger btn-sm" onclick="deleteClient('@client.Id', this)">
+									<i class="fas fa-solid fa-trash-can"></i>Usuń
+								</button>
+							}
 						</td>
 					</tr>
 				}
@@ -88,6 +91,40 @@
 				},
 				order: [[0, "asc"]]
 			});
+		});
+
+		function deleteClient(id, btn) {
+			selectedRow = btn.parentNode.parentNode;
+			selectedClientId = id;
+			$('#modal-confirm-delete').modal('show');
+		}
+
+		$('#modal-confirm-delete-btn').on('click', function (e) {
+
+			$('#modal-confirm-delete').modal('hide');
+
+			var errorMessage = 'Błąd. Nie udało się usunąć wybranego klienta. Spróbuj ponownie lub skontaktuj sie z administratorem.'
+
+			$.ajax({
+				type: "POST",
+				url: "/User/DeleteUser",
+				data: {
+					id: selectedClientId
+				},
+				success: function (data) {
+					if (data.success) {
+						clients.rows(selectedRow).remove().draw();
+						toastr.success('Dane zostały zaktualizowane.')
+					}
+					else
+						toastr.error(errorMessage);
+				},
+				error: function (data) {
+					toastr.error(errorMessage);
+				},
+				dataType: "json"
+			});
+
 		});
 	</script>
 }
