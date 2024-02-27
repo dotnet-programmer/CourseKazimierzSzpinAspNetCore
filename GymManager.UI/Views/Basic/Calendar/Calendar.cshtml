@@ -1,0 +1,91 @@
+﻿@using System.Globalization
+
+@{
+	ViewData["Title"] = "Grafik";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<link rel="stylesheet" href="~/lib/fullcalendar/main.min.css" />
+}
+
+<div class="card card-primary card-border-top">
+	<div class="card-body">
+		<div id="calendar"></div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/lib/fullcalendar/main.min.js"></script>
+	<script src="~/lib/fullcalendar/locales/pl.min.js"></script>
+
+	<script>
+
+		$(document).ready(function () 
+		{
+			// wypełnienie kalendarza za pomocą ajaxa
+			createCalendar();
+		});
+
+		// wypełnienie kalendarza za pomocą ajaxa
+		function createCalendar() 
+		{
+			events = [];
+
+			$.ajax({
+				type: "GET",
+				url: "/Calendar/GetEmployeeEvents",
+				success: function (data) 
+				{
+					// jeśli sukces, uzupełnij tablicę "events" zdarzeniami
+					// v - właściwości z modelu Dto
+					$.each(data, function (i, v) 
+					{
+						events.push(
+						{
+							// przypisywanie wartości właściwości do kolejnych pól tablicy events
+							title: v.title,
+							start: v.start,
+							end: v.end,
+							color: v.themeColor,
+							allDay: v.isFullDay,
+							id: v.id,
+							userId: v.userId
+						});
+					});
+					renderEvents(events);
+				},
+				error: function (data) 
+				{
+					toastr.error('Błąd. Nie udało się wygenerować kalendarza. Spróbuj ponownie lub skontaktuj się z administratorem.');
+				},
+				dataType: "json"
+			});
+		}
+
+		function renderEvents(events) 
+		{
+			var calendarEl = document.getElementById("calendar");
+
+			var calendar = new FullCalendar.Calendar(calendarEl, 
+			{
+				initialView: 'dayGridMonth',
+				headerToolbar: 
+				{
+					left: 'prev,next today',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+				},
+				contentHeight: 600,
+				initialDate: new Date(),
+				navLinks: true,
+				businessHours: true,
+				events: events,
+				locale: '@locale'
+			});
+
+			calendar.render();
+		}
+
+	</script>
+}

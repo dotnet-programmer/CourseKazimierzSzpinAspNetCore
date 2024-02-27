@@ -85,11 +85,14 @@ public static class DependencyInjection
 		// INFO - serwis do generowania kodów QR
 		services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 
-		// INFO - serwid do generowania PDF
+		// INFO - serwis do generowania PDF
 		services.AddScoped<IPdfFileGenerator, RotativaPdfGenerator>();
 
 		// INFO - serwis do obsługi plików na serwerze
 		services.AddSingleton<IFileManagerService, FileManagerService>();
+
+		// INFO - serwis do generowania losowego koloru 
+		services.AddScoped<IRandomService, RandomService>();
 
 		return services;
 	}

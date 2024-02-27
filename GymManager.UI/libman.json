@@ -214,6 +214,17 @@
         "font/summernote.woff",
         "font/summernote.woff2"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "fullcalendar@5.10.2",
+      "destination": "wwwroot/lib/fullcalendar/",
+      "files": [
+        "locales/pl.min.js",
+        "locales/en-gb.min.js",
+        "main.min.css",
+        "main.min.js"
+      ]
     }
   ]
 }
