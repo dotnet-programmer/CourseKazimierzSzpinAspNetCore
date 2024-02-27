@@ -1,5 +1,6 @@
 ﻿using GymManager.Application.Dictionaries;
 using GymManager.Application.EmployeeEvents.Commands.AddEmployeeEvent;
+using GymManager.Application.EmployeeEvents.Commands.DeleteEmployeeEvent;
 using GymManager.Application.EmployeeEvents.Commands.UpdateEmployeeEvent;
 using GymManager.Application.EmployeeEvents.Queries.GetEmployeeEvents;
 using GymManager.Application.Employees.Queries.GetEmployeeBasics;
@@ -29,6 +30,13 @@ public class CalendarController : BaseController
 	public async Task<IActionResult> UpdateEmployeeEvent(UpdateEmployeeEventCommand command)
 	{
 		await Mediator.Send(command);
+		return Json(new { success = true });
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> DeleteEmployeeEvent(int id)
+	{
+		await Mediator.Send(new DeleteEmployeeEventCommand { Id = id });
 		return Json(new { success = true });
 	}
 }
