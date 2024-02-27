@@ -3,10 +3,9 @@ using GymManager.Application.Dictionaries;
 using GymManager.Application.Employees.Commands.AddEmployee;
 using GymManager.Application.Employees.Queries.GetEditEmployee;
 using GymManager.Application.Employees.Queries.GetEmployeeBasics;
-using GymManager.Infrastructure.Services;
+using GymManager.Application.Employees.Queries.GetEmployeePage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GymManager.UI.Controllers;
 
@@ -15,7 +14,7 @@ public class EmployeeController : BaseController
 {
 	private readonly IDateTimeService _dateTimeService;
 
-	public EmployeeController(IDateTimeService dateTimeService) => 
+	public EmployeeController(IDateTimeService dateTimeService) =>
 		_dateTimeService = dateTimeService;
 
 	public async Task<IActionResult> Employees() =>
@@ -99,5 +98,17 @@ public class EmployeeController : BaseController
 		TempData["Success"] = "Dane pracownika zostały zaktualizowane.";
 
 		return RedirectToAction("Employees");
+	}
+
+	// wyświetlanie strony profilowej pracownika
+	// strona będzie wyświetlała się po dopisaniu do adresu trener/strona_trenera
+	[Route("trener/{employeePageUrl}")]
+	public async Task<IActionResult> EmployeePage(string employeePageUrl)
+	{
+		// pobranie info o stronie z bazy danych
+		var page = await Mediator.Send(new GetEmployeePageQuery { Url = employeePageUrl });
+
+		// jeśli taka strona istnieje, to zwróć tą stronę, jeśli nie, to NotFound
+		return page != null ? View(page) : (IActionResult)NotFound();
 	}
 }
