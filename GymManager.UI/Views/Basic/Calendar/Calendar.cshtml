@@ -46,6 +46,11 @@
 				theme: 'bootstrap-5'
 			});
 
+			$('#IsFullDay').click(function () 
+			{
+				$('#IsFullDay').is(':checked') ? $("#divEndDate").hide() : $("#divEndDate").show();
+			});
+
 			// wypełnienie kalendarza za pomocą ajaxa
 			createCalendar();
 		});
@@ -107,7 +112,56 @@
 				locale: '@locale'
 			});
 
+			calendar.on('dateClick', function (info) 
+			{
+				$("#modal-delete").hide();
+				$("#divEndDate").show();
+				$("#Id").val(0);
+				$("#dtpStart").datetimepicker('date', moment(info.date));
+				$("#dtpEnd").datetimepicker('date', moment(info.date).add(8, 'hours'));
+				$("#IsFullDay").prop('checked', false);
+				$("#UserId").val('@Model.First().Id').change();
+				$('.modal-title').text("Dodaj zdarzenie");
+				$('#modal-calendar').modal('show');
+			});
+
 			calendar.render();
+		}
+
+		$('#calendar-form').submit(function () 
+		{
+			$('#modal-calendar').modal('hide');
+			var model = $(this).serialize();
+			$("#Id").val() == 0 ? addEvent(model) : updateEvent(model);
+			return false;
+		});
+
+		function addEvent(model) 
+		{
+			var errorMessage = "Błąd. Nie udało się zaktualizować danych na kalendarzu. Spróbuj ponownie lub skontaktuj się z administratorem.";
+
+			$.ajax(
+			{
+				type: "POST",
+				url: "/Calendar/AddEmployeeEvent",
+				data: model,
+				success: function (data) 
+				{
+					if (data.success) 
+					{
+						toastr.success('Dane zostały zaktualizowane.');
+						createCalendar();
+					} else 
+					{
+						toastr.error(errorMessage);
+					}
+				},
+				error: function (data) 
+				{
+					toastr.error(errorMessage);
+				},
+				dataType: "json"
+			});
 		}
 
 		function deleteEvent() 
