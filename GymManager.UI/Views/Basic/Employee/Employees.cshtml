@@ -31,8 +31,8 @@
 		<div class="form-group mt-0">
 			<div class="form-check form-check-inline form-switch mt-0">
 				<div class="custom-control custom-switch">
-					<input type="checkbox" class="form-check-input" id="isActiveUserCb" onclick="refreshTable();" />
-					<label class="form-check-label custom-control-label" for="isActiveUserCb">
+					<input type="checkbox" class="form-check-input" id="isActiveEmployeeCb" onclick="refreshTable();" />
+					<label class="form-check-label custom-control-label" for="isActiveEmployeeCb">
 						Tylko aktywni
 					</label>
 				</div>
@@ -94,6 +94,7 @@
 </div>
 
 @section Scripts {
+	<script src="~/lib/js-cookie/js.cookie.min.js"></script>
 	<partial name="Scripts/_DataTablesScriptsPartial" />
 
 	<script>
@@ -104,11 +105,11 @@
 
 		$(document).ready(function () {
 
-			$('#isActiveUserCb').prop('checked', $.cookie("isActiveUserCb") === "1")
+			$('#isActiveEmployeeCb').prop('checked', Cookies.get('isActiveEmployeeCb') === "1")
 
-			$('#isActiveUserCb').change(function() {
-			   var cookiesIsActiveUserCbVal = this.checked === true ? "1" : "0" ;
-			   $.cookie("isActiveUserCb", cookiesIsActiveUserCbVal, { path: '/Employee', expires: 365 });
+			$('#isActiveEmployeeCb').change(function () {
+				var cookiesisActiveEmployeeCbVal = this.checked === true ? "1" : "0";
+				Cookies.set('isActiveEmployeeCb', cookiesisActiveEmployeeCbVal, { expires: 365 });
 			});
 
 			employees = $('#employees').DataTable({
@@ -135,11 +136,11 @@
 		$.fn.dataTable.ext.search.push(
 			function(settings, data, dataIndex) {
 
-				var isActiveUserCb = $('#isActiveUserCb').is(":checked");
+				var isActiveEmployeeCb = $('#isActiveEmployeeCb').is(":checked");
 
 				var activeUserCol = parseInt(data[2]);
 
-				if (isActiveUserCb && activeUserCol == 1)
+				if (isActiveEmployeeCb && activeUserCol == 1)
 					return false;
 
 				return true;

@@ -1,0 +1,169 @@
+﻿@using GymManager.Application.Employees.Commands.AddEmployee
+@using System.Globalization
+@using GymManager.Domain.Enums
+
+@model AddEmployeeCommand
+
+@{
+	ViewData["Title"] = "Dodawanie nowego pracownika";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<partial name="Styles/_DateTimeStylesPartial" />
+	<partial name="Styles/_SelectStylesPartial" />
+}
+
+<div class="card card-primary card-border-top">
+
+	@using (Html.BeginForm("AddEmployee", "Employee"))
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="card-body">
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Email)
+				@Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "Wprowadź e-mail" })
+				@Html.ValidationMessageFor(x => x.Email)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Password)
+				@Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder = "Wprowadź hasło", value = Model.Password })
+				@Html.ValidationMessageFor(x => x.Password)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.ConfirmPassword)
+				@Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder = "Wprowadź ponownie hasło", value = Model.ConfirmPassword })
+				@Html.ValidationMessageFor(x => x.ConfirmPassword)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.FirstName)
+				@Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "Wprowadź imię" })
+				@Html.ValidationMessageFor(x => x.FirstName)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.LastName)
+				@Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Wprowadź nazwisko" })
+				@Html.ValidationMessageFor(x => x.LastName)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Country)
+				@Html.TextBoxFor(x => x.Country, new { @class = "form-control", placeholder = "Wprowadź kraj zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Country)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.City)
+				@Html.TextBoxFor(x => x.City, new { @class = "form-control", placeholder = "Wprowadź miejscowość zamieszkania" })
+				@Html.ValidationMessageFor(x => x.City)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.ZipCode)
+				@Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control", placeholder = "Wprowadź kod pocztowy" })
+				@Html.ValidationMessageFor(x => x.ZipCode)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Street)
+				@Html.TextBoxFor(x => x.Street, new { @class = "form-control", placeholder = "Wprowadź ulicę" })
+				@Html.ValidationMessageFor(x => x.Street)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.StreetNumber)
+				@Html.TextBoxFor(x => x.StreetNumber, new { @class = "form-control", placeholder = "Wprowadź numer domu" })
+				@Html.ValidationMessageFor(x => x.StreetNumber)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.DateOfEmployment)
+				<div class="input-group date" id="dtpDateOfEmployment" data-target-input="nearest">
+					<input asp-for="DateOfEmployment" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfEmployment" />
+					<div class="input-group-append" data-target="#dtpDateOfEmployment" data-toggle="datetimepicker">
+						<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+				@Html.ValidationMessageFor(x => x.DateOfEmployment)
+			</div>
+
+			@* wynagrodzenie ma określony format, można wpisać tylko liczby *@
+			<div class="form-group">
+				@Html.LabelFor(x => x.Salary)
+				@Html.TextBoxFor(x => x.Salary, "{0:n2}", new { @class = "form-control", placeholder = "Wprowadź wynagrodzenie" })
+				@Html.ValidationMessageFor(x => x.Salary)
+			</div>
+
+			<div class="form-group mt-3">
+				@Html.LabelFor(x => x.ImageUrl)
+				<div class="input-group">
+					@Html.TextBoxFor(x => x.ImageUrl, new { @class = "form-control", @readonly = "readonly", placeholder = "Wybierz zdjęcie profilowe" })
+				</div>
+				@Html.ValidationMessageFor(x => x.ImageUrl)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.PositionId)
+				<div class="select2-blue">
+					@Html.DropDownList("PositionId", Html.GetEnumSelectList<Position>(), null, htmlAttributes: new { @class = "form-control select2-PositionId", style = "width: 100%;" })
+					@Html.ValidationMessageFor(x => x.PositionId)
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.WebsiteUrl)
+				@Html.TextBoxFor(x => x.WebsiteUrl, new { @class = "form-control", placeholder = "Wprowadź adres URL strony profilowej" })
+				@Html.ValidationMessageFor(x => x.WebsiteUrl)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.WebsiteRaw)
+				@Html.TextAreaFor(x => x.WebsiteRaw, new { @class = "form-control summernote", placeholder = "Wprowadź treść strony profilowej" })
+				@Html.ValidationMessageFor(x => x.WebsiteRaw)
+			</div>
+
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-circle-check"></i>Zapisz
+			</button>
+		</div>
+
+	}
+
+</div>
+
+
+@section Scripts 
+{
+	<partial name="Scripts/_ValidationScriptsPartial" />
+	<partial name="Scripts/_DateTimeScriptsPartial" />
+	<partial name="Scripts/_SelectScriptsPartial" />
+	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+	<script>
+
+		$(document).ready(function () {
+
+			$('#dtpDateOfEmployment').datetimepicker({
+				format: 'L',
+				locale: '@locale'
+			});
+
+			$('.select2-PositionId').select2({
+				theme: 'bootstrap-5'
+			});
+
+			$("#ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+
+		});
+
+	</script>
+}
