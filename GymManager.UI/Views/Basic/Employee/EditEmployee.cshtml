@@ -1,0 +1,273 @@
+﻿@using System.Globalization
+@using GymManager.Application.Employees.Queries.GetEditEmployee
+@using GymManager.Domain.Enums
+
+@model EditEmployeeVm
+
+@{
+	ViewData["Title"] = "Edytowanie danych pracownika";
+	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+	<partial name="Styles/_DateTimeStylesPartial" />
+	<partial name="Styles/_EditorStylesPartial" />
+	<partial name="Styles/_SelectStylesPartial" />
+}
+
+<partial name="Modals/_ModalChooseFilePartial" />
+
+<div class="card card-primary card-border-top">
+
+	@using (Html.BeginForm("EditEmployee", "Employee"))
+	{
+		@Html.AntiForgeryToken()
+
+		@Html.HiddenFor(x => x.Employee.Id)
+		@Html.HiddenFor(x => x.EmployeeFullPathImage)
+
+		@for (int i = 0; i < Model.AvailableRoles.Count(); i++)
+		{
+			@Html.HiddenFor(x => x.AvailableRoles[i].Id)
+			@Html.HiddenFor(x => x.AvailableRoles[i].Name)
+		}
+
+		<div class="card-body">
+
+			@if (!string.IsNullOrWhiteSpace(Model.EmployeeFullPathImage))
+			{
+				<img src="@Model.EmployeeFullPathImage" class="border mb-3 img-fluid w-25" />
+			}
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.Email)
+				@Html.TextBoxFor(x => x.Employee.Email, new { @class = "form-control", placeholder = "Wprowadź e-mail" })
+				@Html.ValidationMessageFor(x => x.Employee.Email)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.FirstName)
+				@Html.TextBoxFor(x => x.Employee.FirstName, new { @class = "form-control", placeholder = "Wprowadź imię" })
+				@Html.ValidationMessageFor(x => x.Employee.FirstName)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.LastName)
+				@Html.TextBoxFor(x => x.Employee.LastName, new { @class = "form-control", placeholder = "Wprowadź nazwisko" })
+				@Html.ValidationMessageFor(x => x.Employee.LastName)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.Country)
+				@Html.TextBoxFor(x => x.Employee.Country, new { @class = "form-control", placeholder = "Wprowadź kraj zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Employee.Country)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.City)
+				@Html.TextBoxFor(x => x.Employee.City, new { @class = "form-control", placeholder = "Wprowadź miejscowość zamieszkania" })
+				@Html.ValidationMessageFor(x => x.Employee.City)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.ZipCode)
+				@Html.TextBoxFor(x => x.Employee.ZipCode, new { @class = "form-control", placeholder = "Wprowadź kod pocztowy" })
+				@Html.ValidationMessageFor(x => x.Employee.ZipCode)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.Street)
+				@Html.TextBoxFor(x => x.Employee.Street, new { @class = "form-control", placeholder = "Wprowadź ulicę" })
+				@Html.ValidationMessageFor(x => x.Employee.Street)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.StreetNumber)
+				@Html.TextBoxFor(x => x.Employee.StreetNumber, new { @class = "form-control", placeholder = "Wprowadź numer domu" })
+				@Html.ValidationMessageFor(x => x.Employee.StreetNumber)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.RoleIds)
+				<select data-dropdown-css-class="select2-blue" class="form-control select2 select2-RoleIds" multiple="multiple" data-placeholder="Wybierz role" style="width: 100%;" asp-for="@Model.Employee.RoleIds" asp-items="@Model.AvailableRoles.Select(x => new SelectListItem(x.Name, x.Id))"></select>
+				@Html.ValidationMessageFor(x => x.Employee.RoleIds)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.DateOfEmployment)
+				<div class="input-group date" id="dtpDateOfEmployment" data-target-input="nearest">
+					<input asp-for="Employee.DateOfEmployment" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfEmployment" />
+					<div class="input-group-append" data-target="#dtpDateOfEmployment" data-toggle="datetimepicker">
+						<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+				@Html.ValidationMessageFor(x => x.Employee.DateOfEmployment)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.DateOfDismissal)
+				<div class="input-group date" id="dtpDateOfDismissal" data-target-input="nearest">
+					<input asp-for="Employee.DateOfDismissal" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfDismissal" />
+					<div class="input-group-append" data-target="#dtpDateOfDismissal" data-toggle="datetimepicker">
+						<div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+				@Html.ValidationMessageFor(x => x.Employee.DateOfDismissal)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.Salary)
+				@Html.TextBoxFor(x => x.Employee.Salary, "{0:n2}", new { @class = "form-control", placeholder = "Wprowadź wynagrodzenie" })
+				@Html.ValidationMessageFor(x => x.Employee.Salary)
+			</div>
+
+			<div class="form-group mt-3">
+				@Html.LabelFor(x => x.Employee.ImageUrl)
+				<div class="input-group">
+					@Html.TextBoxFor(x => x.Employee.ImageUrl, new { @class = "form-control", @readonly = "readonly", placeholder = "Wybierz zdjęcie profilowe" })
+					<span onclick="fileBrowse('Employee_ImageUrl'); return false" class="fileBrowse input-group-text bg-primary px-3 text-white"><i class="fas fa-solid fa-file-arrow-up"></i>Wybierz plik...</span>
+					<span onclick="clearFile('Employee_ImageUrl'); return false" class="fileBrowse input-group-text bg-danger px-3 text-white"><i class="fas fa-solid fa-file-excel"></i>Wyczyść</span>
+				</div>
+				@Html.ValidationMessageFor(x => x.Employee.ImageUrl)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.PositionId)
+				<div class="select2-blue">
+					@Html.DropDownList("Employee.PositionId", Html.GetEnumSelectList<Position>(), null, htmlAttributes: new { @class = "form-control select2-PositionId", style = "width: 100%;" })
+					@Html.ValidationMessageFor(x => x.Employee.PositionId)
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.WebsiteUrl)
+				@Html.TextBoxFor(x => x.Employee.WebsiteUrl, new { @class = "form-control", placeholder = "Wprowadź adres URL strony profilowej" })
+				@Html.ValidationMessageFor(x => x.Employee.WebsiteUrl)
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(x => x.Employee.WebsiteRaw)
+				@Html.TextAreaFor(x => x.Employee.WebsiteRaw, new { @class = "form-control summernote", placeholder = "Wprowadź treść strony profilowej" })
+				@Html.ValidationMessageFor(x => x.Employee.WebsiteRaw)
+			</div>
+
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-circle-check"></i>Zapisz
+			</button>
+
+			@if (!string.IsNullOrWhiteSpace(Model.Employee.WebsiteUrl))
+			{
+				<a class="btn btn-secondary btn-lg" role="button" href="/trener/@Model.Employee.WebsiteUrl" target="_blank">
+					<i class="fas fa-solid fa-globe"></i>Strona profilowa
+				</a>
+			}
+		</div>
+	}
+</div>
+
+
+@section Scripts {
+
+	<partial name="Scripts/_ValidationScriptsPartial" />
+	<partial name="Scripts/_DateTimeScriptsPartial" />
+	<partial name="Scripts/_EditorScriptsPartial" />
+	<partial name="Scripts/_SelectScriptsPartial" />
+	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+	<script>
+
+		var selectedFileBrowseId;
+
+		$(document).ready(function () {
+
+			init("#Employee_WebsiteRaw");
+
+			$('#dtpDateOfEmployment').datetimepicker({
+				format: 'L',
+				locale: '@locale'
+			});
+
+			$('#dtpDateOfDismissal').datetimepicker({
+				format: 'L',
+				locale: '@locale'
+			});
+
+			$('.select2-RoleIds').select2();
+
+			$('.select2-PositionId').select2({
+				theme: 'bootstrap-5'
+			});
+
+			$("#Employee_ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
+
+		});
+
+		function clearFile(idName) {
+			$('#' + idName).val('');
+		}
+
+		function fileBrowse(idName) {
+			$('#modal-files').empty();
+			selectedFileBrowseId = idName;
+			$('#modal-choose-file').modal('show');
+
+			var url = '@Url.Action("GetFiles", "File")';
+
+			var errorMessage = 'Błąd. Nie udało się pobrać zdjęć. Spróbuj ponownie lub skontaktuj się z administratorem.';
+
+			$.ajax({
+				type: "POST",
+				url: url,
+				success: function (data) {
+					if (data.success) {
+
+						var images = data.images;
+
+						if (images.length == 0) {
+							$('#modal-files').append("<p class='ms-3 mt-3'>Brak zdjęć o wymaganym formacie na serwerze. Wyślij najpierw plik na serwer.</p>");
+							return;
+						}
+
+						var divHtml = '';
+
+						for (let index in images) {
+							divHtml += '<div class="col-sm-2 text-center mt-auto"><img src="' + images[index].url + '" class="img-fluid" /><div class="my-1"><small>' + images[index].name + '</small></div><button class="btn btn-primary btn-sm mb-4" onclick="chooseFile(' + "'" + takeFirstNChar(images[index].name, 30) + "'" + ')"><i class="fas fa-solid fa-circle-check"></i>Wybierz</button></div>';
+						}
+
+						$('#modal-files').append(divHtml);
+						return;
+					}
+					else
+						toastr.error(errorMessage);
+				},
+				error: function (data) {
+					toastr.error(errorMessage);
+				},
+				dataType: "json"
+			});
+
+		}
+
+		function chooseFile(name) {
+			$('#modal-choose-file').modal('hide');
+			$('#' + selectedFileBrowseId).val(name);
+		}
+
+		$('#modal-choose-file-btn').on('click', function (e) {
+			window.location.href = '/file/files';
+		});
+
+		function takeFirstNChar(model, maxLength) {
+			if (!model)
+				return '';
+
+			if (model.length <= maxLength)
+				return model;
+
+			return model.substring(0, maxLength - 3) + "...";
+		}
+	</script>
+}
