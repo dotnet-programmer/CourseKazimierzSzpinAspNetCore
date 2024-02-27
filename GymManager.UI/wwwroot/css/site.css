@@ -108,16 +108,16 @@ ul.client-panel {
 	font-size: 28px;
 }
 
-.card-body label {
+.card-body label, .modal-body label {
 	margin-bottom: 0.5rem;
 	font-weight: bold;
 }
 
-.card-body .form-group:not(:first-child) {
+.card-body .form-group:not(:first-child), .modal-body .form-group {
 	margin-top: 1rem;
 }
 
-.card-body .form-check {
+.card-body .form-check, .modal-body .form-check {
 	margin-top: 1.5rem;
 }
 

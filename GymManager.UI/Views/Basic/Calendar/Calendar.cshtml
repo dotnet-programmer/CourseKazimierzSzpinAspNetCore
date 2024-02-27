@@ -1,4 +1,7 @@
-﻿@using System.Globalization
+﻿@using GymManager.Application.Employees.Queries.GetEmployeeBasics
+@using System.Globalization
+
+@model IEnumerable<EmployeeBasicsDto>
 
 @{
 	ViewData["Title"] = "Grafik";
@@ -7,7 +10,11 @@
 
 @section Styles {
 	<link rel="stylesheet" href="~/lib/fullcalendar/main.min.css" />
+	<partial name="Styles/_DateTimeStylesPartial" />
+	<partial name="Styles/_SelectStylesPartial" />
 }
+
+<partial name="Modals/_ModalEvent" model="@Model" />
 
 <div class="card card-primary card-border-top">
 	<div class="card-body">
@@ -18,11 +25,27 @@
 @section Scripts {
 	<script src="~/lib/fullcalendar/main.min.js"></script>
 	<script src="~/lib/fullcalendar/locales/pl.min.js"></script>
+	<partial name="Scripts/_DateTimeScriptsPartial" />
+	<partial name="Scripts/_SelectScriptsPartial" />
 
 	<script>
 
 		$(document).ready(function () 
 		{
+			$('#dtpStart').datetimepicker({
+				icons: { time: 'far fa-clock' },
+				locale: '@locale'
+			});
+
+			$('#dtpEnd').datetimepicker({
+				icons: { time: 'far fa-clock' },
+				locale: '@locale'
+			});
+
+			$('.select2-UserId').select2({
+				theme: 'bootstrap-5'
+			});
+
 			// wypełnienie kalendarza za pomocą ajaxa
 			createCalendar();
 		});
@@ -85,6 +108,11 @@
 			});
 
 			calendar.render();
+		}
+
+		function deleteEvent() 
+		{
+			
 		}
 
 	</script>

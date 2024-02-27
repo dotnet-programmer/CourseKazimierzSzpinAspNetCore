@@ -1,0 +1,70 @@
+﻿@* okno modalne z formularzem - umożliwia dodanie nowych zdarzeń *@
+
+@using GymManager.Application.Employees.Queries.GetEmployeeBasics
+
+@model IEnumerable<EmployeeBasicsDto>
+
+<div class="modal fade" id="modal-calendar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form id="calendar-form">
+
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    @Html.Hidden("Id")
+
+                    <div class="form-group">
+                        @Html.Label("UserId", "Pracownik", new { @class="form-check-label font-weight-bold" })
+                        <div class="select2-blue">
+                            @Html.DropDownList("UserId", @Model.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class="form-control select2-UserId", style="width: 100%;" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Start", "Data początkowa", new { @class="form-check-label font-weight-bold" })
+                        <div class="input-group date" id="dtpStart" data-target-input="nearest">
+                            <input name="Start" type="text" class="form-control datetimepicker-input" data-target="#dtpStart" />
+                            <div class="input-group-append" data-target="#dtpStart" data-toggle="datetimepicker">
+                                <div class="input-group-text calendar">
+									<i class="fa fa-calendar"></i>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="divEndDate">
+                        @Html.Label("End", "Data końcowa", new { @class="form-check-label font-weight-bold" })
+                        <div class="input-group date" id="dtpEnd" data-target-input="nearest">
+                            <input name="End" type="text" class="form-control datetimepicker-input" data-target="#dtpEnd" />
+                            <div class="input-group-append" data-target="#dtpEnd" data-toggle="datetimepicker">
+                                <div class="input-group-text calendar">
+									<i class="fa fa-calendar"></i>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        @Html.CheckBox("IsFullDay", new { @class = "form-check-input" })
+                        @Html.Label("IsFullDay", "Czy cały dzień?", new { @class="form-check-label font-weight-bold" })
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button onclick="deleteEvent()" type="button" id="modal-delete" style="display: none;" class="btn btn-danger">Usuń</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button id="modal-confirm" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
