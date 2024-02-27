@@ -1,5 +1,6 @@
 ﻿using GymManager.Application.Dictionaries;
 using GymManager.Application.EmployeeEvents.Commands.AddEmployeeEvent;
+using GymManager.Application.EmployeeEvents.Commands.UpdateEmployeeEvent;
 using GymManager.Application.EmployeeEvents.Queries.GetEmployeeEvents;
 using GymManager.Application.Employees.Queries.GetEmployeeBasics;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,13 @@ public class CalendarController : BaseController
 
 	[HttpPost]
 	public async Task<IActionResult> AddEmployeeEvent(AddEmployeeEventCommand command)
+	{
+		await Mediator.Send(command);
+		return Json(new { success = true });
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> UpdateEmployeeEvent(UpdateEmployeeEventCommand command)
 	{
 		await Mediator.Send(command);
 		return Json(new { success = true });

@@ -125,6 +125,19 @@
 				$('#modal-calendar').modal('show');
 			});
 
+			calendar.on('eventClick', function (info) 
+			{
+				$("#modal-delete").show();
+				$("#Id").val(info.event.id);
+				$("#dtpStart").datetimepicker('date', moment(info.event.start));
+				$("#dtpEnd").datetimepicker('date', moment(info.event.end));
+				$("#IsFullDay").prop('checked', info.event.allDay);
+				$("#UserId").val(info.event.extendedProps.userId).change();
+				$('#IsFullDay').is(':checked') ? $("#divEndDate").hide() : $("#divEndDate").show();
+				$('.modal-title').text("Edytowanie zdarzenia");
+				$('#modal-calendar').modal('show');
+			});
+
 			calendar.render();
 		}
 
@@ -152,6 +165,35 @@
 						toastr.success('Dane zostały zaktualizowane.');
 						createCalendar();
 					} else 
+					{
+						toastr.error(errorMessage);
+					}
+				},
+				error: function (data) 
+				{
+					toastr.error(errorMessage);
+				},
+				dataType: "json"
+			});
+		}
+
+		function updateEvent(model) 
+		{
+			var errorMessage = "Błąd. Nie udało się zaktualizować danych na kalendarzu. Spróbuj ponownie lub skontaktuj się z administratorem.";
+
+			$.ajax(
+			{
+				type: "POST",
+				url: "/Calendar/UpdateEmployeeEvent",
+				data: model,
+				success: function (data) 
+				{
+					if (data.success) 
+					{
+						toastr.success('Dane zostały zaktualizowane.');
+						createCalendar();
+					} 
+					else 
 					{
 						toastr.error(errorMessage);
 					}
