@@ -13,7 +13,7 @@ public class FileController : BaseController
 {
 	private readonly ILogger<FileController> _logger;
 
-	public FileController(ILogger<FileController> logger) => 
+	public FileController(ILogger<FileController> logger) =>
 		_logger = logger;
 
 	public async Task<IActionResult> Files() =>
@@ -45,6 +45,21 @@ public class FileController : BaseController
 		{
 			await Mediator.Send(new DeleteFileCommand { Id = id });
 			return Json(new { success = true });
+		}
+		catch (Exception exception)
+		{
+			_logger.LogError(exception, null);
+			return Json(new { success = false });
+		}
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> GetFiles()
+	{
+		try
+		{
+			var files = await Mediator.Send(new GetFilesQuery());
+			return Json(new { success = true, images = files });
 		}
 		catch (Exception exception)
 		{
