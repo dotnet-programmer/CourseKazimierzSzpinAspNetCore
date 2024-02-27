@@ -12,6 +12,7 @@
 @section Styles {
 	<partial name="Styles/_DateTimeStylesPartial" />
 	<partial name="Styles/_SelectStylesPartial" />
+	<partial name="Styles/_EditorStylesPartial" />
 }
 
 <partial name="Modals/_ModalChooseFilePartial" />
@@ -150,6 +151,7 @@
 	<partial name="Scripts/_ValidationScriptsPartial" />
 	<partial name="Scripts/_DateTimeScriptsPartial" />
 	<partial name="Scripts/_SelectScriptsPartial" />
+	<partial name="Scripts/_EditorScriptsPartial" />
 	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
 
 	<script>
@@ -157,6 +159,8 @@
 		var selectedFileBrowseId;
 
 		$(document).ready(function () {
+
+			init("#WebsiteRaw");
 
 			$('#dtpDateOfEmployment').datetimepicker({
 				format: 'L',

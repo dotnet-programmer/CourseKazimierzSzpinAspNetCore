@@ -1,0 +1,77 @@
+﻿@using System.Globalization
+
+<script src="~/lib/summernote/summernote-lite.min.js"></script>
+<script src="~/lib/summernote/lang/summernote-pl-PL.min.js"></script>
+<script src="~/lib/summernote/lang/summernote-en-US.min.js"></script>
+
+<script>
+	var locale = "@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName";
+	var culture;
+
+	switch (locale) {
+		case 'pl':
+			culture = 'pl-PL';
+			break;
+		case 'en':
+			culture = 'en-US';
+			break;
+	}
+
+	// metoda inicjalizująca
+	function init(id, height = 400) {
+		$(id).summernote({
+			height: height,
+			minHeight: null,
+			maxHeight: null,
+			callbacks: {
+				onImageUpload: function (files) {
+					uploadImage(files[0], id);
+				}
+			},
+			toolbar: [
+				['style', ['style']],
+				['font', ['bold', 'underline', 'italic', 'strikethrough', 'clear']],
+				['fontname', ['fontname']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'picture']],
+				['view', ['fullscreen', 'codeview']]
+			],
+			lang: culture,
+			styleTags: [
+				'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+			]
+		});
+
+		$('.note-editable').css('font-size', '18px');
+	}
+		
+	function uploadImage(files, id) {
+		var data = new FormData();
+		data.append("files", files);
+
+		$.ajax({
+			type: "POST",
+			url: "/file/uploadeditor/",
+			data: data,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function (data) {
+				var files = $("<img>").attr('src', data.fullPath).attr('class', 'border my-3 img-fluid').attr('alt', data.name);
+				$(id).summernote("insertNode", files[0]);
+			},
+			error: function (data) {
+
+				if (data.responseJSON.error)
+					toastr.error('Błąd. ' + data.responseJSON.error);
+				else
+					toastr.error('Błąd. Nie udało sikę wysłać pliku. Spróbuj ponownie lub skontaktuj się z administartorem.');
+			}
+		});
+
+	}
+
+</script>
