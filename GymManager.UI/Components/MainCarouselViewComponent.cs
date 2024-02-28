@@ -10,6 +10,6 @@ public class MainCarouselViewComponent : ViewComponent
 		// jakaś logika
 		// pobranie z bazy danych
 		int timeInterval = 1500;
-		return View(timeInterval);
+		return View();
 	}
 }

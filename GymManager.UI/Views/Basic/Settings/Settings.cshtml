@@ -1,0 +1,133 @@
+﻿@using GymManager.Application.Settings.Queries.GetSettings
+@using GymManager.Domain.Enums
+
+@model IList<SettingsDto>
+
+@{
+	ViewData["Title"] = "Ustawienia";
+}
+
+@section Styles {
+	<link rel="stylesheet" href="~/lib/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" />
+}
+
+<div class="card card-primary card-border-top">
+
+	<div class="card-header bg-transparent p-2">
+		<ul class="nav nav-pills" id="pills-tab" role="tablist">
+
+			@* dynamiczne wyświetlenie zakładek w zależności od tego ile jest grup ustawień *@
+			@foreach (var settings in Model)
+			{
+				<li class="nav-item settings-nav-item" role="presentation">
+					<button class="nav-link"
+							id="pills-@settings.Id-tab"
+							data-bs-toggle="pill"
+							data-bs-target="#pills-@settings.Id"
+							type="button" role="tab"
+							aria-controls="pills-@settings.Id"
+							aria-selected="true">
+						@settings.Description
+					</button>
+				</li>
+			}
+
+		</ul>
+	</div>
+
+	@* treścią zakładek są formularze *@
+	@using (Html.BeginForm("EditSettings", "Settings"))
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="card-body">
+			<div class="tab-content" id="pills-tabContent">
+
+				@* dynamiczne ładowanie komponentów *@
+				@for (var i = 0; i < Model.Count; i++)
+				{
+					<div class="tab-pane fade" id="pills-@Model[i].Id" role="tabpanel" aria-labelledby="pills-@Model[i].Id-tab">
+
+						@* iterowanie po pozycjach *@
+						@for (var j = 0; j < Model[i].Positions.Count; j++)
+						{
+							@* wyświetlanie kontrolek formularza *@
+							<div class="form-group">
+
+								@switch (Model[i].Positions[j].Type)
+								{
+									case SettingsType.Text:
+										@Html.Label(Model[i].Positions[j].Description)
+										@Html.TextBoxFor(x => Model[i].Positions[j].Value, new { @class = "form-control" })
+										break;
+									case SettingsType.Boolean:
+										<div class="form-check">
+											@Html.CheckBox("[" + @i + "].Positions[" + @j + "].Value", Model[i].Positions[j].Value.ToUpper() == "TRUE", new { @class = "form-check-input" })
+											@Html.Label(Model[i].Positions[j].Description, null, new { @class = "form-check-label font-weight-bold" })
+										</div>
+										break;
+									case SettingsType.Integer:
+										@Html.Label(Model[i].Positions[j].Description)
+										@Html.TextBoxFor(x => Model[i].Positions[j].Value, new { @class = "form-control", @type = "number" })
+										break;
+									case SettingsType.Password:
+										@Html.Label(Model[i].Positions[j].Description)
+										@Html.PasswordFor(x => Model[i].Positions[j].Value, new { @class = "form-control", value = Model[i].Positions[j].Value })
+										break;
+									case SettingsType.Color:
+										@* biblioteka Bootstrap-Colorpicker *@
+										@Html.Label(Model[i].Positions[j].Description)
+										<div class="input-group input-colorpicker">
+											@Html.TextBoxFor(x => Model[i].Positions[j].Value, new { @class = "form-control" })
+											<div class="input-group-append">
+												<span class="input-group-text input-group-colorpicker">
+													<i class="fas fa-square"></i>
+												</span>
+											</div>
+										</div>
+										break;
+									default:
+										break;
+								}
+								@Html.HiddenFor(x => Model[i].Positions[j].Id)
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary btn-lg">
+				<i class="fas fa-solid fa-circle-check"></i>
+				Zapisz
+			</button>
+		</div>
+	}
+</div>
+
+
+@section Scripts
+{
+	<script src="~/lib/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+	<script>
+		$(document).ready(function () 
+		{
+			$("li.settings-nav-item:first-child button:first-child").addClass("active");
+			$("#pills-tabContent .tab-pane:first-child").addClass("show");
+			$("#pills-tabContent .tab-pane:first-child").addClass("active");
+
+			$('.input-colorpicker').colorpicker();
+
+			$('.input-colorpicker .form-control').each(function () 
+			{
+				$('#' + this.id + ' + div i.fa-square').css('color', $(this).val());
+			});
+
+			$('.input-colorpicker').on('colorpickerChange', function (event) 
+			{
+				$('#' + event.currentTarget.firstElementChild.id + ' + div i.fa-square').css('color', event.color.toString());
+			});
+		});
+	</script>
+}

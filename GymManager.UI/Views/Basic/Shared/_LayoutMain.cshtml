@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using GymManager.Application.Common.Interfaces
+@using GymManager.Application.Dictionaries
+@inject IAppSettingsService appSettings
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,6 +14,12 @@
 
 	@* INFO - pakiet ikon font-awesome *@
 	<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+	<style>
+		footer {
+			background-color: @await appSettings.Get(SettingsDict.FooterColor) !important;
+		}
+	</style>
 
 	@* INFO - renderowanie sekcji Style *@
     @await RenderSectionAsync("Styles", required: false)
@@ -53,7 +63,7 @@
     </main>
 
 	@* TODO - zrobić tak żeby stopka zostawała na dole strony jeśli zawartość jest mniejsza niż wysokość ekranu *@
-    <footer class="border-top bg-danger footer text-white">
+    <footer class="border-top footer text-white">
         <div class="container text-center">
             &copy; @DateTime.Now.Year - GymManager - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">Polityka Prywatności</a>
         </div>

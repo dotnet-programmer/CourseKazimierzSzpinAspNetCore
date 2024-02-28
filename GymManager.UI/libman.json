@@ -225,6 +225,14 @@
         "main.min.css",
         "main.min.js"
       ]
+    },
+    {
+      "library": "bootstrap-colorpicker@3.4.0",
+      "destination": "wwwroot/lib/bootstrap-colorpicker/",
+      "files": [
+        "js/bootstrap-colorpicker.min.js",
+        "css/bootstrap-colorpicker.min.css"
+      ]
     }
   ]
 }

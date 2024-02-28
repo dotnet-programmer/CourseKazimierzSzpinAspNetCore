@@ -99,7 +99,7 @@ public class LoginModel : PageModel
 	// wywołanie po kliknięciu przycisku logowania
 	public async Task<IActionResult> OnPostAsync(string returnUrl = null)
 	{
-		returnUrl ??= Url.Content("~/");
+		returnUrl ??= Url.Content("~/Client/Dashboard");
 
 		//ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 

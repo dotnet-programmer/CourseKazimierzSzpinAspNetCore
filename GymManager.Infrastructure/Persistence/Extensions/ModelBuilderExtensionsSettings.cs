@@ -10,13 +10,13 @@ public static class ModelBuilderExtensionsSettings
 			new Settings
 			{
 				SettingsId = 1,
-				Description = "Ogólne",
-				Order = 1
+				Description = "E-mail",
+				Order = 2
 			},
 			new Settings
 			{
 				SettingsId = 2,
-				Description = "E-mail",
-				Order = 2
+				Description = "Ogólne",
+				Order = 1
 			});
 }

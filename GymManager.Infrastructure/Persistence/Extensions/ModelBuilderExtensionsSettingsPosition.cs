@@ -6,7 +6,7 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensionsSettingsPosition
 {
-	public static void SeedSettingsPosition(this ModelBuilder modelBuilder) => 
+	public static void SeedSettingsPosition(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<SettingsPosition>().HasData(
 			new SettingsPosition
 			{
@@ -15,7 +15,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "smtp.gmail.com",
 				Description = "Host",
 				Type = Domain.Enums.SettingsType.Text,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 1
 			},
 			new SettingsPosition
@@ -25,7 +25,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "587",
 				Description = "Port",
 				Type = Domain.Enums.SettingsType.Integer,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 2
 			},
 			new SettingsPosition
@@ -35,7 +35,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "",
 				Description = "Adres e-mail nadawcy",
 				Type = Domain.Enums.SettingsType.Text,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 3
 			},
 			new SettingsPosition
@@ -45,7 +45,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "",
 				Description = "Hasło",
 				Type = Domain.Enums.SettingsType.Password,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 4
 			},
 			new SettingsPosition
@@ -55,7 +55,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "Kazimierz Szpin",
 				Description = "Nazwa nadawcy",
 				Type = Domain.Enums.SettingsType.Text,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 5
 			},
 			new SettingsPosition
@@ -65,7 +65,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "",
 				Description = "Login nadawcy",
 				Type = Domain.Enums.SettingsType.Text,
-				SettingsId = 2,
+				SettingsId = 1,
 				Order = 6
 			},
 			new SettingsPosition
@@ -75,7 +75,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "True",
 				Description = "Czy wyświetlać banner na stronie głównej?",
 				Type = Domain.Enums.SettingsType.Boolean,
-				SettingsId = 1,
+				SettingsId = 2,
 				Order = 1
 			},
 			new SettingsPosition
@@ -85,7 +85,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "#dc3545",
 				Description = "Folor footera strona głównej",
 				Type = Domain.Enums.SettingsType.Color,
-				SettingsId = 1,
+				SettingsId = 2,
 				Order = 2
 			},
 			new SettingsPosition
@@ -95,7 +95,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				Value = "kazimierz.szpin@modestprogrammer.pl",
 				Description = "Główny adres e-mail administratora",
 				Type = Domain.Enums.SettingsType.Text,
-				SettingsId = 1,
+				SettingsId = 2,
 				Order = 3
 			});
 }
