@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
 
+// TODO - sprawdzić dla której komendy albo kwerendy działa, może trzeba zrobić inną wersje dla tych niezwracajacych żadnych danych albo popróbować z typem generycznym
 public abstract class BaseController : Controller
 {
 

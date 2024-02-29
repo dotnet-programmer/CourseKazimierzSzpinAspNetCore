@@ -18,6 +18,7 @@ public class TicketApiController : BaseApiController
 		_webHostEnvironment = webHostEnvironment;
 	}
 
+	// akcja API na którą system płatności24 wyśle informację o zmianie statusu 
 	[Route("updatestatus")]
 	[AllowAnonymous]
 	public async Task<IActionResult> UpdateStatus(MarkTicketAsPaidCommand command)
