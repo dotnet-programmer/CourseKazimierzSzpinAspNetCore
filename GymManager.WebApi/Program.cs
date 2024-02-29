@@ -2,6 +2,7 @@ using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
 using GymManager.WebApi.Extensions;
+using GymManager.WebApi.Middlewares;
 using Microsoft.Extensions.Options;
 using NLog.Web;
 
@@ -44,6 +45,9 @@ using (var scope = app.Services.CreateScope())
 		app.Services.GetService<IEmailService>(),
 		app.Services.GetService<IWebHostEnvironment>());
 }
+
+// dodanie middleware - globalna obs³uga wyj¹tków
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
