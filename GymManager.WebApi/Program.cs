@@ -1,6 +1,7 @@
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,11 @@ builder.Services.AddCors();
 // dodanie Dependency Injection z innych projektów
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// dodanie NLog 
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Logging.AddNLogWeb();
 
 var app = builder.Build();
 
