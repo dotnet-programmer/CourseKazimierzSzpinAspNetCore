@@ -1,6 +1,8 @@
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
+using GymManager.WebApi.Extensions;
+using Microsoft.Extensions.Options;
 using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,11 +25,19 @@ builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Logging.AddNLogWeb();
 
+// dodanie globalizacji
+builder.Services.AddCulture();
+
 var app = builder.Build();
 
 // dodanie Dependency Injection z innych projektów
 using (var scope = app.Services.CreateScope())
 {
+	// dodanie globalizacji
+	app.UseRequestLocalization(
+		app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
+	// wstrzykiwanie odpowiednich serwisów
 	app.UseInfrastructure(
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
 		app.Services.GetService<IAppSettingsService>(),

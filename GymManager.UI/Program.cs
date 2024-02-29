@@ -5,6 +5,7 @@ using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
 using GymManager.UI.Extensions;
 using GymManager.UI.Middlewares;
+using Microsoft.Extensions.Options;
 using NLog.Web;
 
 //INFO - Program.cs - kod odpowiedzialny za utworzenie, skonfigurowanie i uruchomienie aplikacji
@@ -58,6 +59,10 @@ app.UseSession();
 // jako parametry metody będą użyte wstrzyknięte implementacje
 using (var scope = app.Services.CreateScope())
 {
+	// dodanie globalizacji
+	app.UseRequestLocalization(
+		app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
 	// wstrzykiwanie odpowiednich serwisów
 	app.UseInfrastructure(
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
