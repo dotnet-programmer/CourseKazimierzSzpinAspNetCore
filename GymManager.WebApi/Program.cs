@@ -12,7 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// wersjonowanie - zmiana tego wpisu potrzebna do poprawnego dzia³ania wersjonowania
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerBearerAuthorization();
+
+// wersjonowanie API - umo¿liwia wydawanie kolejnych wersji bez utraty dzia³ania poprzednich wersji
+builder.Services.AddApiVersioning(options =>
+{
+	options.AssumeDefaultVersionWhenUnspecified = true;
+	options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+});
 
 // CORS - mechanizm umo¿liwiaj¹cy wspó³dzielenie zasobów miêdzy serwerami znajduj¹cymi siê w ró¿nych domenach
 builder.Services.AddCors();
@@ -53,7 +63,14 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI();
+
+	// wersjonowanie API - umo¿liwia wydawanie kolejnych wersji bez utraty dzia³ania poprzednich wersji
+	app.UseSwaggerUI(options =>
+	{
+		// wskazanie adresu dla ka¿dej wersji
+		options.SwaggerEndpoint($"/swagger/v1/swagger.json", "v1");
+		options.SwaggerEndpoint($"/swagger/v2/swagger.json", "v2");
+	});
 }
 
 // CORS - mechanizm umo¿liwiaj¹cy wspó³dzielenie zasobów miêdzy serwerami znajduj¹cymi siê w ró¿nych domenach
