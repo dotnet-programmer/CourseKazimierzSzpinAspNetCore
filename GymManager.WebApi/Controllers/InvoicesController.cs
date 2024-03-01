@@ -1,4 +1,5 @@
 ﻿using GymManager.Application.Invoices.Commands.AddInvoice;
+using GymManager.Application.Invoices.Commands.DeleteInvoice;
 using GymManager.Application.Invoices.Commands.EditInvoice;
 using GymManager.Application.Invoices.Queries.GetInvoice;
 using GymManager.Application.Invoices.Queries.GetInvoices;
@@ -50,6 +51,15 @@ public class InvoicesController : BaseApiController
 	// aktualizacja wybranej faktury
 	[HttpPut]
 	public async Task<IActionResult> Edit(EditInvoiceCommand command)
+	{
+		command.UserId = UserId;
+		await Mediator.Send(command);
+		return NoContent();
+	}
+
+	// usuwanie wybranej faktury
+	[HttpDelete]
+	public async Task<IActionResult> Delete(DeleteInvoiceCommand command)
 	{
 		command.UserId = UserId;
 		await Mediator.Send(command);
