@@ -47,8 +47,8 @@ public static class DependencyInjection
 				RequireNonAlphanumeric = true,
 			};
 		})
-			// zarządzanie rolami
-			.AddRoleManager<RoleManager<IdentityRole>>()
+		// zarządzanie rolami
+		.AddRoleManager<RoleManager<IdentityRole>>()
 		.AddEntityFrameworkStores<ApplicationDbContext>()
 		// zdefiniowanie wiadomości walidacyjnych
 		.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
@@ -93,6 +93,9 @@ public static class DependencyInjection
 
 		// INFO - serwis do generowania losowego koloru 
 		services.AddScoped<IRandomService, RandomService>();
+
+		// INFO - serwis do generowania tokena JWT
+		services.AddSingleton<IJwtService, JwtService>();
 
 		return services;
 	}

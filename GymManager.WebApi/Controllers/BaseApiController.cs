@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.WebApi.Controllers;
@@ -11,5 +12,6 @@ public abstract class BaseApiController : ControllerBase
 	private ISender _mediator;
 	protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
-	protected string UserId => "e6981a91-a5af-4538-bbb7-0f051b1cd924";
+	// JWT - odczytanie danych z tokena
+	protected string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
