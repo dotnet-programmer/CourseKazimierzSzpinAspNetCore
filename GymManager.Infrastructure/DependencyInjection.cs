@@ -1,6 +1,7 @@
 ﻿using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
 using GymManager.Infrastructure.Identity;
+using GymManager.Infrastructure.Invoices;
 using GymManager.Infrastructure.Payments;
 using GymManager.Infrastructure.Pdf;
 using GymManager.Infrastructure.Persistence;
@@ -96,6 +97,9 @@ public static class DependencyInjection
 
 		// INFO - serwis do generowania tokena JWT
 		services.AddScoped<IJwtService, JwtService>();
+
+		// INFO - serwis do dodawania nowych faktur poprzez WebApi
+		services.AddHttpClient<IGymInvoices, GymInvoices>();
 
 		return services;
 	}

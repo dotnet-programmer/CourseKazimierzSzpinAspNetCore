@@ -14,4 +14,7 @@ public class MyHttpContext : IHttpContext
 	public string AppBaseUrl => $"{Current.Request.Scheme}://{Current.Request.Host}{Current.Request.PathBase}";
 
 	public string IpAddress => Current.Connection.RemoteIpAddress.ToString();
+
+	// informacje o sesji, potrzebne to trzymania tokena z zewnętrznego Api
+	public ISession Session => Current.Session;
 }
