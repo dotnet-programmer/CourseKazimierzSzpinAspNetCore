@@ -3,6 +3,7 @@ using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
 using GymManager.WebApi.Extensions;
 using GymManager.WebApi.Middlewares;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using NLog.Web;
 
@@ -84,6 +85,16 @@ app.UseCors(x => x
 	.AllowAnyMethod()
 	// zezwalaj na wywo³anie dowolnego headera
 	.AllowAnyHeader());
+
+// umo¿liwienie korzystania z plików statycznych (obrazy, exe itp) w WebApi
+app.UseFileServer(new FileServerOptions
+{
+	// wskazanie fizycznej œcie¿ki
+	FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+	// ta fizyczna œcie¿ka do folderu bêdzie dostêpna po dopisaniu do adresu URL /wwwroot
+	RequestPath = "/wwwroot",
+	EnableDefaultFiles = true
+});
 
 app.UseHttpsRedirection();
 
