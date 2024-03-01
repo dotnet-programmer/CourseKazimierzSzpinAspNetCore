@@ -95,7 +95,7 @@ public static class DependencyInjection
 		services.AddScoped<IRandomService, RandomService>();
 
 		// INFO - serwis do generowania tokena JWT
-		services.AddSingleton<IJwtService, JwtService>();
+		services.AddScoped<IJwtService, JwtService>();
 
 		return services;
 	}
