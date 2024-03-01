@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Inovices;
+using GymManager.Application.GymInvoices.Queries.GetPdfGymInvoice;
 using GymManager.Application.Invoices.Commands.AddInvoice;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,21 @@ public class GymInvoices : IGymInvoices
 			_logger.LogError(response.RequestMessage.ToString(), null);
 			throw new Exception(response.RequestMessage.ToString());
 		}
+	}
+
+	public async Task<InvoicePdfVm> GetPdfInvoice(int id)
+	{
+		await SetHeader();
+
+		var response = await _httpClient.GetAsync($"/api/v1/invoices/pdf/{id}");
+
+		if (!response.IsSuccessStatusCode)
+		{
+			_logger.LogError(response.RequestMessage.ToString(), null);
+			throw new Exception(response.RequestMessage.ToString());
+		}
+
+		return JsonConvert.DeserializeObject<InvoicePdfVm>(await response.Content.ReadAsStringAsync());
 	}
 
 	private async Task SetHeader()
