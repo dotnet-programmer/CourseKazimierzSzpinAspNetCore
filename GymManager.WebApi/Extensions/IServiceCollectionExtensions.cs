@@ -1,5 +1,8 @@
 ﻿using System.Globalization;
+using System.Text;
 using GymManager.WebApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace GymManager.WebApi.Extensions;
@@ -25,9 +28,7 @@ public static class IServiceCollectionExtensions
 		});
 	}
 
-	#region wersjonowanie API 
-	// umożliwia wydawanie kolejnych wersji bez utraty działania poprzednich wersji
-
+	// wersjonowanie API umożliwia wydawanie kolejnych wersji bez utraty działania poprzednich wersji
 	// wersjonowanie dokumentacji, żeby swagger poprawnie działał
 	public static void AddSwaggerBearerAuthorization(this IServiceCollection service)
 	{
@@ -49,10 +50,59 @@ public static class IServiceCollectionExtensions
 			swagger.ResolveConflictingActions(x => x.First());
 			swagger.OperationFilter<RemoveVersionFromParameter>();
 			swagger.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+
+			// JWT - implementacja uwierzytelnienia w swaggerze
+			swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+			{
+				Name = "Authorization",
+				Type = SecuritySchemeType.ApiKey,
+				Scheme = "Bearer",
+				BearerFormat = "JWT",
+				In = ParameterLocation.Header,
+				Description = "Bearer Authorization"
+			});
+			swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+			{
+				{
+					new OpenApiSecurityScheme
+					{
+						Reference = new OpenApiReference
+						{
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer"
+						}
+					},
+					new string [] {}
+				}
+			});
 		});
 	}
 
-	// implementacja uwierzytelnienia
+	// JWT - implementacja uwierzytelnienia w WebApi
+	public static void AddBearerAuthentication(this IServiceCollection service, IConfiguration configuration)
+	{
+		// IConfiguration - potrzebne do pobierania informacji o kluczu z pliku konfiguracyjnego
+		// klucz musi być w postaci tablicy bajtów dlatego jest zrobione rzutowanie
+		var bearerSecret = Encoding.ASCII.GetBytes(configuration.GetSection("Secret").Value);
 
-	#endregion
+		service.AddAuthentication(options =>
+		{
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		})
+		.AddJwtBearer(options =>
+		{
+			options.SaveToken = true;
+			options.RequireHttpsMetadata = false;
+			options.TokenValidationParameters = new TokenValidationParameters
+			{
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = new SymmetricSecurityKey(bearerSecret),
+				ValidateIssuer = false,
+				ValidateAudience = false,
+				ClockSkew = TimeSpan.Zero
+			};
+		});
+	}
 }

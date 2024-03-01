@@ -39,6 +39,9 @@ builder.Logging.AddNLogWeb();
 // dodanie globalizacji
 builder.Services.AddCulture();
 
+// dodanie JWT 
+builder.Services.AddBearerAuthentication(builder.Configuration);
+
 var app = builder.Build();
 
 // dodanie Dependency Injection z innych projektów
@@ -84,6 +87,8 @@ app.UseCors(x => x
 
 app.UseHttpsRedirection();
 
+// dodanie JWT - dodaæ UseAuthentication przed UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
