@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymManager.Application", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymManager.Infrastructure", "GymManager.Infrastructure\GymManager.Infrastructure.csproj", "{882C4940-5960-487F-A9CD-E2AB7FFBCCEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GymManager.WebApi", "GymManager.WebApi\GymManager.WebApi.csproj", "{EE70F542-767C-4206-BB40-72C5A16882A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymManager.WebApi", "GymManager.WebApi\GymManager.WebApi.csproj", "{EE70F542-767C-4206-BB40-72C5A16882A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

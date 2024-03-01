@@ -1,0 +1,50 @@
+﻿@page {
+	size: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.row {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex !important;
+}
+
+	.row > div {
+		-webkit-box-flex: 1;
+		-webkit-flex: 1;
+		flex: 1;
+	}
+
+tr, td, th, thead tr, thead tr th, tfoot {
+	page-break-inside: avoid !important;
+	page-break-before: avoid !important;
+	page-break-after: avoid !important;
+}
+
+.invoice-font {
+	font-size: 18px;
+	text-align: center;
+	padding-bottom: 15px;
+	color: black !important;
+}
+
+.header-font {
+	font-size: 22px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.top-line {
+	border-top: 1px solid black;
+	margin-top: 5px;
+}
+
+.top-small-caption {
+	font-size: 10px;
+	margin-bottom: 5px;
+}
+
+th {
+	font-weight: normal;
+}

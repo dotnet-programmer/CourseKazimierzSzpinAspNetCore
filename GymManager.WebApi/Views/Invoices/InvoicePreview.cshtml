@@ -1,0 +1,123 @@
+﻿@using GymManager.Application.Invoices.Queries.GetInvoice
+
+@model InvoiceDto
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Faktura @Model.Title</title>
+	<link rel="stylesheet" href="~/wwwroot/lib/bootstrap/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/wwwroot/css/print-invoice.css" asp-append-version="true" />
+</head>
+<body>
+	<div class="container">
+		<div class="invoice-font">
+
+			<div class="row">
+				<div class="col-12 header-font">
+					<div>Faktura</div>
+					<div>Nr @Model.Title</div>
+				</div>
+			</div>
+
+			<div class="row mt-5">
+				<div class="col-5">
+					<img src="~/wwwroot/images/gym-logo.jpg" width="250" />
+				</div>
+				<div class="col-4 offset-3">
+					<div class="top-line">
+						<div class="top-small-caption">
+							Data sprzedaży:
+						</div>
+						<div>
+							@Model.CreatedDate.ToString("dd-MM-yyyy")
+						</div>
+					</div>
+					<div class="top-line">
+						<div class="top-small-caption">
+							Termin zapłaty:
+						</div>
+						<div>
+							@Model.CreatedDate.ToString("dd-MM-yyyy")
+						</div>
+					</div>
+					<div class="top-line">
+						<div class="top-small-caption">
+							Sposób zapłaty:
+						</div>
+						<div>
+							@Model.MethodOfPayments
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-5">
+				<div class="col-5">
+					<div class="top-line">
+						<div class="top-small-caption">
+							Sprzedawca:
+						</div>
+						<div>Gym Manager</div>
+						<div>ul. Kasztanowa 4/12d</div>
+						<div>43-444 Bydgoszcz</div>
+						<div>E-mail: kazik@modestprogrammer.pl</div>
+					</div>
+				</div>
+				<div class="col-5 offset-2">
+					<div class="top-line">
+						<div class="top-small-caption">
+							Nabywca:
+						</div>
+						<div>@Model.UserName</div>
+						<div>ul. @Model.UserStreet</div>
+						<div>@Model.UserCity</div>
+						<div>E-mail: @Model.UserEmail</div>
+					</div>
+				</div>
+			</div>
+
+			<table class="table table-bordered mt-5">
+				<thead>
+					<tr>
+						<th>Lp</th>
+						<th>Nazwa</th>
+						<th>Ilość</th>
+						<th>Wartość</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>@Model.PositionName</td>
+						<td>1</td>
+						<td>@Model.Value zł</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="row">
+				<div class="col-12">
+					<div class="text-end">Wartość <strong>@Model.Value zł</strong></div>
+					<div class="text-start">Uwagi: Faktura zapłacona przelewem</div>
+				</div>
+			</div>
+
+			<div class="row mt-5">
+				<div class="col-6">
+					<div>Wystawił:</div>
+					<div>GymManager</div>
+					<div>................................</div>
+				</div>
+				<div class="col-6">
+					<div>Odebrał:</div>
+					<div>@Model.UserName</div>
+					<div>................................</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
