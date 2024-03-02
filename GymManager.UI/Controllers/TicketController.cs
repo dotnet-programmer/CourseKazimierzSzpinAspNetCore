@@ -52,7 +52,7 @@ public class TicketController : BaseController
 	}
 
 	public async Task<IActionResult> AddTicket() =>
-		View(await Mediator.Send(new GetAddTicketQuery()));
+		View(await Mediator.Send(new GetAddTicketQuery { Language = CurrentLanguage }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]

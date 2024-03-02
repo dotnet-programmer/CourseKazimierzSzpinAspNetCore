@@ -27,7 +27,8 @@ public class GetAddTicketQueryHandler : IRequestHandler<GetAddTicketQuery, AddTi
 			},
 
 			AvailableTicketTypes = await _context.TicketTypes
-				.Include(x => x.Translations.Where(y => y.Language.Key == "pl"))
+				// Globalizacja - pobieranie odpowiednich tłumaczeń z bazy danych
+				.Include(x => x.Translations.Where(y => y.Language.Key == request.Language))
 				.ThenInclude(x => x.Language)
 				.AsNoTracking()
 				.Select(x => x.ToDto())

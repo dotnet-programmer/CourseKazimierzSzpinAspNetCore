@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
 using GymManager.UI.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,9 @@ public abstract class BaseController : Controller
 		_mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
 	protected string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+	// globalizacja - wersje językowe
+	protected string CurrentLanguage => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
 	// walidacja danych przed wysłaniem komendy
 	protected async Task<MediatorValidateResponse<T>> MediatorSendValidate<T>(IRequest<T> request)
