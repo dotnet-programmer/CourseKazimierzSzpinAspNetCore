@@ -101,6 +101,11 @@ public static class DependencyInjection
 		// INFO - serwis do dodawania nowych faktur poprzez WebApi
 		services.AddHttpClient<IGymInvoices, GymInvoices>();
 
+		// INFO - serwis do zadań wykonywanych w tle
+		services.AddSingleton<IBackgroundWorkerQueue, BackgroundWorkerQueue>();
+		// serwis, który będzie cały czas uruchomiony i wykonywał w tle zadania które są zakolejkowane
+		services.AddHostedService<LongRunningService>();
+
 		return services;
 	}
 

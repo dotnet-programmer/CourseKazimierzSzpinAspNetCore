@@ -33,6 +33,7 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
 		private readonly IDateTimeService _dateTimeService;
+		private readonly IBackgroundWorkerQueue _backgroundWorkerQueue;
 
 		public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -40,7 +41,8 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
 			IEmailService emailService,
-			IDateTimeService dateTimeService)
+			IDateTimeService dateTimeService,
+			IBackgroundWorkerQueue backgroundWorkerQueue)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +51,7 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
             _logger = logger;
 			_emailService = emailService;
 			_dateTimeService = dateTimeService;
+			_backgroundWorkerQueue = backgroundWorkerQueue;
 		}
 
         /// <summary>
@@ -148,21 +151,27 @@ namespace GymManager.UI.Areas.Identity.Pages.Account
 					
 					// ustawienie kodowania
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                   
-					// generowanie linka zwrotnego, który potwierdzi email
-					var callbackUrl = Url.Page(
+
+					 // generowanie linka zwrotnego, który potwierdzi email
+					 var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-					// wysłanie emaila
+					// wysłanie emaila z potwierdzeniem konta
+
 					// to jest domyślna wysyłka, ale w tym projekcie jest własny EmailService i z niego będą wysyłane maile
 					//await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-					await _emailService.SendAsync(
-						"Potwierdź e-mail",
-						$"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
-						Input.Email);
+					_backgroundWorkerQueue.QueueBackgroundWorkItem(async x =>
+						{
+							await _emailService.SendAsync(
+							"Potwierdź e-mail",
+							$"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
+							Input.Email);
+						},
+						$"Aktywacja konta. E-mail: {Input.Email}"
+					);
 
 					// jeśli wszystko się powiedzie, to przekierowanie do widoku z info że należy potwierdzić adres email
 					return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
