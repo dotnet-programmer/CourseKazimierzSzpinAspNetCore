@@ -21,6 +21,7 @@ public class Przelewy24 : IPrzelewy24
 	private readonly HttpClient _httpClient;
 	private readonly IConfiguration _configuration;
 	private readonly ILogger _logger;
+	private readonly IEncryptionService _encryptionService;
 	private string _crc;
 	private string _userName;
 	private string _userSecret;
@@ -29,12 +30,16 @@ public class Przelewy24 : IPrzelewy24
 
 	// INFO - użycie HttpClient - najlepsze użycie to wstrzyknięcie przez konstruktor
 	// + w Dependency Injection dodać services.AddHttpClient<IPrzelewy24, Przelewy24>(); - to powoduje użycie fabryki HttpClient
-	public Przelewy24(HttpClient httpClient, IConfiguration configuration, ILogger<Przelewy24> logger)
+	public Przelewy24(
+		HttpClient httpClient, 
+		IConfiguration configuration, 
+		ILogger<Przelewy24> logger,
+		IEncryptionService encryptionService)
 	{
 		_httpClient = httpClient;
 		_configuration = configuration;
 		_logger = logger;
-
+		_encryptionService = encryptionService;
 		GetConfiguration();
 		InitHttpClient();
 		InitJsonSettings();
@@ -77,7 +82,7 @@ public class Przelewy24 : IPrzelewy24
 	{
 		_crc = _configuration.GetValue<string>("Przelewy24:Crc");
 		_userName = _configuration.GetValue<string>("Przelewy24:UserName");
-		_userSecret = _configuration.GetValue<string>("Przelewy24:UserSecret");
+		_userSecret = _encryptionService.Decrypt(_configuration.GetValue<string>("Przelewy24:UserSecret"));
 		_baseUrl = _configuration.GetValue<string>("Przelewy24:BaseUrl");
 	}
 

@@ -1,5 +1,6 @@
 ﻿using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
+using GymManager.Infrastructure.Encryption;
 using GymManager.Infrastructure.Identity;
 using GymManager.Infrastructure.Invoices;
 using GymManager.Infrastructure.Payments;
@@ -23,8 +24,20 @@ public static class DependencyInjection
 	// konfiguracja tego, że to EF Core będzie używane i wskazanie bazy danych
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 	{
+		// INFO - szyfrowanie
+		// po uruchomieniu wygeneruje klucze, wystarczy uruchomić raz i skopiować klucze
+		//var keyInfo = new KeyInfo();
+		// klucze można również pobierać z pliku konfiguracyjnego
+		var encryptionService = new EncryptionService(new KeyInfo("kk3zd3HAIZjiZnDUhuU9OMASs4eljyPBZ1WbFdgC3UE=", "4ITbLvvo3BWGObJRFH4wDg=="));
+		services.AddSingleton<IEncryptionService>(encryptionService);
+		
+		// zaszyfrowanie connection stringa - ustawić tu brakepoint, uruchomić debugerem i skopiować zaszyfrowany string
+		// jednorazowe wywołanie żeby zaszyfrować, później można usunąć
+		// TODO - może napisać prostą aplikację w WPF do generowania kluczy i szyfrowania danych???
+		//var encryptedConnectionString = encryptionService.Encrypt("Server=(local)\\SQLEXPRESS;Database=GymManager;User Id=DBUser;Password=1234;TrustServerCertificate=True;");
+
 		// pobranie connection stringa z ustawień
-		var connectionString = configuration.GetConnectionString("DefaultConnection");
+		var connectionString = encryptionService.Decrypt(configuration.GetConnectionString("DefaultConnection"));
 
 		// dependency injection - używaj ApplicationDbContext wszędzie tam gdzie jest IApplicationDbContext
 		services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
