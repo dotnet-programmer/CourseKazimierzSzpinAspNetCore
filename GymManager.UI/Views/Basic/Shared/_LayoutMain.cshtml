@@ -1,6 +1,9 @@
 ﻿@using GymManager.Application.Common.Interfaces
 @using GymManager.Application.Dictionaries
+@using Microsoft.AspNetCore.Mvc.Localization
+
 @inject IAppSettingsService appSettings
+@inject IViewLocalizer viewLocalizer
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +60,7 @@
                 <div class="navbar-collapse collapse justify-content-end main-navbar">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Contact">Kontakt</a>
+							<a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Contact">@viewLocalizer["Contact"]</a>
                         </li>
                     </ul>
 					<partial name="_LoginPartial" />
@@ -70,10 +73,9 @@
         @RenderBody()
     </main>
 
-	@* TODO - zrobić tak żeby stopka zostawała na dole strony jeśli zawartość jest mniejsza niż wysokość ekranu *@
     <footer class="border-top footer text-white">
         <div class="container text-center">
-            &copy; @DateTime.Now.Year - GymManager - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">Polityka Prywatności</a>
+			&copy; @DateTime.Now.Year - GymManager - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">@viewLocalizer["PrivacyPolicy"]</a>
         </div>
     </footer>
 

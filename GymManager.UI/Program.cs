@@ -5,6 +5,7 @@ using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
 using GymManager.UI.Extensions;
 using GymManager.UI.Middlewares;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using NLog.Web;
 
@@ -23,7 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
 	.AddControllersWithViews()
 	// INFO - żeby przechowywać w TempData duże pliki
-	.AddSessionStateTempDataProvider();
+	.AddSessionStateTempDataProvider()
+	// INFO - Globalizacja - wiele wersji językowych
+	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 // INFO - żeby przechowywać w TempData duże pliki
 builder.Services.AddSession();
@@ -41,6 +44,7 @@ builder.Services.DefineViewLocation(builder.Configuration);
 
 // INFO - Globalizacja - wiele wersji językowych
 builder.Services.AddCulture();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // INFO - dodanie NLog
 builder.Logging.ClearProviders();

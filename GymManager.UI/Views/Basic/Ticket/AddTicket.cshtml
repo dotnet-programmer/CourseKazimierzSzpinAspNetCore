@@ -1,10 +1,13 @@
 ﻿@using GymManager.Application.Tickets.Queries.GetAddTicket
 @using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer viewLocalizer
 
 @model AddTicketVm
 
 @{
-	ViewData["Title"] = "Zakup nowego karnetu";
+	ViewData["Title"] = viewLocalizer["AddTicketTitle"];
 	var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 
@@ -61,7 +64,8 @@
 
 		<div class="card-footer">
 			<button type="submit" class="btn btn-primary btn-lg">
-				<i class="fas fa-solid fa-cart-shopping"></i>Przejdź do płatności
+				<i class="fas fa-solid fa-cart-shopping"></i>
+				@viewLocalizer["GoToPayment"]
 			</button>
 		</div>
 	}
