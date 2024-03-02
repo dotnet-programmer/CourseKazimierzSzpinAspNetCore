@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using GymManager.Application.Common.Interfaces
+
+@inject ICurrentUserService currentUserService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -58,7 +62,12 @@
 				<div class="pb-1">
 					<div class="container-fluid">
 						<div class="row" id="main-body">
+
+							@* SignalR - ukryte pole o unikalnym Id używane w usernotification.js do przechowywania informacji o Id połączenia *@
+							<input type="hidden" id="signalRConnectionId" />
+
 							@RenderBody()
+
 						</div>
 					</div>
 				</div>
@@ -76,6 +85,15 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<partial name="_NotificationPartial" />
+
+	@* INFO - SignalR - biblioteki i skrypty *@
+	<script>
+		@* pobranie UserId - potrzebne do poprawnego działania skryptu usernotification.js dlatego musi być przed skryptem *@
+		var userId = '@currentUserService.UserId';
+	</script>
+	<script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+	<script src="~/js/usernotification.js"></script>
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

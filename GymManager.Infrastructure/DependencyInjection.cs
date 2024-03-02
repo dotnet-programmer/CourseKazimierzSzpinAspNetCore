@@ -6,6 +6,7 @@ using GymManager.Infrastructure.Payments;
 using GymManager.Infrastructure.Pdf;
 using GymManager.Infrastructure.Persistence;
 using GymManager.Infrastructure.Services;
+using GymManager.Infrastructure.SignalR.UserNotification;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -105,6 +106,13 @@ public static class DependencyInjection
 		services.AddSingleton<IBackgroundWorkerQueue, BackgroundWorkerQueue>();
 		// serwis, który będzie cały czas uruchomiony i wykonywał w tle zadania które są zakolejkowane
 		services.AddHostedService<LongRunningService>();
+
+		// INFO - SignalR - natychmiastowe notyfikacja bez odświeżania strony z serwera do klientów i dowolnego użytkownika
+		services.AddSignalR();
+		// INFO - SignalR - serwis do pobierania informacji o aktualnych użytkownikach i ich połączeniach
+		services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
+		// INFO - SignalR - serwis do wysyłania powiadomień userowi
+		services.AddSingleton<IUserNotificationService, UserNotificationService>();
 
 		return services;
 	}

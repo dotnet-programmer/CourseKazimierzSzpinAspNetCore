@@ -233,6 +233,13 @@
         "js/bootstrap-colorpicker.min.js",
         "css/bootstrap-colorpicker.min.css"
       ]
+    },
+    {
+      "library": "microsoft-signalr@6.0.3",
+      "destination": "wwwroot/lib/microsoft-signalr/",
+      "files": [
+        "signalr.min.js"
+      ]
     }
   ]
 }

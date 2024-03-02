@@ -3,6 +3,7 @@ using DataTables.AspNet.AspNetCore;
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
+using GymManager.Infrastructure.SignalR.UserNotification;
 using GymManager.UI.Extensions;
 using GymManager.UI.Middlewares;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -125,5 +126,9 @@ app.MapControllerRoute(
 // INFO - dodanie Identity poprzez Scaffolding - potrzebne �eby widoki zosta�y wczytane po wpisaniu adresu URL
 // Configures endpoint routing for Razor Pages.
 app.MapRazorPages();
+
+// INFO - SignalR - serwis do pobierania informacji o aktualnych użytkownikach i ich połączeniach
+// parametr /NotificationUserHub to adres URL, w którym jest nazwa klasy która będzie łącznikiem między JavaScript a C#
+app.MapHub<NotificationUserHub>("/NotificationUserHub");
 
 app.Run();
