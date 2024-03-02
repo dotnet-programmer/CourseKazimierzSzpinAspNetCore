@@ -8,14 +8,14 @@ namespace GymManager.Application.Tickets.Commands.AddTicket;
 // tutaj typ zwracany TResponse ustawione na string, bo będzie zwracane Id karnetu
 public class AddTicketCommand : IRequest<string>
 {
-	[Required(ErrorMessage = "Pole 'Początek' jest wymagane")]
-	[DisplayName("Początek")]
+	[Required(ErrorMessage = "FieldStartDateTicketIsRequired")]
+	[DisplayName("StartDateTicket")]
 	public DateTime StartDate { get; set; }
 
-	[DisplayName("Cena")]
+	[DisplayName("Price")]
 	public decimal Price { get; set; }
 
-	[DisplayName("Typ karnetu")]
+	[DisplayName("TypeOfTicket")]
 	public int TicketTypeId { get; set; }
 
 	public string UserId { get; set; }

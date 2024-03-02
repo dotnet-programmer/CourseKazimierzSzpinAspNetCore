@@ -26,7 +26,15 @@ builder.Services
 	// INFO - żeby przechowywać w TempData duże pliki
 	.AddSessionStateTempDataProvider()
 	// INFO - Globalizacja - wiele wersji językowych
-	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+	// INFO - Globalizacja - wiele wersji językowych - dołączenie innych projektów
+	.AddDataAnnotationsLocalization(x =>
+	{
+		x.DataAnnotationLocalizerProvider = (type, factory) =>
+		{
+			return factory.Create(typeof(GymManager.Application.CommonResources));
+		};
+	});
 
 // INFO - żeby przechowywać w TempData duże pliki
 builder.Services.AddSession();
