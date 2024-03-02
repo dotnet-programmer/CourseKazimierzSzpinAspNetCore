@@ -24,6 +24,7 @@ public class GymInvoices : IGymInvoices
 	private readonly ICurrentUserService _currentUserService;
 	private readonly IApplicationDbContext _context;
 	private readonly string _baseUrl;
+	private string _explicitUserId;
 
 	public GymInvoices(
 		HttpClient httpClient,
@@ -50,8 +51,11 @@ public class GymInvoices : IGymInvoices
 	}
 
 	// dodanie nowej faktury poprzez Api
-	public async Task AddInvoice(string ticketId)
+	// ze względu na eventy i brak możliwości pobrania IdUsera w takiej metodzie trzeba tu przekazć IdUsera jako parametr jeśli chcemy żeby było inne niż to aktualnie zalogowanego
+	public async Task AddInvoice(string ticketId, string userId = null)
 	{
+		_explicitUserId = userId;
+
 		// najpierw trzeba ustawić token w nagłówku requesta, bo wszystkie endpointy w Api wymagają zalogowanego użytkownika
 		await SetHeader();
 
@@ -104,7 +108,9 @@ public class GymInvoices : IGymInvoices
 		if (string.IsNullOrWhiteSpace(token) || TokenHasExpired(token))
 		{
 			// pobierz Id aktualnie zalogowanego użytkownika w aplikacji MVC
-			var userId = _currentUserService.UserId;
+			// jeżeli pracuje się na eventach, to nie ma dostępu do contextu z requesta, przez co wewnątrz tych klas nie da się pobrać np. Id usera
+			// dlatego dodany parametr wywołania metody AddInvoice i pole _explicitUserId
+			var userId = _currentUserService.UserId ?? _explicitUserId ?? null;
 
 			// jeśli nie udało się pobrać Id użytkownika
 			if (string.IsNullOrWhiteSpace(userId))

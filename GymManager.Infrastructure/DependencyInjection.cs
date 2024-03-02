@@ -1,6 +1,9 @@
-﻿using GymManager.Application.Common.Interfaces;
+﻿using System.Reflection;
+using GymManager.Application.Common.Events;
+using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
 using GymManager.Infrastructure.Encryption;
+using GymManager.Infrastructure.Events;
 using GymManager.Infrastructure.Identity;
 using GymManager.Infrastructure.Invoices;
 using GymManager.Infrastructure.Payments;
@@ -127,6 +130,10 @@ public static class DependencyInjection
 		// INFO - SignalR - serwis do wysyłania powiadomień userowi
 		services.AddSingleton<IUserNotificationService, UserNotificationService>();
 
+		// zarejestrowanie klas subskrybujących eventy w kontenerze Dependency Injection
+		// za pomocą refleksji dodanie wszystkich instancji implementujących interfejs IEventHandler 
+		RegisterEvents(services);
+
 		return services;
 	}
 
@@ -149,5 +156,26 @@ public static class DependencyInjection
 		RotativaConfiguration.Setup(webHostEnvironment.WebRootPath, "Rotativa");
 
 		return appBuilder;
+	}
+
+	private static void RegisterEvents(IServiceCollection services)
+	{
+		// dodanie informacji o EventDispatcher
+		services.AddSingleton<IEventDispatcher, EventDispatcher>();
+
+		// pobranie wszystkich assembly za pomocą reflekcji
+		var assemblies = Assembly
+			.GetExecutingAssembly()
+			.GetReferencedAssemblies()
+			.Select(Assembly.Load)
+			.ToList();
+
+		// sprawdzenie wszystkich assembly i sprawdzenie które z nich implementują IEventHandler i wstrzyknąć do kontenera Dependency Injection
+		// potrzebny NuGet - Scrutor
+		services
+			.Scan(x => x.FromAssemblies(assemblies)
+			.AddClasses(x => x.AssignableTo(typeof(IEventHandler<>)))
+			.AsImplementedInterfaces()
+			.WithScopedLifetime());
 	}
 }
