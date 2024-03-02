@@ -33,6 +33,7 @@ public static class IServiceCollectionExtensions
 			});
 	}
 
+	// INFO - Globalizacja - wiele wersji językowych
 	public static void AddCulture(this IServiceCollection services)
 	{
 		// lista przechowująca informacje o językach, które są wspierane

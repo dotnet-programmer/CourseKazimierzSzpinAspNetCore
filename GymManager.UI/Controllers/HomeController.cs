@@ -1,6 +1,8 @@
 using AspNetCore.ReCaptcha;
+using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Contacts.Commands.SendContactEmail;
 using GymManager.UI.Models;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
@@ -11,11 +13,13 @@ namespace GymManager.UI.Controllers;
 public class HomeController : BaseController
 {
 	private readonly ILogger _logger;
+	private readonly IDateTimeService _dateTimeService;
 
 	// konstruktor - dependency injection - wstrzyknięcie klasy NLoga
-	public HomeController(ILogger<HomeController> logger)
+	public HomeController(ILogger<HomeController> logger, IDateTimeService dateTimeService)
 	{
 		_logger = logger;
+		_dateTimeService = dateTimeService;
 	}
 
 	// widok strona główna
@@ -97,6 +101,19 @@ public class HomeController : BaseController
 		TempData["Success"] = "Wiadomość została wysłana do administratora.";
 
 		return RedirectToAction("Contact");
+	}
+
+	// Globalizacja - dropdown z flagami
+	[HttpPost]
+	public IActionResult SetCulture(string culture, string returnUrl)
+	{
+		// ustawienie w cookies wartość wybranego jezyka
+		Response.Cookies.Append(
+			CookieRequestCultureProvider.DefaultCookieName,
+			CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+			new CookieOptions { Expires = _dateTimeService.Now.AddYears(1) });
+
+		return LocalRedirect(returnUrl);
 	}
 
 	// testowa akcja Index

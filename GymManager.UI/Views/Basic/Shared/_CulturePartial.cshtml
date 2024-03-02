@@ -1,0 +1,42 @@
+﻿@* Globalizacja - dropdown z flagami *@
+
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+
+@* wstrzyknięcie informacji o językach które są obsługiwane *@
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+
+	// pobranie informacji o wszystkich językach które są obsługiwane w aplikacji
+	var cultureItems = LocOptions.Value.SupportedUICultures
+		.Select(x => new SelectListItem { Value = x.Name })
+		.ToList();
+
+	// przekazanie do formularza żeby wrócić do strony na której był user
+	var returnUrl = string.IsNullOrWhiteSpace(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
+}
+
+<form asp-controller="Home"
+	  asp-action="SetCulture"
+	  asp-route-returnUrl="@returnUrl"
+	  method="post"
+	  role="form">
+
+	<div class="dropdown language">
+		<button class="btn btn-white btn-lg dropdown-toggle" type="button" id="dropdownLang" data-bs-toggle="dropdown" aria-expanded="false">
+			<img class="rounded text-center border" src="@Url.Content($"~/images/{requestCulture.RequestCulture.UICulture.Name}.png")" width="60" />
+		</button>
+		<ul class="dropdown-menu" aria-labelledby="dropdownLang">
+			@foreach (var culture in cultureItems)
+			{
+				<li>
+					<button class="dropdown-item" type="submit" name="culture" value="@culture.Value">
+						<img class="rounded text-center border" src="@Url.Content($"~/images/{culture.Value}.png")" width="60" />
+					</button>
+				</li>
+			}
+		</ul>
+	</div>
+</form>
