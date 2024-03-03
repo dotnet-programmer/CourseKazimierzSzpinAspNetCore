@@ -23,6 +23,9 @@
 />
 
 <div class="card card-primary card-border-top">
+	
+	<partial name="_OverlayPartial" />
+
 	<div class="card-body">
 
 		<a href='/Role/AddRole' class="btn btn-primary mb-3" role="button">
@@ -99,6 +102,7 @@
 		$('#modal-confirm-delete-btn').on('click', function (e) 
 		{
 			$('#modal-confirm-delete').modal('hide');
+			$('.loading-overlay').show();
 
 			$.ajax({
 				type: "POST",
@@ -113,9 +117,11 @@
 					}
 					else
 						toastr.error('Błąd. ' + data.message);
+					$('.loading-overlay').hide();
 				},
 				error: function (data) {
 					toastr.error('Błąd. Nie udało się usunąć wybranej roli. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+					$('.loading-overlay').hide();
 				},
 				dataType: "json"
 			});

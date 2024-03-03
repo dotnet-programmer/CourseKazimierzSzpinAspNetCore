@@ -14,6 +14,8 @@
 
 <div class="card card-primary card-border-top">
 
+	<partial name="_OverlayPartial" />
+
 	<div class="card-body">
 
 		@if (Model)
@@ -101,6 +103,8 @@
 
 		function generateTicket(id) {
 
+			$('.loading-overlay').show();
+
 			$.ajax({
 				type: "POST",
 				url: "/Ticket/TicketToPdf",
@@ -113,9 +117,11 @@
 					}
 					else
 						toastr.error('Błąd. Nie udało się wygenerować karnetu. Spróbuj ponownie lub skontaktuj się z administartorem.');
+					$('.loading-overlay').hide();
 				},
 				error: function (data) {
 					toastr.error('Błąd. Nie udało się wygenerować karnetu. Spróbuj ponownie lub skontaktuj się z administartorem.');
+					$('.loading-overlay').hide();
 				},
 				dataType: "json",
 				cache: false
@@ -124,6 +130,8 @@
 		}
 
 		function generateInvoice(id) {
+
+			$('.loading-overlay').show();
 
 			$.ajax({
 				type: "POST",
@@ -137,9 +145,11 @@
 					}
 					else
 						toastr.error('Błąd. Nie udało się wygenerować faktury. Spróbuj ponownie lub skontaktuj się z administartorem.');
+					$('.loading-overlay').hide();
 				},
 				error: function (data) {
 					toastr.error('Błąd. Nie udało się wygenerować faktury. Spróbuj ponownie lub skontaktuj się z administartorem.');
+					$('.loading-overlay').hide();
 				},
 				dataType: "json",
 				cache: false

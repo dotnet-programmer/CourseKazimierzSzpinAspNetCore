@@ -17,9 +17,13 @@
 <partial name="Modals/_ModalEvent" model="@Model" />
 
 <div class="card card-primary card-border-top">
+
+	<partial name="_OverlayPartial" />
+
 	<div class="card-body">
 		<div id="calendar"></div>
 	</div>
+
 </div>
 
 @section Scripts {
@@ -32,6 +36,8 @@
 
 		$(document).ready(function () 
 		{
+			$('.loading-overlay').show();
+			
 			$('#dtpStart').datetimepicker({
 				icons: { time: 'far fa-clock' },
 				locale: '@locale'
@@ -82,10 +88,14 @@
 						});
 					});
 					renderEvents(events);
+					$('.loading-overlay').hide();
+
 				},
 				error: function (data) 
 				{
 					toastr.error('Błąd. Nie udało się wygenerować kalendarza. Spróbuj ponownie lub skontaktuj się z administratorem.');
+					$('.loading-overlay').hide();
+
 				},
 				dataType: "json"
 			});
@@ -144,6 +154,7 @@
 		$('#calendar-form').submit(function () 
 		{
 			$('#modal-calendar').modal('hide');
+			$('.loading-overlay').show();
 			var model = $(this).serialize();
 			$("#Id").val() == 0 ? addEvent(model) : updateEvent(model);
 			return false;
@@ -168,10 +179,12 @@
 					{
 						toastr.error(errorMessage);
 					}
+					$('.loading-overlay').hide();
 				},
 				error: function (data) 
 				{
 					toastr.error(errorMessage);
+					$('.loading-overlay').hide();
 				},
 				dataType: "json"
 			});
@@ -197,10 +210,12 @@
 					{
 						toastr.error(errorMessage);
 					}
+					$('.loading-overlay').hide();
 				},
 				error: function (data) 
 				{
 					toastr.error(errorMessage);
+					$('.loading-overlay').hide();
 				},
 				dataType: "json"
 			});
@@ -209,6 +224,7 @@
 		function deleteEvent() 
 		{
 			$('#modal-calendar').modal('hide');
+			$('.loading-overlay').hide();
 
 			var errorMessage = "Błąd. Nie udało się usunąć danych z kalendarza. Spróbuj ponownie lub skontaktuj się z administratorem.";
 
@@ -231,10 +247,12 @@
 					{
 						toastr.error(errorMessage);
 					}
+					$('.loading-overlay').hide();
 				},
 				error: function (data) 
 				{
 					toastr.error(errorMessage);
+					$('.loading-overlay').hide();
 				},
 				dataType: "json"
 			});
