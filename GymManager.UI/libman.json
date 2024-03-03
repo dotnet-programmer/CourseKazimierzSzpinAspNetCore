@@ -240,6 +240,13 @@
       "files": [
         "signalr.min.js"
       ]
+    },
+    {
+      "library": "jquery.pjax@2.0.1",
+      "destination": "wwwroot/lib/jquery.pjax/",
+      "files": [
+        "jquery.pjax.min.js"
+      ]
     }
   ]
 }

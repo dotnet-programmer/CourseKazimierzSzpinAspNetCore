@@ -14,8 +14,25 @@
 	<link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
 
 	@await RenderSectionAsync("Styles", required: false)
-
+	
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+	@* INFO - poprawienie przepływu aplikacji – MVC jak SPA *@
+@* 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/jquery.pjax/jquery.pjax.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$(document).pjax('a.pjax-load', "#main-body", { timeout: 10000 });
+			$(document).ajaxStart(function () {
+				$("#loading-div").show();
+				$("#main-body").hide();
+			});
+			$(document).ajaxComplete(function () {
+				$("#loading-div").hide();
+				$("#main-body").show();
+			});
+		});
+	</script> *@
 
 </head>
 
@@ -69,6 +86,9 @@
 							@RenderBody()
 
 						</div>
+@* 						<div id="loading-div" style="display: none;">
+							<i>Loading...</i>
+						</div> *@
 					</div>
 				</div>
 			</div>
