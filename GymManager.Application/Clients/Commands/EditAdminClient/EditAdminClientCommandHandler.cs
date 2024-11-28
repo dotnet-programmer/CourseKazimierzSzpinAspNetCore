@@ -90,7 +90,7 @@ public class EditAdminClientCommandHandler : IRequestHandler<EditAdminClientComm
 		await AddNewRoles(userId, oldRoles, newRoles);
 	}
 
-	private async Task<List<IdentityRole>> GetOldRoles(string userId) => 
+	private async Task<List<IdentityRole>> GetOldRoles(string userId) =>
 		(await _userRoleManagerService.GetRolesAsync(userId)).ToList();
 
 	private List<IdentityRole> GetNewRoles(List<string> newRoleIds, IEnumerable<IdentityRole> roles)

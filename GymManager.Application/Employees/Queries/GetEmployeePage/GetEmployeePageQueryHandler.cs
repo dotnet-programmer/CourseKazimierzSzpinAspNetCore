@@ -8,7 +8,7 @@ public class GetEmployeePageQueryHandler : IRequestHandler<GetEmployeePageQuery,
 {
 	private readonly IApplicationDbContext _context;
 
-	public GetEmployeePageQueryHandler(IApplicationDbContext context) => 
+	public GetEmployeePageQueryHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task<EmployeePageDto> Handle(GetEmployeePageQuery request, CancellationToken cancellationToken)

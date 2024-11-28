@@ -5,7 +5,7 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensionsAnnouncement
 {
-	public static void SeedAnnouncement(this ModelBuilder modelBuilder) => 
+	public static void SeedAnnouncement(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<Announcement>().HasData(
 			new Announcement
 			{

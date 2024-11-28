@@ -1,10 +1,9 @@
 ﻿using GymManager.Application.Common.Interfaces;
+using GymManager.Application.Common.Models.Payments;
 using GymManager.Domain.Entities;
-using System.Net.Http;
+using GymManager.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using GymManager.Domain.Enums;
-using GymManager.Application.Common.Models.Payments;
 
 // NuGet Package: Microsoft.Extensions.Logging.Abstractions
 

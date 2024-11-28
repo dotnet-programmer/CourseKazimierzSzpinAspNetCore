@@ -11,7 +11,7 @@ public class SendUserNotificationHandler : IEventHandler<TicketPaidEvent>
 {
 	private readonly IUserNotificationService _userNotificationService;
 
-	public SendUserNotificationHandler(IUserNotificationService userNotificationService) 
+	public SendUserNotificationHandler(IUserNotificationService userNotificationService)
 		=> _userNotificationService = userNotificationService;
 
 	public async Task HandleAsync(TicketPaidEvent @event)

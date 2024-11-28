@@ -50,7 +50,7 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 	private Ticket GetActiveTicket(ApplicationUser user) =>
 		user.Tickets.FirstOrDefault(x => x.StartDate.Date <= _dateTimeService.Now.Date && x.EndDate.Date >= _dateTimeService.Now.Date);
 
-	private static DateTime? GetTicketEndDate(Ticket ticket) => 
+	private static DateTime? GetTicketEndDate(Ticket ticket) =>
 		ticket == null ? null : ticket.EndDate;
 
 	private async Task<PaginatedList<AnnouncementDto>> GetAnnouncements(GetClientDashboardQuery request) =>
@@ -60,7 +60,7 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 		.Select(x => x.ToDto())
 		.PaginatedListAsync(request.PageNumber, request.PageSize);
 
-	private List<string> GetChartColors() => 
+	private List<string> GetChartColors() =>
 		[
 			"rgba(255, 99, 132, 0.2)",
 			"rgba(54, 162, 235, 0.2)",
@@ -70,7 +70,7 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 			"rgba(255, 159, 64, 0.2)"
 		];
 
-	private List<string> GetChartBorderColors() => 
+	private List<string> GetChartBorderColors() =>
 		[
 			"rgba(255, 99, 132, 1)",
 			"rgba(54, 162, 235, 1)",
@@ -87,15 +87,15 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 		return new ChartDto
 		{
 			Label = "Ilość",
-			Positions = new List<ChartPositionDto>
-			{
+			Positions =
+			[
 				new ChartPositionDto { Label = "Styczeń", Data = 4, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Luty", Data = 10, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Marzec", Data = 5, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Kwiecień", Data = 6, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Maj", Data = 8, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Czerwiec", Data = 14, BorderColor = borderColors[i], Color = colors[i++] },
-			}
+			]
 		};
 	}
 
@@ -105,15 +105,15 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 
 		return new ChartDto
 		{
-			Positions = new List<ChartPositionDto>
-			{
+			Positions =
+			[
 				new ChartPositionDto { Label = "Siłownia", Data = 855, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Crossfit", Data = 600, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Basen", Data = 350, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Aerobik", Data = 100, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Trójbój", Data = 8, BorderColor = borderColors[i], Color = colors[i++] },
 				new ChartPositionDto { Label = "Rower", Data = 444, BorderColor = borderColors[i], Color = colors[i++] },
-			}
+			]
 		};
 	}
 }

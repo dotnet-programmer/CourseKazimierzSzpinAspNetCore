@@ -13,11 +13,11 @@ public class AddInvoiceHandler : IEventHandler<TicketPaidEvent>
 {
 	private readonly IGymInvoices _gymInvoices;
 
-	public AddInvoiceHandler(IGymInvoices gymInvoices) 
+	public AddInvoiceHandler(IGymInvoices gymInvoices)
 		=> _gymInvoices = gymInvoices;
 
 	// jeśli event TicketPaidEvent zostanie opublikowany to wykona się ta metoda
 	// w tym przypadku doda się nowa faktura za pomocą WebApi
-	public async Task HandleAsync(TicketPaidEvent @event) 
+	public async Task HandleAsync(TicketPaidEvent @event)
 		=> await _gymInvoices.AddInvoice(@event.TicketId, @event.UserId);
 }

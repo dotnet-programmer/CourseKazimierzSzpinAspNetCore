@@ -9,7 +9,7 @@ internal class GetClientQueryHandler : IRequestHandler<GetClientQuery, ClientDto
 {
 	private readonly IApplicationDbContext _context;
 
-	public GetClientQueryHandler(IApplicationDbContext context) => 
+	public GetClientQueryHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task<ClientDto> Handle(GetClientQuery request, CancellationToken cancellationToken)

@@ -33,11 +33,11 @@ public static class DependencyInjection
 		// klucze można również pobierać z pliku konfiguracyjnego
 		var encryptionService = new EncryptionService(new KeyInfo("kk3zd3HAIZjiZnDUhuU9OMASs4eljyPBZ1WbFdgC3UE=", "4ITbLvvo3BWGObJRFH4wDg=="));
 		services.AddSingleton<IEncryptionService>(encryptionService);
-		
+
 		// zaszyfrowanie connection stringa - ustawić tu brakepoint, uruchomić debugerem i skopiować zaszyfrowany string
 		// jednorazowe wywołanie żeby zaszyfrować, później można usunąć
 		// TODO - może napisać prostą aplikację w WPF do generowania kluczy i szyfrowania danych???
-		//var encryptedConnectionString = encryptionService.Encrypt("Server=(local)\\SQLEXPRESS;Database=GymManager;User Id=DBUser;Password=1234;TrustServerCertificate=True;");
+		//var encryptedConnectionString = encryptionService.Encrypt("Server=(local)\\SQLEXPRESS;Database=GymManager;User Id=DBUser;Password=;TrustServerCertificate=True;");
 
 		// pobranie connection stringa z ustawień
 		var connectionString = encryptionService.Decrypt(configuration.GetConnectionString("DefaultConnection"));

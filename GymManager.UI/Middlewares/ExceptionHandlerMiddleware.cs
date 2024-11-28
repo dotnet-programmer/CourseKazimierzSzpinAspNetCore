@@ -12,7 +12,7 @@ public class ExceptionHandlerMiddleware
 
 	// wstrzyknięcie requesta przez konstruktor
 	public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
-    {
+	{
 		_next = next;
 		_logger = logger;
 	}
@@ -39,10 +39,10 @@ public class ExceptionHandlerMiddleware
 	{
 		// ustawienie typu odpowiedzi
 		context.Response.ContentType = "application/json";
-		
+
 		// stawienie kodu błędu
 		int statusCode = (int)HttpStatusCode.InternalServerError;
-		
+
 		// przygotowanie obiektu który zostanie zwrócony
 		string result = JsonSerializer.Serialize(new
 		{

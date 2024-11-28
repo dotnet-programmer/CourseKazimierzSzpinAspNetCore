@@ -7,7 +7,7 @@ public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommand>
 {
 	private readonly IRoleManagerService _roleManagerService;
 
-	public DeleteRoleCommandHandler(IRoleManagerService roleManagerService) => 
+	public DeleteRoleCommandHandler(IRoleManagerService roleManagerService) =>
 		_roleManagerService = roleManagerService;
 
 	public async Task Handle(DeleteRoleCommand request, CancellationToken cancellationToken)

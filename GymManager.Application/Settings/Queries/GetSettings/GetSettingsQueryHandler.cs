@@ -12,7 +12,7 @@ public class GetSettingsQueryHandler : IRequestHandler<GetSettingsQuery, IList<S
 	public GetSettingsQueryHandler(IApplicationDbContext context) =>
 		_context = context;
 
-	public async Task<IList<SettingsDto>> Handle(GetSettingsQuery request, CancellationToken cancellationToken) 
+	public async Task<IList<SettingsDto>> Handle(GetSettingsQuery request, CancellationToken cancellationToken)
 		=> await _context.Settings
 			.AsNoTracking()
 			.Include(x => x.Positions.OrderBy(y => y.Order))

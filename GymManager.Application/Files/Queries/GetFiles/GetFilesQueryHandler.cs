@@ -9,7 +9,7 @@ public class GetFilesQueryHandler : IRequestHandler<GetFilesQuery, IEnumerable<F
 {
 	private readonly IApplicationDbContext _context;
 
-	public GetFilesQueryHandler(IApplicationDbContext context) => 
+	public GetFilesQueryHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task<IEnumerable<FileDto>> Handle(GetFilesQuery request, CancellationToken cancellationToken) =>

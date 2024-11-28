@@ -8,11 +8,11 @@ public class GetRolesQueryHandler : IRequestHandler<GetRolesQuery, IEnumerable<R
 {
 	private readonly IRoleManagerService _roleManagerService;
 
-	public GetRolesQueryHandler(IRoleManagerService roleManagerService) => 
+	public GetRolesQueryHandler(IRoleManagerService roleManagerService) =>
 		_roleManagerService = roleManagerService;
 
 	// zarządzanie rolami jest w Identity, czyli jest już dostęp do wszystkich funkcji związanych z rolami
 	// żeby nie używać tych metod bezpośrednio z RoleManager została stworzona abstrakcja i serwis
-	public async Task<IEnumerable<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken) => 
+	public async Task<IEnumerable<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken) =>
 		_roleManagerService.GetRoles();
 }

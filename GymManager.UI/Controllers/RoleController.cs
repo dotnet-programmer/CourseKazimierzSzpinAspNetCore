@@ -1,6 +1,4 @@
-﻿using System;
-using GymManager.Application.Common.Exceptions;
-using GymManager.Application.Contacts.Commands.SendContactEmail;
+﻿using GymManager.Application.Common.Exceptions;
 using GymManager.Application.Dictionaries;
 using GymManager.Application.Roles.Commands.AddRole;
 using GymManager.Application.Roles.Commands.DeleteRole;
@@ -17,11 +15,10 @@ public class RoleController : BaseController
 {
 	private readonly ILogger _logger;
 
-	public RoleController(ILogger<RoleController> logger) => 
+	public RoleController(ILogger<RoleController> logger) =>
 		_logger = logger;
 
-	public async Task<IActionResult> Roles()
-	{
+	public async Task<IActionResult> Roles() =>
 		// INFO - poprawienie przepływu aplikacji – MVC jak SPA
 		//await Task.Delay(2000);
 		//var roles = await Mediator.Send(new GetRolesQuery());
@@ -29,10 +26,9 @@ public class RoleController : BaseController
 		//	? View(roles) 
 		//	: PartialView(roles);
 
-		return View(await Mediator.Send(new GetRolesQuery()));
-	}
+		View(await Mediator.Send(new GetRolesQuery()));
 
-	public IActionResult AddRole() => 
+	public IActionResult AddRole() =>
 		View(new AddRoleCommand());
 
 	[HttpPost]

@@ -8,7 +8,7 @@ public class DeleteEmployeeEventCommandHandler : IRequestHandler<DeleteEmployeeE
 {
 	private readonly IApplicationDbContext _context;
 
-	public DeleteEmployeeEventCommandHandler(IApplicationDbContext context) => 
+	public DeleteEmployeeEventCommandHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task Handle(DeleteEmployeeEventCommand request, CancellationToken cancellationToken)

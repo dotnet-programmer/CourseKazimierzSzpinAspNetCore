@@ -12,10 +12,10 @@ namespace GymManager.Infrastructure.Persistence;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
 	// wszystkie ustawienia przekazywane za pomocą Dependency Injection
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 	{ }
 
-    public DbSet<Address> Addresses { get; set; }
+	public DbSet<Address> Addresses { get; set; }
 	public DbSet<Client> Clients { get; set; }
 	public DbSet<Employee> Employees { get; set; }
 	public DbSet<EmployeeEvent> EmployeeEvents { get; set; }

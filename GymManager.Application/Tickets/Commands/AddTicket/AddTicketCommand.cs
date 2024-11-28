@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using MediatR;
 
 namespace GymManager.Application.Tickets.Commands.AddTicket;

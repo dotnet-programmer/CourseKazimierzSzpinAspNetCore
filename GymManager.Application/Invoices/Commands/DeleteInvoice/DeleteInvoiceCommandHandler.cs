@@ -8,7 +8,7 @@ public class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceCommand>
 {
 	private readonly IApplicationDbContext _context;
 
-	public DeleteInvoiceCommandHandler(IApplicationDbContext context) => 
+	public DeleteInvoiceCommandHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)

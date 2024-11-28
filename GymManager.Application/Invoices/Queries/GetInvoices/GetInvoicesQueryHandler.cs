@@ -11,7 +11,7 @@ public class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, IEnumer
 	public GetInvoicesQueryHandler(IApplicationDbContext context) =>
 		_context = context;
 
-	public async Task<IEnumerable<InvoiceBasicsDto>> Handle(GetInvoicesQuery request, CancellationToken cancellationToken) 
+	public async Task<IEnumerable<InvoiceBasicsDto>> Handle(GetInvoicesQuery request, CancellationToken cancellationToken)
 		=> (await _context
 			.Invoices
 			.Where(x => x.UserId == request.UserId)

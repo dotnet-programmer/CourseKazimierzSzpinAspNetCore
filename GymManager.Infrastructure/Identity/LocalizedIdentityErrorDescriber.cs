@@ -9,66 +9,45 @@ internal class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
 	private const string Email = "Email";
 
 	// jeśli różne hasła to wyświetli się ten błąd
-	public override IdentityError PasswordMismatch()
+	public override IdentityError PasswordMismatch() => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło i Potwierdzone hasło są różne."
-		};
-	}
+		Code = Password,
+		Description = "Hasło i Potwierdzone hasło są różne."
+	};
 
-	public override IdentityError PasswordRequiresDigit()
+	public override IdentityError PasswordRequiresDigit() => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło musi zawierać przynajmniej 1 cyfrę."
-		};
-	}
+		Code = Password,
+		Description = "Hasło musi zawierać przynajmniej 1 cyfrę."
+	};
 
-	public override IdentityError PasswordRequiresLower()
+	public override IdentityError PasswordRequiresLower() => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło musi zawierać przynajmniej 1 małą literę."
-		};
-	}
+		Code = Password,
+		Description = "Hasło musi zawierać przynajmniej 1 małą literę."
+	};
 
-	public override IdentityError PasswordRequiresNonAlphanumeric()
+	public override IdentityError PasswordRequiresNonAlphanumeric() => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło musi zawierać przynajmniej 1 znak specjalny (np. $, #, & itp.)."
-		};
-	}
+		Code = Password,
+		Description = "Hasło musi zawierać przynajmniej 1 znak specjalny (np. $, #, & itp.)."
+	};
 
-	public override IdentityError PasswordRequiresUpper()
+	public override IdentityError PasswordRequiresUpper() => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło musi zawierać przynajmniej 1 dużą literę."
-		};
-	}
+		Code = Password,
+		Description = "Hasło musi zawierać przynajmniej 1 dużą literę."
+	};
 
-	public override IdentityError PasswordTooShort(int length)
+	public override IdentityError PasswordTooShort(int length) => new()
 	{
-		return new IdentityError
-		{
-			Code = Password,
-			Description = "Hasło musi mieć co najmniej 8 znaków i nie więcej niż 100 znaków."
-		};
-	}
+		Code = Password,
+		Description = "Hasło musi mieć co najmniej 8 znaków i nie więcej niż 100 znaków."
+	};
 
-	public override IdentityError DuplicateUserName(string userName)
+	public override IdentityError DuplicateUserName(string userName) => new()
 	{
-		return new IdentityError
-		{
-			Code = Email,
-			Description = "Wybrany email jest już zajęty."
-		};
-	}
+		Code = Email,
+		Description = "Wybrany email jest już zajęty."
+	};
 }

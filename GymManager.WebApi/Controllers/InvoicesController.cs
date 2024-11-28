@@ -28,8 +28,8 @@ public class InvoicesController : BaseApiController
 	[MapToApiVersion("2.0")]
 	[ApiExplorerSettings(GroupName = "v2")]
 	[HttpGet]
-	public async Task<IActionResult> GetAllv2() 
-		=> Ok(new List<InvoiceBasicsDto> { new InvoiceBasicsDto { Id = 100, CreatedDate = new DateTime(2000, 1, 1), Title = "1", UserId = "1", UserName = "Test", Value = 1 } });
+	public async Task<IActionResult> GetAllv2()
+		=> Ok(new List<InvoiceBasicsDto> { new() { Id = 100, CreatedDate = new DateTime(2000, 1, 1), Title = "1", UserId = "1", UserName = "Test", Value = 1 } });
 
 	// pobranie pojedynczej faktury dla podanego użytkownika
 	[HttpGet("{id}")]

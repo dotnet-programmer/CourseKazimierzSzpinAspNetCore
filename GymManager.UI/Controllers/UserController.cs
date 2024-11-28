@@ -10,7 +10,7 @@ public class UserController : BaseController
 {
 	private readonly ILogger _logger;
 
-	public UserController(ILogger<UserController> logger) => 
+	public UserController(ILogger<UserController> logger) =>
 		_logger = logger;
 
 	[HttpPost]

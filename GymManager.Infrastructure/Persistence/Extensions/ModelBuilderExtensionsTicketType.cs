@@ -6,7 +6,7 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensionsTicketType
 {
-	public static void SeedTicketType(this ModelBuilder modelBuilder) => 
+	public static void SeedTicketType(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<TicketType>().HasData(
 			new TicketType
 			{

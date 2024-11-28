@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using GymManager.Application.Common.Exceptions;
+﻿using GymManager.Application.Common.Exceptions;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Roles.Queries.GetRoles;
 using Microsoft.AspNetCore.Identity;
@@ -61,8 +60,8 @@ public class RoleManagerService : IRoleManagerService
 	{
 		var role = await _roleManager.FindByIdAsync(id);
 
-		return role == null ? 
-			throw new Exception($"Brak roli o podanym id: {id}.") : 
+		return role == null ?
+			throw new Exception($"Brak roli o podanym id: {id}.") :
 			new RoleDto { Id = role.Id, Name = role.Name };
 	}
 
@@ -85,7 +84,7 @@ public class RoleManagerService : IRoleManagerService
 	{
 		if (await _roleManager.RoleExistsAsync(roleName))
 		{
-			throw new ValidationException(new List<ValidationFailure> { new("Name", $"Rola o nazwie '{roleName}' już istnieje.") });
+			throw new ValidationException([new("Name", $"Rola o nazwie '{roleName}' już istnieje.")]);
 		}
 	}
 

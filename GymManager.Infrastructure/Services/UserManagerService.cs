@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using GymManager.Application.Common.Exceptions;
+﻿using GymManager.Application.Common.Exceptions;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +30,7 @@ public class UserManagerService : IUserManagerService
 		{
 			foreach (var item in result.Errors)
 			{
-				throw new ValidationException(new List<ValidationFailure> { new(item.Code, item.Description) });
+				throw new ValidationException([new(item.Code, item.Description)]);
 			}
 		}
 
@@ -43,7 +42,7 @@ public class UserManagerService : IUserManagerService
 		return await _userManager.GetUserIdAsync(user);
 	}
 
-	private IUserEmailStore<ApplicationUser> GetEmailStore() => 
+	private IUserEmailStore<ApplicationUser> GetEmailStore() =>
 		_userManager.SupportsUserEmail ?
 			(IUserEmailStore<ApplicationUser>)_userStore :
 			throw new NotSupportedException("The default UI requires a user store with email support");

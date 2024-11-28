@@ -10,7 +10,7 @@ public class NotificationUserHub : Hub
 {
 	private readonly IUserConnectionManager _userConnectionManager;
 
-	public NotificationUserHub(IUserConnectionManager userConnectionManager) 
+	public NotificationUserHub(IUserConnectionManager userConnectionManager)
 		=> _userConnectionManager = userConnectionManager;
 
 	// jeśli user wejdzie na stronę to potrzebna jest o tym informacja
@@ -35,7 +35,7 @@ public class NotificationUserHub : Hub
 	{
 		// pobierz Id połączenia z contextu
 		var connectionId = Context.ConnectionId;
-		
+
 		// wywołanie metody z IUserConnectionManager
 		// jeśli ktoś opuszcza stronę to trzeba usunąć informacje z listy
 		_userConnectionManager.RemoveUserConnection(connectionId);

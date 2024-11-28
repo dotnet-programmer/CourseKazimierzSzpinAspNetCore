@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net;
+﻿using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Payments;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -31,8 +25,8 @@ public class Przelewy24 : IPrzelewy24
 	// INFO - użycie HttpClient - najlepsze użycie to wstrzyknięcie przez konstruktor
 	// + w Dependency Injection dodać services.AddHttpClient<IPrzelewy24, Przelewy24>(); - to powoduje użycie fabryki HttpClient
 	public Przelewy24(
-		HttpClient httpClient, 
-		IConfiguration configuration, 
+		HttpClient httpClient,
+		IConfiguration configuration,
 		ILogger<Przelewy24> logger,
 		IEncryptionService encryptionService)
 	{
@@ -94,7 +88,7 @@ public class Przelewy24 : IPrzelewy24
 		_httpClient.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_userName}:{_userSecret}")));
 	}
 
-	private void InitJsonSettings() => 
+	private void InitJsonSettings() =>
 		_jsonSettings = new JsonSerializerSettings
 		{
 			ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() },

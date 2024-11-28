@@ -13,7 +13,7 @@ public class BackgroundWorkerQueue : IBackgroundWorkerQueue
 	// semafor umożliwiający dostęp tylko dla 1 wątku równocześnie
 	private readonly SemaphoreSlim _semaphore = new(0);
 
-	public BackgroundWorkerQueue(ILogger<BackgroundWorkerQueue> logger) 
+	public BackgroundWorkerQueue(ILogger<BackgroundWorkerQueue> logger)
 		=> _logger = logger;
 
 	// pobieranie metody z kolejki, która ma zostać wykonana
@@ -22,7 +22,7 @@ public class BackgroundWorkerQueue : IBackgroundWorkerQueue
 	{
 		// zablokuj wątek
 		await _semaphore.WaitAsync(cancellationToken);
-		
+
 		// pobierz delegata
 		_workItems.TryDequeue(out var workItem);
 

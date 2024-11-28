@@ -1,10 +1,10 @@
-﻿using GymManager.Application.Common.Extensions;
+﻿using System.Linq.Dynamic.Core;
+using GymManager.Application.Common.Extensions;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models;
 using GymManager.Application.Tickets.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
 
 namespace GymManager.Application.Tickets.Queries.GetClientsTickets;
 

@@ -36,8 +36,8 @@ public class EmailService : IEmailService
 		message.Subject = subject;
 
 		BodyBuilder builder = new()
-			{
-				HtmlBody = @$"
+		{
+			HtmlBody = @$"
 					<html>
 						<head></head>
 						<body>
@@ -46,7 +46,7 @@ public class EmailService : IEmailService
 							</div>
 						</body>
 					</html>"
-			};
+		};
 
 		// sprawdzanie czy dodano załącznik
 		if (!string.IsNullOrEmpty(attachmentPath))

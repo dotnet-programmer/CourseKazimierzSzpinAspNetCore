@@ -8,20 +8,19 @@ using GymManager.Application.Clients.Queries.GetEditClient;
 using GymManager.Application.Dictionaries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GymManager.UI.Controllers;
 
 [Authorize]
 public class ClientController : BaseController
 {
-	public async Task<IActionResult> Dashboard() => 
+	public async Task<IActionResult> Dashboard() =>
 		View(await Mediator.Send(new GetClientDashboardQuery { UserId = UserId }));
 
-	public async Task<IActionResult> Client() => 
+	public async Task<IActionResult> Client() =>
 		View(await Mediator.Send(new GetClientQuery { UserId = UserId }));
 
-	public async Task<IActionResult> EditClient() => 
+	public async Task<IActionResult> EditClient() =>
 		View(await Mediator.Send(new GetEditClientQuery { UserId = UserId }));
 
 	[HttpPost]
@@ -62,11 +61,11 @@ public class ClientController : BaseController
 	}
 
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> Clients() => 
+	public async Task<IActionResult> Clients() =>
 		View(await Mediator.Send(new GetClientsBasicsQuery()));
 
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> AddClient() => 
+	public async Task<IActionResult> AddClient() =>
 		View(new AddClientCommand());
 
 	[HttpPost]
@@ -108,7 +107,7 @@ public class ClientController : BaseController
 	}
 
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> EditAdminClient(string clientId) => 
+	public async Task<IActionResult> EditAdminClient(string clientId) =>
 		View(await Mediator.Send(new GetEditAdminClientQuery { UserId = clientId }));
 
 	[HttpPost]

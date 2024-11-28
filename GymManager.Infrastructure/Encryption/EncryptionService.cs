@@ -7,13 +7,13 @@ public class EncryptionService : IEncryptionService
 {
 	private readonly KeyInfo _keyInfo;
 
-	public EncryptionService(KeyInfo keyInfo) 
+	public EncryptionService(KeyInfo keyInfo)
 		=> _keyInfo = keyInfo;
 
 	public string Encrypt(string input)
 		=> Convert.ToBase64String(EncryptStringToBytesAes(input, _keyInfo.Key, _keyInfo.Iv));
 
-	public string Decrypt(string cipherText) 
+	public string Decrypt(string cipherText)
 		=> DecryptStringFromBytesAes(Convert.FromBase64String(cipherText), _keyInfo.Key, _keyInfo.Iv);
 
 	private static byte[] EncryptStringToBytesAes(string plainText, byte[] key, byte[] iv)

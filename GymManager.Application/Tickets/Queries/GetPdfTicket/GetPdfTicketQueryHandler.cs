@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GymManager.Application.Common.Interfaces;
+﻿using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models;
 using GymManager.Application.Tickets.Extensions;
 using MediatR;
@@ -28,9 +23,10 @@ public class GetPdfTicketQueryHandler : IRequestHandler<GetPdfTicketQuery, Ticke
 
 	public async Task<TicketPdfVm> Handle(GetPdfTicketQuery request, CancellationToken cancellationToken)
 	{
-		TicketPdfVm vm = new();
-
-		vm.Handle = Guid.NewGuid().ToString();
+		TicketPdfVm vm = new()
+		{
+			Handle = Guid.NewGuid().ToString()
+		};
 
 		var ticket = (await _context.Tickets
 			.AsNoTracking()

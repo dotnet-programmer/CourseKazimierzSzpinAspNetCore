@@ -16,7 +16,7 @@ public class UserRoleManagerService : IUserRoleManagerService
 	}
 
 	// na podstawie nazwy roli zwróci listę użytkowników należących do tej roli
-	public async Task<IEnumerable<ApplicationUser>> GetUsersInRoleAsync(string roleName) => 
+	public async Task<IEnumerable<ApplicationUser>> GetUsersInRoleAsync(string roleName) =>
 		await _userManager.GetUsersInRoleAsync(roleName);
 
 	public async Task<IEnumerable<IdentityRole>> GetRolesAsync(string userId)

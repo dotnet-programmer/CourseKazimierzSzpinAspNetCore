@@ -8,7 +8,7 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
 {
 	private readonly IApplicationDbContext _context;
 
-	public DeleteUserCommandHandler(IApplicationDbContext context) => 
+	public DeleteUserCommandHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)

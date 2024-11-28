@@ -20,8 +20,8 @@ public class TicketController : BaseController
 	private readonly IStringLocalizer<CommonResources> _localizer;
 
 	public TicketController(
-		IConfiguration configuration, 
-		ILogger<TicketController> logger, 
+		IConfiguration configuration,
+		ILogger<TicketController> logger,
 		IStringLocalizer<CommonResources> localizer)
 	{
 		_configuration = configuration;

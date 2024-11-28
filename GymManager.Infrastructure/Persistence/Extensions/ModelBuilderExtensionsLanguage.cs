@@ -5,7 +5,7 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensionsLanguage
 {
-	public static void SeedLanguage(this ModelBuilder modelBuilder) => 
+	public static void SeedLanguage(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<Language>().HasData(
 			new Language
 			{

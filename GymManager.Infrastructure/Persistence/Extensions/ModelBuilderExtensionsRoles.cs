@@ -6,7 +6,7 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 // INFO - role użytkowników
 public static class ModelBuilderExtensionsRoles
 {
-	public static void SeedRoles(this ModelBuilder modelBuilder) => 
+	public static void SeedRoles(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<IdentityRole>()
 		.HasData(
 			new IdentityRole

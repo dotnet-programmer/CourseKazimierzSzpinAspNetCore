@@ -8,7 +8,7 @@ public class UpdateEmployeeEventCommandHandler : IRequestHandler<UpdateEmployeeE
 {
 	private readonly IApplicationDbContext _context;
 
-	public UpdateEmployeeEventCommandHandler(IApplicationDbContext context) => 
+	public UpdateEmployeeEventCommandHandler(IApplicationDbContext context) =>
 		_context = context;
 
 	public async Task Handle(UpdateEmployeeEventCommand request, CancellationToken cancellationToken)

@@ -1,7 +1,6 @@
 using AspNetCore.ReCaptcha;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Contacts.Commands.SendContactEmail;
-using GymManager.UI.Models;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,22 +22,13 @@ public class HomeController : BaseController
 	}
 
 	// widok strona główna
-	public IActionResult Index()
-	{
-		return View();
-	}
+	public IActionResult Index() => View();
 
 	// widok polityka prywatności
-	public IActionResult Privacy()
-	{
-		return View();
-	}
+	public IActionResult Privacy() => View();
 
 	// widok kontakt
-	public IActionResult Contact()
-	{
-		return View(new SendContactEmailCommand());
-	}
+	public IActionResult Contact() => View(new SendContactEmailCommand());
 
 	// wysyłanie danych z formularza do kontrolera
 	[ValidateAntiForgeryToken]
