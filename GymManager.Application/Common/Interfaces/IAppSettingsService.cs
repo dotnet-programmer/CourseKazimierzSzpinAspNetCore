@@ -4,7 +4,7 @@
 public interface IAppSettingsService
 {
 	// pobieranie wartości ze słownika na podstawie klucza
-	Task<string> Get(string key);
+	Task<string> GetValueByKeyAsync(string key);
 
 	// aktualizacja słownika danymi z bazy danych
 	Task Update(IApplicationDbContext context);

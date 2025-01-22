@@ -6,7 +6,7 @@ namespace GymManager.Application.Clients.Commands.EditAdminClient;
 
 public class EditAdminClientCommand : IRequest
 {
-	public string Id { get; set; }
+	public string UserId { get; set; }
 
 	[Required(ErrorMessage = "Pole 'Adres e-mail' jest wymagane")]
 	[DisplayName("Adres e-mail")]

@@ -2,11 +2,13 @@
 
 namespace GymManager.Application.Common.Exceptions;
 
-// własny wyjątek
+// własny wyjątek o takiej samej nazwie jak ten z FluentValidation
 public class ValidationException : Exception
 {
-	public ValidationException() : base("Błąd walidacji") =>
-		Errors = new Dictionary<string, string[]>();
+	//public ValidationException() : base("Błąd walidacji") =>
+	//	Errors = new Dictionary<string, string[]>();
+	public ValidationException() : this("Błąd walidacji")
+	{ }
 
 	public ValidationException(string description) : base(description) =>
 		Errors = new Dictionary<string, string[]>();

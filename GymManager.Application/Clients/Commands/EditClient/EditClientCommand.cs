@@ -6,11 +6,10 @@ namespace GymManager.Application.Clients.Commands.EditClient;
 
 // komenda zapisujaca zmiany w bazie
 // wspólny model wykorzystany w kwerendzie do pobrania danych a później w komendzie do zapisu danych
-// będzie tylko 1 model żeby nie tworzyć osobno modeli dla EditClient i GetEditClient
-// bo wtedy modele byłyby podwójne i identyczne
+// będzie tylko 1 model żeby nie tworzyć osobno modeli dla EditClient i GetEditClient bo wtedy modele byłyby podwójne i identyczne
 public class EditClientCommand : IRequest
 {
-	public string Id { get; set; }
+	public string UserId { get; set; }
 
 	[Required(ErrorMessage = "Pole 'Adres e-mail' jest wymagane")]
 	[DisplayName("Adres e-mail")]

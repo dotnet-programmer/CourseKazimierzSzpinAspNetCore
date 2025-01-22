@@ -13,21 +13,14 @@ using Microsoft.Extensions.Localization;
 namespace GymManager.UI.Controllers;
 
 [Authorize]
-public class TicketController : BaseController
+public class TicketController(
+	IConfiguration configuration,
+	ILogger<TicketController> logger,
+	IStringLocalizer<CommonResources> localizer) : BaseController
 {
-	private readonly IConfiguration _configuration;
-	private readonly ILogger _logger;
-	private readonly IStringLocalizer<CommonResources> _localizer;
-
-	public TicketController(
-		IConfiguration configuration,
-		ILogger<TicketController> logger,
-		IStringLocalizer<CommonResources> localizer)
-	{
-		_configuration = configuration;
-		_logger = logger;
-		_localizer = localizer;
-	}
+	private readonly IConfiguration _configuration = configuration;
+	private readonly ILogger _logger = logger;
+	private readonly IStringLocalizer<CommonResources> _localizer = localizer;
 
 	public async Task<IActionResult> TicketsAsync()
 	{

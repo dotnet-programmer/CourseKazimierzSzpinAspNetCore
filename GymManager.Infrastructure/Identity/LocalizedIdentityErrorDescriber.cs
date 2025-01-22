@@ -2,7 +2,7 @@
 
 namespace GymManager.Infrastructure.Identity;
 
-// INFO - konfiguracja Identity - komunikaty poprawności danych
+// konfiguracja Identity - komunikaty poprawności danych
 internal class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
 {
 	private const string Password = "Password";

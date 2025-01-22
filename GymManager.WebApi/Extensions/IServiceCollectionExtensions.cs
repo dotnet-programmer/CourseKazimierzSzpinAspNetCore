@@ -30,50 +30,52 @@ public static class IServiceCollectionExtensions
 
 	// wersjonowanie API umożliwia wydawanie kolejnych wersji bez utraty działania poprzednich wersji
 	// wersjonowanie dokumentacji, żeby swagger poprawnie działał
-	public static void AddSwaggerBearerAuthorization(this IServiceCollection service) => service.AddSwaggerGen(swagger =>
-																							  {
-																								  // wskazanie kolejnych wersji dokumentacji
-																								  swagger.SwaggerDoc("v1", new OpenApiInfo
-																								  {
-																									  Version = "v1",
-																									  Title = "ASP.NET 6 GymManager Web API 1"
-																								  });
-																								  swagger.SwaggerDoc("v2", new OpenApiInfo
-																								  {
-																									  Version = "v2",
-																									  Title = "ASP.NET 6 GymManager Web API 2"
-																								  });
-
-																								  // jeśli będą konflikty, to ustaw pierwszą akcję
-																								  swagger.ResolveConflictingActions(x => x.First());
-																								  swagger.OperationFilter<RemoveVersionFromParameter>();
-																								  swagger.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
-
-																								  // JWT - implementacja uwierzytelnienia w swaggerze
-																								  swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-																								  {
-																									  Name = "Authorization",
-																									  Type = SecuritySchemeType.ApiKey,
-																									  Scheme = "Bearer",
-																									  BearerFormat = "JWT",
-																									  In = ParameterLocation.Header,
-																									  Description = "Bearer Authorization"
-																								  });
-																								  swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-																								  {
+	public static void AddSwaggerBearerAuthorization(this IServiceCollection service)
+		=> service.AddSwaggerGen(swagger =>
+			{
+				// wskazanie kolejnych wersji dokumentacji
+				swagger.SwaggerDoc("v1", new OpenApiInfo
 				{
-					new OpenApiSecurityScheme
+					Version = "v1",
+					Title = "ASP.NET 6 GymManager Web API 1"
+				});
+				swagger.SwaggerDoc("v2", new OpenApiInfo
+				{
+					Version = "v2",
+					Title = "ASP.NET 6 GymManager Web API 2"
+				});
+
+				// jeśli będą konflikty, to ustaw pierwszą akcję
+				swagger.ResolveConflictingActions(x => x.First());
+				swagger.OperationFilter<RemoveVersionFromParameter>();
+				swagger.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+
+				// JWT - implementacja uwierzytelnienia w swaggerze
+				swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+				{
+					Name = "Authorization",
+					Type = SecuritySchemeType.ApiKey,
+					Scheme = "Bearer",
+					BearerFormat = "JWT",
+					In = ParameterLocation.Header,
+					Description = "Bearer Authorization"
+				});
+				swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
 					{
-						Reference = new OpenApiReference
+						new OpenApiSecurityScheme
 						{
-							Type = ReferenceType.SecurityScheme,
-							Id = "Bearer"
-						}
-					},
-					new string [] {}
-				}
-																								  });
-																							  });
+							Reference = new OpenApiReference
+							{
+								Type = ReferenceType.SecurityScheme,
+								Id = "Bearer"
+							}
+						},
+						new string [] {}
+					}
+				});
+			}
+		);
 
 	// JWT - implementacja uwierzytelnienia w WebApi
 	public static void AddBearerAuthentication(this IServiceCollection service, IConfiguration configuration)

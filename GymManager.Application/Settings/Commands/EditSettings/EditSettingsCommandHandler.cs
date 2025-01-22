@@ -3,21 +3,14 @@ using MediatR;
 
 namespace GymManager.Application.Settings.Commands.EditSettings;
 
-public class EditSettingsCommandHandler : IRequestHandler<EditSettingsCommand>
+public class EditSettingsCommandHandler(
+	IApplicationDbContext context,
+	IAppSettingsService appSettingsService,
+	IEmailService emailService) : IRequestHandler<EditSettingsCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IAppSettingsService _appSettingsService;
-	private readonly IEmailService _emailService;
-
-	public EditSettingsCommandHandler(
-		IApplicationDbContext context,
-		IAppSettingsService appSettingsService,
-		IEmailService emailService)
-	{
-		_context = context;
-		_appSettingsService = appSettingsService;
-		_emailService = emailService;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IAppSettingsService _appSettingsService = appSettingsService;
+	private readonly IEmailService _emailService = emailService;
 
 	public async Task Handle(EditSettingsCommand request, CancellationToken cancellationToken)
 	{
@@ -29,13 +22,11 @@ public class EditSettingsCommandHandler : IRequestHandler<EditSettingsCommand>
 
 		await _context.SaveChangesAsync(cancellationToken);
 
-		await UpdateAppSettings();
-
-		return;
+		await UpdateAppSettingsAsync();
 	}
 
 	// odświeżenie ustawień zapisanych w Cahce
-	private async Task UpdateAppSettings()
+	private async Task UpdateAppSettingsAsync()
 	{
 		await _appSettingsService.Update(_context);
 		await _emailService.Update(_appSettingsService);

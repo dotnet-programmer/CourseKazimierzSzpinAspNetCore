@@ -28,7 +28,7 @@
 		</a>
 	</li>
 
-	@if (User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Pracownik))
+	@if (User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Employee))
 	{
 		<li class="nav-item @Url.MakeActiveClass("Client", "Clients,AddClient,EditAdminClient")">
 			<a asp-controller="Client" asp-action="Clients" class="nav-link align-middle px-0 text-white">

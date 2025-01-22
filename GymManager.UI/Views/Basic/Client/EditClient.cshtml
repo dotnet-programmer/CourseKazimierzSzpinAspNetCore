@@ -11,7 +11,7 @@
 	@using (Html.BeginForm("EditClient", "Client"))
 	{
 		@Html.AntiForgeryToken()
-		@Html.HiddenFor(x => x.Id)
+		@Html.HiddenFor(x => x.UserId)
 
 		<div class="card-body">
 
@@ -37,7 +37,7 @@
 				@Html.LabelFor(x => x.IsPrivateAccount, new { @class = "form-check-label font-weight-bold" })
 			</div>
 
-			@* INFO - pokazywanie/ukrywanie NIP w zależności od zaznaczenia checkboxa - javascript *@
+			@* pokazywanie/ukrywanie NIP w zależności od zaznaczenia checkboxa - javascript *@
 			<div class="form-group" id="divNipNumber" style="display: none;">
 				@Html.LabelFor(x => x.NipNumber)
 				@Html.TextBoxFor(x => x.NipNumber, new { @class = "form-control", placeholder = "Wprowadź NIP" })
@@ -87,7 +87,7 @@
 
 @section Scripts {
 	<partial name="Scripts/_ValidationScriptsPartial" />
-	@* INFO - Input Mask *@
+	@* Input Mask *@
 	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
 
 	<script>
@@ -97,7 +97,7 @@
 			if ('@Model.IsPrivateAccount.ToString().ToUpper()' == 'FALSE') {
 				$("#divNipNumber").show();
 			}
-			// INFO - Input Mask
+			// Input Mask
 			$("#ZipCode").inputmask("99-999", { "clearIncomplete": true, showMaskOnHover: false });
 		});
 

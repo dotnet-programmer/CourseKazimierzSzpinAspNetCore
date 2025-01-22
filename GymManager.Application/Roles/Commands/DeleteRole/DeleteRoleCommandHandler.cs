@@ -3,17 +3,8 @@ using MediatR;
 
 namespace GymManager.Application.Roles.Commands.DeleteRole;
 
-public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommand>
+public class DeleteRoleCommandHandler(IRoleManagerService roleManagerService) : IRequestHandler<DeleteRoleCommand>
 {
-	private readonly IRoleManagerService _roleManagerService;
-
-	public DeleteRoleCommandHandler(IRoleManagerService roleManagerService) =>
-		_roleManagerService = roleManagerService;
-
-	public async Task Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
-	{
-		await _roleManagerService.DeleteAsync(request.Id);
-
-		return;
-	}
+	public async Task Handle(DeleteRoleCommand request, CancellationToken cancellationToken) => 
+		await roleManagerService.DeleteAsync(request.Id);
 }

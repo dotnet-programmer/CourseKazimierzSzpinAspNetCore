@@ -5,16 +5,10 @@ using Microsoft.Extensions.Logging;
 namespace GymManager.Infrastructure.Services;
 
 // serwis, który będzie cały czas uruchomiony i wykonywał w tle zadania które są zakolejkowane
-public class LongRunningService : BackgroundService
+public class LongRunningService(IBackgroundWorkerQueue queue, ILogger<LongRunningService> logger) : BackgroundService
 {
-	private readonly IBackgroundWorkerQueue _queue;
-	private readonly ILogger _logger;
-
-	public LongRunningService(IBackgroundWorkerQueue queue, ILogger<LongRunningService> logger)
-	{
-		_queue = queue;
-		_logger = logger;
-	}
+	private readonly IBackgroundWorkerQueue _queue = queue;
+	private readonly ILogger _logger = logger;
 
 	// metoda która startuje zaraz po starcie aplikacji,
 	// dopóki nie zostanie anulowana to będzie pobierała z kolejki zadania do wykoniania w tle

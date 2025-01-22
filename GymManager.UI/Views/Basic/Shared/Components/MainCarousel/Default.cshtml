@@ -1,11 +1,12 @@
-﻿@* INFO - komponent *@
+﻿@* komponent *@
 
 @using GymManager.Application.Common.Interfaces
 @using GymManager.Application.Dictionaries
 
 @inject IAppSettingsService appSettings
 
-@if (Convert.ToBoolean(await appSettings.Get(SettingsDict.BannerVisible)))
+@* wyświetlanie baneru zgodnie z ustawieniami aplikacji *@
+@if (Convert.ToBoolean(await appSettings.GetValueByKeyAsync(SettingsDict.BannerVisible)))
 {
 	<div id="carouselExampleControls" class="carousel slide mt-3 mb-3 " data-bs-ride="carousel">
 		<div class="carousel-inner">

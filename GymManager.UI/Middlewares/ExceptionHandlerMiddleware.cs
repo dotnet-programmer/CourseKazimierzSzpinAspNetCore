@@ -3,20 +3,13 @@ using System.Text.Json;
 
 namespace GymManager.UI.Middlewares;
 
-// INFO - globalna obsługa wyjątków przez poprzez middleware
+// globalna obsługa wyjątków przez poprzez middleware
 
-public class ExceptionHandlerMiddleware
+// wstrzyknięcie requesta przez konstruktor
+public class ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
 {
-	private readonly RequestDelegate _next;
-	private readonly ILogger _logger;
-
-	// wstrzyknięcie requesta przez konstruktor
-	public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
-	{
-		_next = next;
-		_logger = logger;
-	}
-
+	private readonly RequestDelegate _next = next;
+	private readonly ILogger<ExceptionHandlerMiddleware> _logger = logger;
 
 	public async Task Invoke(HttpContext context)
 	{

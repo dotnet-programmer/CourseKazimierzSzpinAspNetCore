@@ -5,22 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Clients.Commands.AddClient;
 
-public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
+public class AddClientCommandHandler(
+	IApplicationDbContext context,
+	IUserManagerService userManagerService,
+	IDateTimeService dateTimeService) : IRequestHandler<AddClientCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IUserManagerService _userManagerService;
-	private readonly IDateTimeService _dateTimeService;
-
-	public AddClientCommandHandler(
-		IApplicationDbContext context,
-		IUserManagerService userManagerService,
-		IDateTimeService dateTimeService)
-	{
-		_context = context;
-		_userManagerService = userManagerService;
-		_dateTimeService = dateTimeService;
-	}
-
 	public async Task Handle(AddClientCommand request, CancellationToken cancellationToken)
 	{
 		if (request.IsPrivateAccount)
@@ -29,18 +18,18 @@ public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
 		}
 
 		// stworzenie nowego klienta z podstawowymi danymi w bazie i zwrócenie jego ID
-		var userId = await _userManagerService.CreateAsync(request.Email, request.Password, RolesDict.Klient);
+		var userId = await userManagerService.CreateAsync(request.Email, request.Password, RolesDict.Client);
 
 		// wybranie z bazy nowo utworzonego klienta
-		var user = await _context.Users
+		var user = await context.Users
 			.Include(x => x.Client)
 			.Include(x => x.Address)
-			.FirstOrDefaultAsync(x => x.Id == userId);
+			.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
 
 		// ustawienie jego właściwości z pól formularza
 		user.FirstName = request.FirstName;
 		user.LastName = request.LastName;
-		user.RegisterDateTime = _dateTimeService.Now;
+		user.RegisterDateTime = dateTimeService.Now;
 		// jeśli pracownik dodaje nowego klienta to ten ma od razu potwierdzony adres
 		user.EmailConfirmed = true;
 
@@ -61,7 +50,6 @@ public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
 			UserId = userId
 		};
 
-		await _context.SaveChangesAsync(cancellationToken);
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

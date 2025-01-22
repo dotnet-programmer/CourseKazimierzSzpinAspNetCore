@@ -10,16 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Clients.Queries.GetClientDashboard;
 
-public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboardQuery, GetClientDashboardVm>
+public class GetClientDashboardQueryHandler(IApplicationDbContext context, IDateTimeService dateTimeService) : IRequestHandler<GetClientDashboardQuery, GetClientDashboardVm>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IDateTimeService _dateTimeService;
-
-	public GetClientDashboardQueryHandler(IApplicationDbContext context, IDateTimeService dateTimeService)
-	{
-		_context = context;
-		_dateTimeService = dateTimeService;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IDateTimeService _dateTimeService = dateTimeService;
 
 	public async Task<GetClientDashboardVm> Handle(GetClientDashboardQuery request, CancellationToken cancellationToken)
 	{
@@ -27,16 +21,16 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 		var user = await GetUser(request);
 		vm.Email = user.Email;
 		var ticket = GetActiveTicket(user);
-		vm.TicketEndDate = GetTicketEndDate(ticket);
+		vm.TicketEndDate = ticket?.EndDate;
 		vm.Announcements = await GetAnnouncements(request);
 
 		// w przykładzie dane wpisane na sztywno
 		// żeby zrobić odpowiednią implementację, trzeba zrobić odpowiednią kwerendę na bazie danych
 		// a następnie pogrupować w zależności od tego, co będzie wyświetlane
-		var color = GetChartColors();
+		var colors = GetChartColors();
 		var borderColors = GetChartBorderColors();
-		vm.TrainingCountChart = GetTrainingCountChart(color, borderColors);
-		vm.TheBestTrainingsChart = GetTheBestTrainingsChart(color, borderColors);
+		vm.TrainingCountChart = GetTrainingCountChart(colors, borderColors);
+		vm.TheBestTrainingsChart = GetTheBestTrainingsChart(colors, borderColors);
 
 		return vm;
 	}
@@ -50,15 +44,12 @@ public class GetClientDashboardQueryHandler : IRequestHandler<GetClientDashboard
 	private Ticket GetActiveTicket(ApplicationUser user) =>
 		user.Tickets.FirstOrDefault(x => x.StartDate.Date <= _dateTimeService.Now.Date && x.EndDate.Date >= _dateTimeService.Now.Date);
 
-	private static DateTime? GetTicketEndDate(Ticket ticket) =>
-		ticket == null ? null : ticket.EndDate;
-
 	private async Task<PaginatedList<AnnouncementDto>> GetAnnouncements(GetClientDashboardQuery request) =>
-	await _context.Announcements
-		.AsNoTracking()
-		.OrderByDescending(x => x.Date)
-		.Select(x => x.ToDto())
-		.PaginatedListAsync(request.PageNumber, request.PageSize);
+		await _context.Announcements
+			.AsNoTracking()
+			.OrderByDescending(x => x.Date)
+			.Select(x => x.ToDto())
+			.PaginatedListAsync(request.PageNumber, request.PageSize);
 
 	private List<string> GetChartColors() =>
 		[

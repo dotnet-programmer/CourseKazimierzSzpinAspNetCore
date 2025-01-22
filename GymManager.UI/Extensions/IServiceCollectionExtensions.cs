@@ -5,7 +5,7 @@ namespace GymManager.UI.Extensions;
 
 public static class IServiceCollectionExtensions
 {
-	// INFO - jedna aplikacja (wiele różnych szablonów) dla wielu klientów
+	// jedna aplikacja (wiele różnych szablonów) dla wielu klientów
 	// Konfiguracja silnika Razor jak i gdzie szukać widoków dla poszczególnych klientów
 	public static void DefineViewLocation(this IServiceCollection services, IConfiguration configuration)
 	{
@@ -33,7 +33,7 @@ public static class IServiceCollectionExtensions
 			});
 	}
 
-	// INFO - Globalizacja - wiele wersji językowych
+	// Globalizacja - wiele wersji językowych
 	public static void AddCulture(this IServiceCollection services)
 	{
 		// lista przechowująca informacje o językach, które są wspierane

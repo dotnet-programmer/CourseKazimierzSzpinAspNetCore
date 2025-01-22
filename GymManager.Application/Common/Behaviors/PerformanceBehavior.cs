@@ -5,19 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace GymManager.Application.Common.Behaviors;
 
-// INFO - badanie wydajności aplikacji
-public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+// badanie wydajności aplikacji
+public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger, ICurrentUserService currentUserService) : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-	private readonly ILogger _logger;
-	private readonly Stopwatch _timer;
-	private readonly ICurrentUserService _currentUserService;
-
-	public PerformanceBehavior(ILogger<TRequest> logger, ICurrentUserService currentUserService)
-	{
-		_logger = logger;
-		_timer = new Stopwatch();
-		_currentUserService = currentUserService;
-	}
+	private readonly Stopwatch _timer = new Stopwatch();
 
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 	{
@@ -27,10 +18,10 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 		var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 		if (elapsedMilliseconds > 500)
 		{
-			// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
-			string userId = _currentUserService.UserId ?? string.Empty;
-			string userName = _currentUserService.UserName ?? string.Empty;
-			_logger.LogInformation(
+			// Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
+			string userId = currentUserService.UserId ?? string.Empty;
+			string userName = currentUserService.UserName ?? string.Empty;
+			logger.LogInformation(
 				"GymManager Long Running Request: {@Name} ({@ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
 				typeof(TRequest).Name, elapsedMilliseconds, userId, userName, request);
 		}

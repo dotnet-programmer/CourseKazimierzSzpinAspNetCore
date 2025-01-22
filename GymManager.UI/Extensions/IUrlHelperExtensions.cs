@@ -2,7 +2,7 @@
 
 namespace GymManager.UI.Extensions;
 
-// INFO - dynamiczna aktywacja zakładki
+// dynamiczna aktywacja zakładki
 public static class IUrlHelperExtensions
 {
 	public static string MakeActiveClass(this IUrlHelper urlHelper, string controller, string action)
@@ -28,7 +28,6 @@ public static class IUrlHelperExtensions
 				.ToList()
 				.Select(x => x.ToUpper());
 
-			// TODO - albo to przez wykonaniem Split, albo tu chyba powinno być sprawdzanie actions
 			if (action == null || !action.Any())
 			{
 				return null;

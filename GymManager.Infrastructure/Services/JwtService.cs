@@ -10,21 +10,12 @@ namespace GymManager.Infrastructure.Services;
 
 // JWT - klasa do generowania tokena
 // token będzie generowany w warstwie application
-public class JwtService : IJwtService
+public class JwtService(IConfiguration configuration, IDateTimeService dateTimeService) : IJwtService
 {
-	private readonly IConfiguration _configuration;
-	private readonly IDateTimeService _dateTimeService;
-
-	public JwtService(IConfiguration configuration, IDateTimeService dateTimeService)
-	{
-		_configuration = configuration;
-		_dateTimeService = dateTimeService;
-	}
-
 	public AuthenticateResponse GenerateJwtToken(string userId)
 	{
 		// pobranie klucza z ustawień
-		var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Secret").Value);
+		var key = Encoding.ASCII.GetBytes(configuration.GetSection("Secret").Value);
 
 		// lista wartości które będą przetrzymywane jako dane w tokenie
 		var authClaims = new List<Claim>
@@ -37,12 +28,12 @@ public class JwtService : IJwtService
 		};
 
 		// ustawienie klucza szyfrującego
-		var authSigningKey = new SymmetricSecurityKey(key);
+		SymmetricSecurityKey authSigningKey = new(key);
 
 		// generowanie tokena
 		JwtSecurityToken token = new(
 			// data wygaśnięcia - ustawienie jak długo ma być wważny dany token
-			expires: _dateTimeService.Now.AddDays(1),
+			expires: dateTimeService.Now.AddDays(1),
 
 			// dane przechowywane w tokenie
 			claims: authClaims,

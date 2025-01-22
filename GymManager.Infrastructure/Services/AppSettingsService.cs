@@ -28,7 +28,7 @@ public class AppSettingsService : IAppSettingsService
 	#endregion
 
 	// pobieranie wartości ze słownika na podstawie klucza
-	public async Task<string> Get(string key)
+	public async Task<string> GetValueByKeyAsync(string key)
 	{
 		try
 		{

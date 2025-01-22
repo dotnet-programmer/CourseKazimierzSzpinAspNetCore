@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.8" />
 
-		<!-- INFO - zastąpienie pakietu Microsoft.AspNetCore.Http.Abstractions dla IApplicationBuilder-->
+		<!-- zastąpienie pakietu Microsoft.AspNetCore.Http.Abstractions dla IApplicationBuilder-->
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 

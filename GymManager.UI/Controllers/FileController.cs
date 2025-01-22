@@ -9,12 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymManager.UI.Controllers;
 
 [Authorize(Roles = RolesDict.Administrator)]
-public class FileController : BaseController
+public class FileController(ILogger<FileController> logger) : BaseController
 {
-	private readonly ILogger<FileController> _logger;
-
-	public FileController(ILogger<FileController> logger) =>
-		_logger = logger;
+	private readonly ILogger<FileController> _logger = logger;
 
 	public async Task<IActionResult> Files() =>
 		View(await Mediator.Send(new GetFilesQuery()));

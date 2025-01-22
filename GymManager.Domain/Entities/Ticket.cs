@@ -8,7 +8,7 @@ public class Ticket
 	public decimal Price { get; set; }
 	public bool IsPaid { get; set; }
 
-	// TODO - co to??
+	// Token generowany przez system płatności
 	public string Token { get; set; }
 	public DateTime CreatedDate { get; set; }
 

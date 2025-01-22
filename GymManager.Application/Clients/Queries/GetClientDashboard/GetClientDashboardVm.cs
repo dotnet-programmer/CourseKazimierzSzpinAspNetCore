@@ -13,6 +13,7 @@ public class GetClientDashboardVm
 	// dla 1 wykresu zawsze będzie 1 model (czyli dla każdego wykresu potrzebna osobna właściwość)
 	// wykres na temat liczby treningów
 	public ChartDto TrainingCountChart { get; set; }
+
 	// statystyki  najlepszych treningów
 	public ChartDto TheBestTrainingsChart { get; set; }
 }

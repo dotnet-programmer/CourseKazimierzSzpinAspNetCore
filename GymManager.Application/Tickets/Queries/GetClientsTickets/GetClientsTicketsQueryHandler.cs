@@ -8,16 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Tickets.Queries.GetClientsTickets;
 
-public class GetClientsTicketsQueryHandler : IRequestHandler<GetClientsTicketsQuery, PaginatedList<TicketBasicsDto>>
+public class GetClientsTicketsQueryHandler(IApplicationDbContext context) : IRequestHandler<GetClientsTicketsQuery, PaginatedList<TicketBasicsDto>>
 {
-	private readonly IApplicationDbContext _context;
-
-	public GetClientsTicketsQueryHandler(IApplicationDbContext context) =>
-		_context = context;
-
 	public async Task<PaginatedList<TicketBasicsDto>> Handle(GetClientsTicketsQuery request, CancellationToken cancellationToken)
 	{
-		var tickets = _context.Tickets
+		var tickets = context.Tickets
 			.Where(x => x.UserId == request.UserId)
 			.AsNoTracking();
 

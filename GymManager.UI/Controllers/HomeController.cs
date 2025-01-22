@@ -6,29 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
 
-// INFO - routing - można go definiować nad nazwą kontrolera
+// routing - można go definiować nad nazwą kontrolera
 // wtedy dotyczy wszystkich akcji w kontrolerze, które nie mają nadpisanego routingu
 //[Route("test/[controller]/[action]")]
-public class HomeController : BaseController
+public class HomeController(ILogger<HomeController> logger, IDateTimeService dateTimeService) : BaseController
 {
-	private readonly ILogger _logger;
-	private readonly IDateTimeService _dateTimeService;
-
-	// konstruktor - dependency injection - wstrzyknięcie klasy NLoga
-	public HomeController(ILogger<HomeController> logger, IDateTimeService dateTimeService)
-	{
-		_logger = logger;
-		_dateTimeService = dateTimeService;
-	}
+	private readonly ILogger<HomeController> _logger = logger;
+	private readonly IDateTimeService _dateTimeService = dateTimeService;
 
 	// widok strona główna
-	public IActionResult Index() => View();
+	public IActionResult Index() 
+		=> View();
 
 	// widok polityka prywatności
-	public IActionResult Privacy() => View();
+	public IActionResult Privacy() 
+		=> View();
 
 	// widok kontakt
-	public IActionResult Contact() => View(new SendContactEmailCommand());
+	public IActionResult Contact() 
+		=> View(new SendContactEmailCommand());
 
 	// wysyłanie danych z formularza do kontrolera
 	[ValidateAntiForgeryToken]
@@ -39,7 +35,6 @@ public class HomeController : BaseController
 		// zwykłe wysłanie maila
 		//await Mediator.Send(sendContactEmailCommand);
 
-		// TODO - dlaczego nie działa?
 		//var result = await MediatorSendValidate(sendContactEmailCommand);
 
 		// powinno być przeniesione do BaseController, ale wtedy nie działa
@@ -112,21 +107,21 @@ public class HomeController : BaseController
 	//	// symulacja błędu
 	//	//throw new Exception("Nieobsłużony błąd!");
 
-	//	// INFO - wywołanie kwerendy
+	//	// wywołanie kwerendy
 	//	// parametr to nazwa kwerendy, czyli klasa Query
 	//	//var ticket = await Mediator.Send(new GetTicketByIdQuery { TicketId = 1 });
 
-	//	// INFO - wywołanie kwerendy
+	//	// wywołanie kwerendy
 	//	//await Mediator.Send(new AddTicketCommand { Name = "Ticket1" });
 
-	//	// INFO - użycie NLog
+	//	// użycie NLog
 	//	//_logger.LogInformation("LogInformation");
 	//	//_logger.LogError(new Exception("LogError"), null);
 
 	//	return View();
 	//}
 
-	// INFO - routing - definiowanie ścieżki nad konkretną akcją
+	// routing - definiowanie ścieżki nad konkretną akcją
 
 	// przekazanie w jaki sposób ma zostać przekazany ten parametr
 	// czyli nie ma jawnego przypisania wartości do parametru - www.adres.pl/home/index2?test=wartosc

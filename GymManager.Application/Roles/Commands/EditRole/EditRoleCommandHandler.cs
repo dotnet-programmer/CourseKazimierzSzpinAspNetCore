@@ -4,16 +4,8 @@ using MediatR;
 
 namespace GymManager.Application.Roles.Commands.EditRole;
 
-public class EditRoleCommandHandler : IRequestHandler<EditRoleCommand>
+public class EditRoleCommandHandler(IRoleManagerService roleManagerService) : IRequestHandler<EditRoleCommand>
 {
-	private readonly IRoleManagerService _roleManagerService;
-
-	public EditRoleCommandHandler(IRoleManagerService roleManagerService) => _roleManagerService = roleManagerService;
-
-	public async Task Handle(EditRoleCommand request, CancellationToken cancellationToken)
-	{
-		await _roleManagerService.UpdateAsync(new RoleDto { Id = request.Id, Name = request.Name });
-
-		return;
-	}
+	public async Task Handle(EditRoleCommand request, CancellationToken cancellationToken) => 
+		await roleManagerService.UpdateAsync(new RoleDto { Id = request.Id, Name = request.Name });
 }

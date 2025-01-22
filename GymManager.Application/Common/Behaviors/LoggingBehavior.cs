@@ -4,34 +4,27 @@ using Microsoft.Extensions.Logging;
 
 namespace GymManager.Application.Common.Behaviors;
 
-// INFO - Logowanie wszystkich requestów aplikacji
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+// Logowanie wszystkich requestów aplikacji
+public class LoggingBehavior<TRequest, TResponse>(ILogger<TRequest> logger, ICurrentUserService currentUserService) : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-	private readonly ILogger _logger;
-	private readonly ICurrentUserService _currentUserService;
-
-	public LoggingBehavior(ILogger<TRequest> logger, ICurrentUserService currentUserService)
-	{
-		_logger = logger;
-		_currentUserService = currentUserService;
-	}
-
+	// metoda wywoływana przed każdym requestem
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 	{
+		// pobranie nazwy requesta
 		var requestName = typeof(TRequest).Name;
 
-		// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
-		string userId = _currentUserService.UserId ?? string.Empty;
-		string userName = _currentUserService.UserName ?? string.Empty;
+		// Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
+		string userId = currentUserService.UserId ?? string.Empty;
+		string userName = currentUserService.UserName ?? string.Empty;
 
-		_logger.LogInformation($"Handling {requestName}");
-		_logger.LogInformation("GymManager Request: {@Name} {@UserId} {@UserName} {@Request}", requestName, userId, userName, request);
+		logger.LogInformation($"Handling {requestName}");
+		logger.LogInformation("GymManager Request: {@Name} {@UserId} {@UserName} {@Request}", requestName, userId, userName, request);
 
 		// przypisanie do responsa odpowiedzi obsłużonego requesta
 		var response = await next();
 
 		// informacja, że request został obsłużony
-		_logger.LogInformation($"Handled {typeof(TResponse).Name}");
+		logger.LogInformation($"Handled {typeof(TResponse).Name}");
 
 		// zwrócenie odpowiedzi
 		return response;

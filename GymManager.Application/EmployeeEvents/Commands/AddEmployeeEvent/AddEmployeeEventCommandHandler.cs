@@ -1,40 +1,37 @@
 ﻿using GymManager.Application.Common.Interfaces;
-using GymManager.Domain.Entities;
+//using GymManager.Domain.Entities;
 using MediatR;
 
 namespace GymManager.Application.EmployeeEvents.Commands.AddEmployeeEvent;
 
-public class AddEmployeeEventCommandHandler : IRequestHandler<AddEmployeeEventCommand>
+public class AddEmployeeEventCommandHandler(IApplicationDbContext context, IDateTimeService dateTimeService) : IRequestHandler<AddEmployeeEventCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IDateTimeService _dateTimeService;
-
-	public AddEmployeeEventCommandHandler(IApplicationDbContext context, IDateTimeService dateTimeService)
-	{
-		_context = context;
-		_dateTimeService = dateTimeService;
-	}
-
 	public async Task Handle(AddEmployeeEventCommand request, CancellationToken cancellationToken)
 	{
 		// jeśli zdarzenie całodniowe to data zakończenia będzie nullem
-		if (request.IsFullDay.GetValueOrDefault())
-		{
-			request.End = null;
-		}
+		//if (request.IsFullDay.GetValueOrDefault())
+		//{
+		//	request.End = null;
+		//}
+		//EmployeeEvent employeeEvent = new()
+		//{
+		//	End = request.End,
+		//	IsFullDay = request.IsFullDay.GetValueOrDefault(),
+		//	Start = request.Start,
+		//	UserId = request.UserId,
+		//	CreatedDate = dateTimeService.Now
+		//};
+		//context.EmployeeEvents.Add(employeeEvent);
 
-		var employeeEvent = new EmployeeEvent
+		context.EmployeeEvents.Add(new()
 		{
-			End = request.End,
+			End = request.IsFullDay.GetValueOrDefault() ? null : request.End,
 			IsFullDay = request.IsFullDay.GetValueOrDefault(),
 			Start = request.Start,
 			UserId = request.UserId,
-			CreatedDate = _dateTimeService.Now
-		};
+			CreatedDate = dateTimeService.Now
+		});
 
-		_context.EmployeeEvents.Add(employeeEvent);
-		await _context.SaveChangesAsync(cancellationToken);
-
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

@@ -9,38 +9,28 @@ using Microsoft.Extensions.Logging;
 
 namespace GymManager.Application.Tickets.Commands.MarkTicketAsPaidCommand;
 
-public class MarkTicketAsPaidCommandHandler : IRequestHandler<MarkTicketAsPaidCommand>
+public class MarkTicketAsPaidCommandHandler(
+	IApplicationDbContext context,
+	IPrzelewy24 przelewy24,
+	ILogger<MarkTicketAsPaidCommandHandler> logger,
+	IGymInvoices gymInvoices,
+	IUserNotificationService userNotificationService,
+	IEventDispatcher eventDispatcher) : IRequestHandler<MarkTicketAsPaidCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IPrzelewy24 _przelewy24;
-	private readonly ILogger _logger;
-	private readonly IGymInvoices _gymInvoices;
-	private readonly IUserNotificationService _userNotificationService;
-	private readonly IEventDispatcher _eventDispatcher;
-
-	public MarkTicketAsPaidCommandHandler(
-		IApplicationDbContext context,
-		IPrzelewy24 przelewy24,
-		ILogger<MarkTicketAsPaidCommandHandler> logger,
-		IGymInvoices gymInvoices,
-		IUserNotificationService userNotificationService,
-		IEventDispatcher eventDispatcher)
-	{
-		_context = context;
-		_przelewy24 = przelewy24;
-		_logger = logger;
-		_gymInvoices = gymInvoices;
-		_userNotificationService = userNotificationService;
-		_eventDispatcher = eventDispatcher;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IPrzelewy24 _przelewy24 = przelewy24;
+	private readonly ILogger _logger = logger;
+	//private readonly IGymInvoices _gymInvoices = gymInvoices;
+	//private readonly IUserNotificationService _userNotificationService = userNotificationService;
+	private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
 
 	public async Task Handle(MarkTicketAsPaidCommand request, CancellationToken cancellationToken)
 	{
 		#region oznaczenie faktury jako opłaconej
 		_logger.LogInformation($"Przelewy24 - payment verification started - {request.SessionId}");
-		await VerifyTransactionPrzelewy24(request);
-		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == request.SessionId);
-		await UpdatePaymentInDb(ticket, cancellationToken);
+		await VerifyTransactionPrzelewy24Async(request);
+		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == request.SessionId, cancellationToken);
+		await UpdatePaymentInDbAsync(ticket, cancellationToken);
 		_logger.LogInformation($"Przelewy24 - payment verification finished - {request.SessionId}");
 		#endregion oznaczenie faktury jako opłaconej
 
@@ -59,13 +49,10 @@ public class MarkTicketAsPaidCommandHandler : IRequestHandler<MarkTicketAsPaidCo
 			TicketId = ticket.TicketId,
 			UserId = ticket.UserId,
 		});
-
 		#endregion metody przeniesione do eventów dlatego w komentarzach
-
-		return;
 	}
 
-	private async Task VerifyTransactionPrzelewy24(MarkTicketAsPaidCommand request)
+	private async Task VerifyTransactionPrzelewy24Async(MarkTicketAsPaidCommand request)
 	{
 		var response = await _przelewy24.TransactionVerifyAsync(
 			new P24TransactionVerifyRequest
@@ -85,7 +72,7 @@ public class MarkTicketAsPaidCommandHandler : IRequestHandler<MarkTicketAsPaidCo
 	}
 
 	// oznaczenie karnetu w bazie jako zapłacony
-	private async Task UpdatePaymentInDb(Ticket ticket, CancellationToken cancellationToken)
+	private async Task UpdatePaymentInDbAsync(Ticket ticket, CancellationToken cancellationToken)
 	{
 		ticket.IsPaid = true;
 		await _context.SaveChangesAsync(cancellationToken);

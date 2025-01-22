@@ -22,7 +22,7 @@ public class Przelewy24 : IPrzelewy24
 	private string _baseUrl;
 	private JsonSerializerSettings _jsonSettings;
 
-	// INFO - użycie HttpClient - najlepsze użycie to wstrzyknięcie przez konstruktor
+	// użycie HttpClient - najlepsze użycie to wstrzyknięcie przez konstruktor
 	// + w Dependency Injection dodać services.AddHttpClient<IPrzelewy24, Przelewy24>(); - to powoduje użycie fabryki HttpClient
 	public Przelewy24(
 		HttpClient httpClient,

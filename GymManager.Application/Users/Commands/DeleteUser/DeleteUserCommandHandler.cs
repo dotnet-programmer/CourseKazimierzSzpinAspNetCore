@@ -4,22 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Users.Commands.DeleteUser;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
+public class DeleteUserCommandHandler(IApplicationDbContext context) : IRequestHandler<DeleteUserCommand>
 {
-	private readonly IApplicationDbContext _context;
-
-	public DeleteUserCommandHandler(IApplicationDbContext context) =>
-		_context = context;
-
 	public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
 	{
-		var user = await _context.Users
-			.FirstOrDefaultAsync(x => x.Id == request.Id);
+		var user = await context.Users
+			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		user.IsDeleted = true;
 
-		await _context.SaveChangesAsync(cancellationToken);
-
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

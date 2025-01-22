@@ -16,12 +16,12 @@
 	ViewData["Title"] = "Kontakt";
 }
 
-@* INFO - powiadomienia - biblioteka toastr.js *@
+@* powiadomienia - biblioteka toastr.js *@
 @section Styles {
 	<link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
 }
 
-@* INFO - komponent *@
+@* komponent *@
 <vc:main-carousel priority="2" />
 
 <div class="container">
@@ -74,7 +74,6 @@
 	@* skrypty do walidacji danych po stronie klienta *@
 	<partial name="Scripts/_ValidationScriptsPartial" />
 
-	@* INFO - powiadomienia - biblioteka toastr.js *@
-	<script src="~/lib/toastr.js/toastr.min.js"></script>
+	@* powiadomienia - biblioteka toastr.js *@
 	<partial name="_NotificationPartial" />
 }

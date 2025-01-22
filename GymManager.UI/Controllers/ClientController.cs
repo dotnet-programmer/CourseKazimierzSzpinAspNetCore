@@ -14,14 +14,14 @@ namespace GymManager.UI.Controllers;
 [Authorize]
 public class ClientController : BaseController
 {
-	public async Task<IActionResult> Dashboard() =>
-		View(await Mediator.Send(new GetClientDashboardQuery { UserId = UserId }));
+	public async Task<IActionResult> Dashboard() 
+		=> View(await Mediator.Send(new GetClientDashboardQuery { UserId = UserId }));
 
-	public async Task<IActionResult> Client() =>
-		View(await Mediator.Send(new GetClientQuery { UserId = UserId }));
+	public async Task<IActionResult> Client() 
+		=> View(await Mediator.Send(new GetClientQuery { UserId = UserId }));
 
-	public async Task<IActionResult> EditClient() =>
-		View(await Mediator.Send(new GetEditClientQuery { UserId = UserId }));
+	public async Task<IActionResult> EditClient() 
+		=> View(await Mediator.Send(new GetEditClientQuery { UserId = UserId }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
@@ -60,17 +60,17 @@ public class ClientController : BaseController
 		return RedirectToAction("Client");
 	}
 
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> Clients() =>
-		View(await Mediator.Send(new GetClientsBasicsQuery()));
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
+	public async Task<IActionResult> Clients() 
+		=> View(await Mediator.Send(new GetClientsBasicsQuery()));
 
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> AddClient() =>
-		View(new AddClientCommand());
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
+	public async Task<IActionResult> AddClient() 
+		=> View(new AddClientCommand());
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 	public async Task<IActionResult> AddClient(AddClientCommand command)
 	{
 		//var result = await MediatorSendValidate(command);
@@ -106,13 +106,13 @@ public class ClientController : BaseController
 		return RedirectToAction("Clients");
 	}
 
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
-	public async Task<IActionResult> EditAdminClient(string clientId) =>
-		View(await Mediator.Send(new GetEditAdminClientQuery { UserId = clientId }));
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
+	public async Task<IActionResult> EditAdminClient(string clientId) 
+		=> View(await Mediator.Send(new GetEditAdminClientQuery { UserId = clientId }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 	public async Task<IActionResult> EditAdminClient(EditAdminClientVm vm)
 	{
 		//var result = await MediatorSendValidate(vm.Client);

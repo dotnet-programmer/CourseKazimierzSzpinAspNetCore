@@ -4,24 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.EmployeeEvents.Queries.GetEmployeeEvents;
 
-public class GetEmployeeEventsQueryHandler : IRequestHandler<GetEmployeeEventsQuery, IEnumerable<EmployeeEventDto>>
+public class GetEmployeeEventsQueryHandler(IApplicationDbContext context, IRandomService randomService) : IRequestHandler<GetEmployeeEventsQuery, IEnumerable<EmployeeEventDto>>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IRandomService _randomService;
-
-	public GetEmployeeEventsQueryHandler(IApplicationDbContext context, IRandomService randomService)
-	{
-		_context = context;
-		_randomService = randomService;
-	}
-
 	public async Task<IEnumerable<EmployeeEventDto>> Handle(GetEmployeeEventsQuery request, CancellationToken cancellationToken)
 	{
-		var employeeEvents = await _context
-			.EmployeeEvents
+		var employeeEvents = await context.EmployeeEvents
 			.Include(x => x.User)
 			.AsNoTracking()
-			// tu można zrobić metodę rozszerzającą ToDto
 			.Select(x => new EmployeeEventDto
 			{
 				Id = x.EmployeeEventId,
@@ -31,7 +20,7 @@ public class GetEmployeeEventsQueryHandler : IRequestHandler<GetEmployeeEventsQu
 				Title = $"{x.User.FirstName} {x.User.LastName}",
 				UserId = x.UserId
 			})
-			.ToListAsync();
+			.ToListAsync(cancellationToken);
 
 		// ustawienie kolorów dla kafelków
 		SetColors(employeeEvents);
@@ -45,7 +34,7 @@ public class GetEmployeeEventsQueryHandler : IRequestHandler<GetEmployeeEventsQu
 	{
 		foreach (var item in employeeEvents)
 		{
-			item.ThemeColor = _randomService.GetColor();
+			item.ThemeColor = randomService.GetColor();
 		}
 	}
 }

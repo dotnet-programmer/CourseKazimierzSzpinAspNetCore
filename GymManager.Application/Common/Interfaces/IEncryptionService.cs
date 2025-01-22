@@ -1,6 +1,6 @@
 ﻿namespace GymManager.Application.Common.Interfaces;
 
-// INFO - szyfrowanie danych
+// szyfrowanie danych
 public interface IEncryptionService
 {
 	// szyfrowanie

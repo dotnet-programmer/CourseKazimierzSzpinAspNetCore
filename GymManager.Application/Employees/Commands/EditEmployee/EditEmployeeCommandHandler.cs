@@ -7,37 +7,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Employees.Commands.EditEmployee;
 
-public class EditEmployeeCommandHandler : IRequestHandler<EditEmployeeCommand>
+public class EditEmployeeCommandHandler(
+	IApplicationDbContext context,
+	IUserRoleManagerService userRoleManagerService,
+	IRoleManagerService roleManagerService) : IRequestHandler<EditEmployeeCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IUserRoleManagerService _userRoleManagerService;
-	private readonly IRoleManagerService _roleManagerService;
-
-	public EditEmployeeCommandHandler(
-		IApplicationDbContext context,
-		IUserRoleManagerService userRoleManagerService,
-		IRoleManagerService roleManagerService)
-	{
-		_context = context;
-		_userRoleManagerService = userRoleManagerService;
-		_roleManagerService = roleManagerService;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IUserRoleManagerService _userRoleManagerService = userRoleManagerService;
+	private readonly IRoleManagerService _roleManagerService = roleManagerService;
 
 	public async Task Handle(EditEmployeeCommand request, CancellationToken cancellationToken)
 	{
 		var user = await _context.Users
 			.Include(x => x.Employee)
 			.Include(x => x.Address)
-			.FirstOrDefaultAsync(x => x.Id == request.Id);
+			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		user.FirstName = request.FirstName;
 		user.LastName = request.LastName;
 
-		if (user.Employee == null)
-		{
-			user.Employee = new Domain.Entities.Employee();
-		}
-
+		user.Employee ??= new Domain.Entities.Employee();
 		user.Employee.UserId = request.Id;
 		user.Employee.Salary = request.Salary;
 		user.Employee.ImageUrl = request.ImageUrl;
@@ -47,11 +36,7 @@ public class EditEmployeeCommandHandler : IRequestHandler<EditEmployeeCommand>
 		user.Employee.WebsiteUrl = request.WebsiteUrl;
 		user.Employee.DateOfDismissal = request.DateOfDismissal;
 
-		if (user.Address == null)
-		{
-			user.Address = new Domain.Entities.Address();
-		}
-
+		user.Address ??= new Domain.Entities.Address();
 		user.Address.Country = request.Country;
 		user.Address.City = request.City;
 		user.Address.Street = request.Street;
@@ -65,8 +50,6 @@ public class EditEmployeeCommandHandler : IRequestHandler<EditEmployeeCommand>
 		{
 			await UpdateRoles(request.RoleIds, request.Id);
 		}
-
-		return;
 	}
 
 	private async Task UpdateRoles(List<string> newRoleIds, string userId)
@@ -103,7 +86,7 @@ public class EditEmployeeCommandHandler : IRequestHandler<EditEmployeeCommand>
 
 	private List<IdentityRole> GetNewRoles(List<string> newRoleIds, IEnumerable<IdentityRole> roles)
 	{
-		var newRoles = new List<IdentityRole>();
+		List<IdentityRole> newRoles = [];
 
 		foreach (var roleId in newRoleIds)
 		{

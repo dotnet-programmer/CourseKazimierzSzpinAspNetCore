@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace GymManager.Infrastructure.Services;
 
-public class MyHttpContext : IHttpContext
+public class MyHttpContext(IHttpContextAccessor httpContextAccessor) : IHttpContext
 {
-	private readonly IHttpContextAccessor _httpContextAccessor;
-	private HttpContext Current => _httpContextAccessor.HttpContext;
+	private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-	public MyHttpContext(IHttpContextAccessor httpContextAccessor) =>
-		_httpContextAccessor = httpContextAccessor;
+	private HttpContext Current => _httpContextAccessor.HttpContext;
 
 	public string AppBaseUrl => $"{Current.Request.Scheme}://{Current.Request.Host}{Current.Request.PathBase}";
 

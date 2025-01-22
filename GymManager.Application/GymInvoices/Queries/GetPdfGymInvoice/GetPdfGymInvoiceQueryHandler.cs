@@ -3,13 +3,8 @@ using MediatR;
 
 namespace GymManager.Application.GymInvoices.Queries.GetPdfGymInvoice;
 
-public class GetPdfGymInvoiceQueryHandler : IRequestHandler<GetPdfGymInvoiceQuery, InvoicePdfVm>
+public class GetPdfGymInvoiceQueryHandler(IGymInvoices gymInvoices) : IRequestHandler<GetPdfGymInvoiceQuery, InvoicePdfVm>
 {
-	private readonly IGymInvoices _gymInvoices;
-
-	public GetPdfGymInvoiceQueryHandler(IGymInvoices gymInvoices) =>
-		_gymInvoices = gymInvoices;
-
 	public async Task<InvoicePdfVm> Handle(GetPdfGymInvoiceQuery request, CancellationToken cancellationToken) =>
-		await _gymInvoices.GetPdfInvoice(request.Id);
+		await gymInvoices.GetPdfInvoice(request.Id);
 }

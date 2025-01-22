@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymManager.UI.Controllers;
 
 [Authorize]
-public class InvoiceController : BaseController
+public class InvoiceController(ILogger<InvoiceController> logger) : BaseController
 {
-	private readonly ILogger _logger;
-
-	public InvoiceController(ILogger<InvoiceController> logger) => _logger = logger;
+	private readonly ILogger<InvoiceController> _logger = logger;
 
 	public async Task<IActionResult> InvoiceToPdf(int id)
 	{

@@ -11,15 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymManager.UI.Controllers;
 
 [Authorize(Roles = RolesDict.Administrator)]
-public class RoleController : BaseController
+public class RoleController(ILogger<RoleController> logger) : BaseController
 {
-	private readonly ILogger _logger;
-
-	public RoleController(ILogger<RoleController> logger) =>
-		_logger = logger;
+	private readonly ILogger _logger = logger;
 
 	public async Task<IActionResult> Roles() =>
-		// INFO - poprawienie przepływu aplikacji – MVC jak SPA
+		// poprawienie przepływu aplikacji – MVC jak SPA
 		//await Task.Delay(2000);
 		//var roles = await Mediator.Send(new GetRolesQuery());
 		//return string.IsNullOrWhiteSpace(Request.Headers["X-PJAX"]) 

@@ -17,7 +17,7 @@
 	{
 		@Html.AntiForgeryToken()
 
-		@Html.HiddenFor(x => x.Client.Id)
+		@Html.HiddenFor(x => x.Client.UserId)
 
 		@* ukryte informacje o rolach 
 			potrzebne do sytuacji, w której jest jakiś błąd na formularzu i następuje powrót na tą stronę, 

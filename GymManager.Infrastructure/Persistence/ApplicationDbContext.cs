@@ -8,7 +8,7 @@ using File = GymManager.Domain.Entities.File;
 
 namespace GymManager.Infrastructure.Persistence;
 
-// INFO - konfiguracja Identity - zamiast po DbContext trzeba dziedziczyć po IdentityDbContext<ApplicationUser>
+// konfiguracja Identity - zamiast po DbContext trzeba dziedziczyć po IdentityDbContext<ApplicationUser>
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
 	// wszystkie ustawienia przekazywane za pomocą Dependency Injection
@@ -31,7 +31,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// dodanie wszystkich plików konfiguracyjnych za pomocą reflekcji
+		// dodanie wszystkich plików konfiguracyjnych za pomocą refleksji
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
 		// wypełnianie bazy danych startowymi wartościami

@@ -5,21 +5,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GymManager.Infrastructure.Services;
 
-// INFO - abstrakcja / nakładka na RoleManager z Identity
-public class RoleManagerService : IRoleManagerService
+// abstrakcja / nakładka na RoleManager z Identity
+public class RoleManagerService(RoleManager<IdentityRole> roleManager, IUserRoleManagerService userRoleManagerService) : IRoleManagerService
 {
-	private readonly RoleManager<IdentityRole> _roleManager;
-	private readonly IUserRoleManagerService _userRoleManagerService;
-
-	public RoleManagerService(RoleManager<IdentityRole> roleManager, IUserRoleManagerService userRoleManagerService)
-	{
-		_roleManager = roleManager;
-		_userRoleManagerService = userRoleManagerService;
-	}
+	private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+	private readonly IUserRoleManagerService _userRoleManagerService = userRoleManagerService;
 
 	public IEnumerable<RoleDto> GetRoles() =>
 		_roleManager.Roles
-			// zmiana z typu IdentityRole na ty RoleDto, może jakaś metoda rozszerzjąca .ToDto() i na odwrót?
 			.Select(x => new RoleDto { Id = x.Id, Name = x.Name })
 			.ToList();
 
@@ -69,7 +62,7 @@ public class RoleManagerService : IRoleManagerService
 	{
 		var roleDb = await _roleManager.FindByIdAsync(id);
 
-		// INFO - walidacja przeniesiona do klasy DeleteRoleCommandValidator
+		// walidacja przeniesiona do klasy DeleteRoleCommandValidator
 		//await ValidateRoleToDelete(roleDb.Name);
 
 		var result = await _roleManager.DeleteAsync(roleDb);
@@ -88,7 +81,7 @@ public class RoleManagerService : IRoleManagerService
 		}
 	}
 
-	// INFO - walidacja przeniesiona do klasy DeleteRoleCommandValidator
+	// walidacja przeniesiona do klasy DeleteRoleCommandValidator
 	//private async Task ValidateRoleToDelete(string roleName)
 	//{
 	//	var userInRole = await _userRoleManagerService.GetUsersInRoleAsync(roleName);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Infrastructure.Persistence.Extensions;
 
-// INFO - role użytkowników
+// role użytkowników
 public static class ModelBuilderExtensionsRoles
 {
 	public static void SeedRoles(this ModelBuilder modelBuilder) =>

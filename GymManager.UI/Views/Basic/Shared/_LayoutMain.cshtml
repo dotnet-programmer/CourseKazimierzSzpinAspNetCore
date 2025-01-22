@@ -17,16 +17,17 @@
 
 	<partial name="_FaviconsPartial" />
 
-	@* INFO - pakiet ikon font-awesome *@
+	@* pakiet ikon font-awesome *@
 	<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 
+	@* kolor footera zgodnie z ustawieniami aplikacji *@
 	<style>
 		footer {
-			background-color: @await appSettings.Get(SettingsDict.FooterColor) !important;
+			background-color: @await appSettings.GetValueByKeyAsync(SettingsDict.FooterColor) !important;
 		}
 	</style>
 
-	@* INFO - renderowanie sekcji Style *@
+	@* renderowanie sekcji Style *@
     @await RenderSectionAsync("Styles", required: false)
 
 </head>

@@ -7,16 +7,10 @@ namespace GymManager.UI.Controllers.Api;
 // route musi się zgadzać z tym co jest w AddTicketCommandHandler - $"{_httpContext.AppBaseUrl}/api/ticket/updatestatus"
 [Route("api/ticket")]
 [ApiController]
-public class TicketApiController : BaseApiController
+public class TicketApiController(ILogger<TicketApiController> logger, IWebHostEnvironment webHostEnvironment) : BaseApiController
 {
-	private readonly ILogger _logger;
-	private readonly IWebHostEnvironment _webHostEnvironment;
-
-	public TicketApiController(ILogger<TicketApiController> logger, IWebHostEnvironment webHostEnvironment)
-	{
-		_logger = logger;
-		_webHostEnvironment = webHostEnvironment;
-	}
+	private readonly ILogger<TicketApiController> _logger = logger;
+	private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
 	// akcja API na którą system płatności24 wyśle informację o zmianie statusu 
 	[Route("updatestatus")]

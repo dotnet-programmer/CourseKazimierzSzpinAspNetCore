@@ -3,9 +3,9 @@ using MediatR;
 
 namespace GymManager.Application.Tickets.Queries.GetClientsTickets;
 
+// przekazanie danych z tabeli/kontrolera
 public class GetClientsTicketsQuery : IRequest<PaginatedList<TicketBasicsDto>>
 {
-	// przekazanie danych z tabeli/kontrolera
 	public string UserId { get; set; }
 	public string OrderInfo { get; set; }
 	public string SearchValue { get; set; }

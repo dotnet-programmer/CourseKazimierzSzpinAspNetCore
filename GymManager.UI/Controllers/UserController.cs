@@ -6,15 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymManager.UI.Controllers;
 
 [Authorize]
-public class UserController : BaseController
+public class UserController(ILogger<UserController> logger) : BaseController
 {
-	private readonly ILogger _logger;
-
-	public UserController(ILogger<UserController> logger) =>
-		_logger = logger;
+	private readonly ILogger<UserController> _logger = logger;
 
 	[HttpPost]
-	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 	public async Task<IActionResult> DeleteUser(string id)
 	{
 		try

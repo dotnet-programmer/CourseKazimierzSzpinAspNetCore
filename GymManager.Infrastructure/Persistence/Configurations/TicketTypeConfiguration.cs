@@ -6,5 +6,6 @@ namespace GymManager.Infrastructure.Persistence.Configurations;
 
 public class TicketTypeConfiguration : IEntityTypeConfiguration<TicketType>
 {
-	public void Configure(EntityTypeBuilder<TicketType> builder) => builder.ToTable("TicketTypes");
+	public void Configure(EntityTypeBuilder<TicketType> builder)
+		=> builder.ToTable("TicketTypes");
 }

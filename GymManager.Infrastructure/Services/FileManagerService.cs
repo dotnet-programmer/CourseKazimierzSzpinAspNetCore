@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace GymManager.Infrastructure.Services;
 
-public class FileManagerService : IFileManagerService
+public class FileManagerService(IWebHostEnvironment webHostEnvironment) : IFileManagerService
 {
-	private readonly IWebHostEnvironment _webHostEnvironment;
-
-	public FileManagerService(IWebHostEnvironment webHostEnvironment) =>
-		_webHostEnvironment = webHostEnvironment;
+	private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
 	public async Task Upload(IEnumerable<IFormFile> files)
 	{

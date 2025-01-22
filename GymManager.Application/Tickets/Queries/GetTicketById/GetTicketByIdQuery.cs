@@ -2,7 +2,7 @@
 
 namespace GymManager.Application.Tickets.Queries.GetTicketById;
 
-// INFO - Kwerenda - Query
+// Kwerenda - Query
 // klasa Query jest to klasa, która będzie parametrem w metodzie, która zostanie wykonana przez QueryHandler
 // musi implementować interfejs IRequest<TResult>
 // - typ IRequest jest w NuGet -> MediatR

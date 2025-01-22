@@ -21,22 +21,20 @@ using Rotativa.AspNetCore;
 
 namespace GymManager.Infrastructure;
 
+// tutaj będą dodawane/rejestrowane różne serwisy z aplikacji, które będą wywołane w projekcie UI w Program.cs
 public static class DependencyInjection
 {
-	// INFO - tutaj będą dodawane/rejestrowane różne serwisy z aplikacji, które będą wywołane w projekcie UI w Program.cs
-	// konfiguracja tego, że to EF Core będzie używane i wskazanie bazy danych
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 	{
-		// INFO - szyfrowanie
+		// szyfrowanie
 		// po uruchomieniu wygeneruje klucze, wystarczy uruchomić raz i skopiować klucze
 		//var keyInfo = new KeyInfo();
 		// klucze można również pobierać z pliku konfiguracyjnego
-		var encryptionService = new EncryptionService(new KeyInfo("kk3zd3HAIZjiZnDUhuU9OMASs4eljyPBZ1WbFdgC3UE=", "4ITbLvvo3BWGObJRFH4wDg=="));
+		EncryptionService encryptionService = new(new KeyInfo("kk3zd3HAIZjiZnDUhuU9OMASs4eljyPBZ1WbFdgC3UE=", "4ITbLvvo3BWGObJRFH4wDg=="));
 		services.AddSingleton<IEncryptionService>(encryptionService);
 
 		// zaszyfrowanie connection stringa - ustawić tu brakepoint, uruchomić debugerem i skopiować zaszyfrowany string
 		// jednorazowe wywołanie żeby zaszyfrować, później można usunąć
-		// TODO - może napisać prostą aplikację w WPF do generowania kluczy i szyfrowania danych???
 		//var encryptedConnectionString = encryptionService.Encrypt("Server=(local)\\SQLEXPRESS;Database=GymManager;User Id=DBUser;Password=;TrustServerCertificate=True;");
 
 		// pobranie connection stringa z ustawień
@@ -52,7 +50,7 @@ public static class DependencyInjection
 			// dodane żeby można było podejrzeć parametry przekazywane do kwerend i komend
 			.EnableSensitiveDataLogging());
 
-		// INFO - konfiguracja Identity - użytkownicy w aplikacji
+		// konfiguracja Identity - użytkownicy w aplikacji
 		services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 		{
 			options.SignIn.RequireConfirmedAccount = true;
@@ -80,54 +78,54 @@ public static class DependencyInjection
 		// singleton, bo apliakcja będzie pracować tylko na 1 obiekcie wysyłającym emaile
 		services.AddSingleton<IEmailService, EmailService>();
 
-		// INFO - dodanie serwisu z datą
+		// dodanie serwisu z datą
 		services.AddScoped<IDateTimeService, DateTimeService>();
 
-		// INFO - Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
+		// Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
 		services.AddHttpContextAccessor();
 		services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
-		// INFO - abstrakcja / nakładka na RoleManager z Identity
+		// abstrakcja / nakładka na RoleManager z Identity
 		services.AddScoped<IRoleManagerService, RoleManagerService>();
 
-		// INFO - abstrakcja / nakładka na UserRoleManager z Identity
+		// abstrakcja / nakładka na UserRoleManager z Identity
 		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
 
-		// INFO - abstrakcja / nakładka na UserManager z Identity
+		// abstrakcja / nakładka na UserManager z Identity
 		services.AddScoped<IUserManagerService, UserManagerService>();
 
-		// - INFO - zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
+		// zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
 		services.AddHttpClient<IPrzelewy24, Przelewy24>();
 		services.AddSingleton<IHttpContext, MyHttpContext>();
 
-		// INFO - serwis do generowania kodów QR
+		// serwis do generowania kodów QR
 		services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 
-		// INFO - serwis do generowania PDF
+		// serwis do generowania PDF
 		services.AddScoped<IPdfFileGenerator, RotativaPdfGenerator>();
 
-		// INFO - serwis do obsługi plików na serwerze
+		// serwis do obsługi plików na serwerze
 		services.AddSingleton<IFileManagerService, FileManagerService>();
 
-		// INFO - serwis do generowania losowego koloru 
+		// serwis do generowania losowego koloru 
 		services.AddScoped<IRandomService, RandomService>();
 
-		// INFO - serwis do generowania tokena JWT
+		// serwis do generowania tokena JWT
 		services.AddScoped<IJwtService, JwtService>();
 
-		// INFO - serwis do dodawania nowych faktur poprzez WebApi
+		// serwis do dodawania nowych faktur poprzez WebApi
 		services.AddHttpClient<IGymInvoices, GymInvoices>();
 
-		// INFO - serwis do zadań wykonywanych w tle
+		// serwis do zadań wykonywanych w tle
 		services.AddSingleton<IBackgroundWorkerQueue, BackgroundWorkerQueue>();
 		// serwis, który będzie cały czas uruchomiony i wykonywał w tle zadania które są zakolejkowane
 		services.AddHostedService<LongRunningService>();
 
-		// INFO - SignalR - natychmiastowe notyfikacja bez odświeżania strony z serwera do klientów i dowolnego użytkownika
+		// SignalR - natychmiastowe notyfikacja bez odświeżania strony z serwera do klientów i dowolnego użytkownika
 		services.AddSignalR();
-		// INFO - SignalR - serwis do pobierania informacji o aktualnych użytkownikach i ich połączeniach
+		// SignalR - serwis do pobierania informacji o aktualnych użytkownikach i ich połączeniach
 		services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
-		// INFO - SignalR - serwis do wysyłania powiadomień userowi
+		// SignalR - serwis do wysyłania powiadomień userowi
 		services.AddSingleton<IUserNotificationService, UserNotificationService>();
 
 		// zarejestrowanie klas subskrybujących eventy w kontenerze Dependency Injection
@@ -163,7 +161,7 @@ public static class DependencyInjection
 		// dodanie informacji o EventDispatcher
 		services.AddSingleton<IEventDispatcher, EventDispatcher>();
 
-		// pobranie wszystkich assembly za pomocą reflekcji
+		// pobranie wszystkich assembly za pomocą refleksji
 		var assemblies = Assembly
 			.GetExecutingAssembly()
 			.GetReferencedAssemblies()

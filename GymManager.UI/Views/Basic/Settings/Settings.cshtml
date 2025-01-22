@@ -119,11 +119,16 @@
 
 			$('.input-colorpicker').colorpicker();
 
+			// 2 poniższe ustawienia zrobione w ten sposób, bo kontrolka jest dodawana dynamicznie i może być kilka na stronie, 
+			// gdyby była dodawana statycznie to te ustawienia robi się w html każdej z nich
+
+			// ustawienie wybranego koloru z colorpickera jako podgląd w małym kwadracie
 			$('.input-colorpicker .form-control').each(function () 
 			{
 				$('#' + this.id + ' + div i.fa-square').css('color', $(this).val());
 			});
-
+			
+			// podpięcie się pod event zmiany koloru w colorpickerze, tak żeby zmieniał też wygląd małego kwadratu
 			$('.input-colorpicker').on('colorpickerChange', function (event) 
 			{
 				$('#' + event.currentTarget.firstElementChild.id + ' + div i.fa-square').css('color', event.color.toString());

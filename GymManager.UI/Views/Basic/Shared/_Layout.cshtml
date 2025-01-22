@@ -19,7 +19,7 @@
 	
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-	@* INFO - poprawienie przepływu aplikacji – MVC jak SPA *@
+	@* poprawienie przepływu aplikacji – MVC jak SPA *@
 @* 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/jquery.pjax/jquery.pjax.min.js"></script>
 	<script>
@@ -108,7 +108,7 @@
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<partial name="_NotificationPartial" />
 
-	@* INFO - SignalR - biblioteki i skrypty *@
+	@* SignalR - biblioteki i skrypty *@
 	<script>
 		@* pobranie UserId - potrzebne do poprawnego działania skryptu usernotification.js dlatego musi być przed skryptem *@
 		var userId = '@currentUserService.UserId';

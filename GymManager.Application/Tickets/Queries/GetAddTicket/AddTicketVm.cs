@@ -2,7 +2,7 @@
 
 namespace GymManager.Application.Tickets.Queries.GetAddTicket;
 
-// INFO ViewModel, bo do widoku poza modelem potrzeba jeszcze przekazać listę typów karnetów
+// ViewModel, bo do widoku poza modelem potrzeba jeszcze przekazać listę typów karnetów
 public class AddTicketVm
 {
 	public AddTicketCommand Ticket { get; set; }

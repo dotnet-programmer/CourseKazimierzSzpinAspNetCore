@@ -4,23 +4,11 @@ using MediatR;
 
 namespace GymManager.Application.Contacts.Commands.SendContactEmail;
 
-public class SendContactEmailCommandHandler : IRequestHandler<SendContactEmailCommand>
+public class SendContactEmailCommandHandler(
+	IEmailService email,
+	IAppSettingsService appSettings,
+	IBackgroundWorkerQueue backgroundWorkerQueue) : IRequestHandler<SendContactEmailCommand>
 {
-	private readonly IEmailService _email;
-	private readonly IAppSettingsService _appSettings;
-	private readonly IBackgroundWorkerQueue _backgroundWorkerQueue;
-
-	// wstrzyknięcie klasy Email odpowiedzialnej za wysyłkę emaili
-	public SendContactEmailCommandHandler(
-		IEmailService email,
-		IAppSettingsService appSettings,
-		IBackgroundWorkerQueue backgroundWorkerQueue)
-	{
-		_email = email;
-		_appSettings = appSettings;
-		_backgroundWorkerQueue = backgroundWorkerQueue;
-	}
-
 	// wysłanie email do administratora poprzez formularz Contact.cshtml
 	public async Task Handle(SendContactEmailCommand request, CancellationToken cancellationToken)
 	{
@@ -38,16 +26,14 @@ public class SendContactEmailCommandHandler : IRequestHandler<SendContactEmailCo
 		//	await _appSettings.Get(SettingsDict.AdminEmail));
 
 		// wywołanie komendy w tle z użyciem zadań w tle
-		_backgroundWorkerQueue.QueueBackgroundWorkItem(async x =>
+		backgroundWorkerQueue.QueueBackgroundWorkItem(async x =>
 			{
-				await _email.SendAsync(
-				$"Wiadomość z GymManager: {request.Title}",
-				body,
-				await _appSettings.Get(SettingsDict.AdminEmail));
+				await email.SendAsync(
+					$"Wiadomość z GymManager: {request.Title}",
+					body,
+					await appSettings.GetValueByKeyAsync(SettingsDict.AdminEmail));
 			},
 			$"Kontakt. E-mail: {request.Email}"
 		);
-
-		return;
 	}
 }

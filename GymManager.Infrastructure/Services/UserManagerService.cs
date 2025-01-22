@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GymManager.Infrastructure.Services;
 
+// nakładka na metody z Identity
 public class UserManagerService : IUserManagerService
 {
 	private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +22,7 @@ public class UserManagerService : IUserManagerService
 	// metoda tworząca nowego użytkownika w bazie danych, używane metody z Identity
 	public async Task<string> CreateAsync(string email, string password, string role)
 	{
-		var user = new ApplicationUser();
+		ApplicationUser user = new();
 		await _userStore.SetUserNameAsync(user, email, CancellationToken.None);
 		await _userEmailStore.SetEmailAsync(user, email, CancellationToken.None);
 		var result = await _userManager.CreateAsync(user, password);

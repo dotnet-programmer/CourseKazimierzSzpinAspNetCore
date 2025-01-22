@@ -5,7 +5,7 @@ using MimeKit;
 
 namespace GymManager.Infrastructure.Services;
 
-// INFO - implementacja wysyłki email
+// implementacja wysyłki email
 public class EmailService : IEmailService
 {
 	private int _port;
@@ -18,12 +18,12 @@ public class EmailService : IEmailService
 	// pola wypełniane danymi pobranymi z serwisu IAppSettingsService
 	public async Task Update(IAppSettingsService appSettingsService)
 	{
-		_port = Convert.ToInt32(await appSettingsService.Get(SettingsDict.Port));
-		_hostSmtp = await appSettingsService.Get(SettingsDict.HostSmtp);
-		_senderEmail = await appSettingsService.Get(SettingsDict.SenderEmail);
-		_senderEmailPassword = await appSettingsService.Get(SettingsDict.SenderEmailPassword);
-		_senderName = await appSettingsService.Get(SettingsDict.SenderName);
-		_senderLogin = await appSettingsService.Get(SettingsDict.SenderLogin);
+		_port = Convert.ToInt32(await appSettingsService.GetValueByKeyAsync(SettingsDict.Port));
+		_hostSmtp = await appSettingsService.GetValueByKeyAsync(SettingsDict.HostSmtp);
+		_senderEmail = await appSettingsService.GetValueByKeyAsync(SettingsDict.SenderEmail);
+		_senderEmailPassword = await appSettingsService.GetValueByKeyAsync(SettingsDict.SenderEmailPassword);
+		_senderName = await appSettingsService.GetValueByKeyAsync(SettingsDict.SenderName);
+		_senderLogin = await appSettingsService.GetValueByKeyAsync(SettingsDict.SenderLogin);
 	}
 
 	// ogólna metoda wysyłająca emaile, używa NuGet - MailKit (instalowany w Infrastructure)

@@ -7,7 +7,6 @@ public class Invoice
 	public int Year { get; set; }
 	public decimal Value { get; set; }
 
-	// TODO - dlaczego to jest jako string a nie np. enum albo słownik z bd?
 	public string MethodOfPayment { get; set; }
 	public DateTime CreatedDate { get; set; }
 

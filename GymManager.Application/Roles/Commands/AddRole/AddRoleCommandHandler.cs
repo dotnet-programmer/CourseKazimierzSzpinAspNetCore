@@ -3,16 +3,8 @@ using MediatR;
 
 namespace GymManager.Application.Roles.Commands.AddRole;
 
-public class AddRoleCommandHandler : IRequestHandler<AddRoleCommand>
+public class AddRoleCommandHandler(IRoleManagerService roleManagerService) : IRequestHandler<AddRoleCommand>
 {
-	private readonly IRoleManagerService _roleManagerService;
-
-	public AddRoleCommandHandler(IRoleManagerService roleManagerService) => _roleManagerService = roleManagerService;
-
-	public async Task Handle(AddRoleCommand request, CancellationToken cancellationToken)
-	{
-		await _roleManagerService.CreateAsync(request.Name);
-
-		return;
-	}
+	public async Task Handle(AddRoleCommand request, CancellationToken cancellationToken) => 
+		await roleManagerService.CreateAsync(request.Name);
 }

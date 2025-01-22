@@ -6,21 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Clients.Commands.EditAdminClient;
 
-public class EditAdminClientCommandHandler : IRequestHandler<EditAdminClientCommand>
+public class EditAdminClientCommandHandler(
+	IApplicationDbContext context,
+	IUserRoleManagerService userRoleManagerService,
+	IRoleManagerService roleManagerService) : IRequestHandler<EditAdminClientCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IUserRoleManagerService _userRoleManagerService;
-	private readonly IRoleManagerService _roleManagerService;
-
-	public EditAdminClientCommandHandler(
-		IApplicationDbContext context,
-		IUserRoleManagerService userRoleManagerService,
-		IRoleManagerService roleManagerService)
-	{
-		_context = context;
-		_userRoleManagerService = userRoleManagerService;
-		_roleManagerService = roleManagerService;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IUserRoleManagerService _userRoleManagerService = userRoleManagerService;
+	private readonly IRoleManagerService _roleManagerService = roleManagerService;
 
 	//public async Task<Unit> Handle(EditAdminClientCommand request, CancellationToken cancellationToken)
 	public async Task Handle(EditAdminClientCommand request, CancellationToken cancellationToken)
@@ -33,7 +26,7 @@ public class EditAdminClientCommandHandler : IRequestHandler<EditAdminClientComm
 		var user = await _context.Users
 			.Include(x => x.Client)
 			.Include(x => x.Address)
-			.FirstOrDefaultAsync(x => x.Id == request.Id);
+			.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 
 		user.FirstName = request.FirstName;
 		user.LastName = request.LastName;
@@ -46,7 +39,7 @@ public class EditAdminClientCommandHandler : IRequestHandler<EditAdminClientComm
 
 		user.Client.IsPrivateAccount = request.IsPrivateAccount;
 		user.Client.NipNumber = request.NipNumber;
-		user.Client.UserId = request.Id;
+		user.Client.UserId = request.UserId;
 
 		//if (user.Address == null)
 		//{
@@ -59,13 +52,13 @@ public class EditAdminClientCommandHandler : IRequestHandler<EditAdminClientComm
 		user.Address.Street = request.Street;
 		user.Address.ZipCode = request.ZipCode;
 		user.Address.StreetNumber = request.StreetNumber;
-		user.Address.UserId = request.Id;
+		user.Address.UserId = request.UserId;
 
 		await _context.SaveChangesAsync(cancellationToken);
 
 		if (request.RoleIds != null && request.RoleIds.Any())
 		{
-			await UpdateRoles(request.RoleIds, request.Id);
+			await UpdateRoles(request.RoleIds, request.UserId);
 		}
 
 		//	return Unit.Value;

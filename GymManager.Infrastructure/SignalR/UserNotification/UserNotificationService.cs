@@ -6,18 +6,12 @@ namespace GymManager.Infrastructure.SignalR.UserNotification;
 // serwis wywoływany w warstwie aplikacji i będzie umożliwiał wysłanie notyfikacji za pomocą SignalR
 // z poziomu aplikacji będzie się tylko wywoływać tą metodę ze wskazaniem,
 // któremu userowi będzie wysłane powiadomienie o podanej treści
-public class UserNotificationService : IUserNotificationService
+public class UserNotificationService(
+	IHubContext<NotificationUserHub> hubContext,
+	IUserConnectionManager userConnectionManager) : IUserNotificationService
 {
-	private readonly IHubContext<NotificationUserHub> _hubContext;
-	private readonly IUserConnectionManager _userConnectionManager;
-
-	public UserNotificationService(
-		IHubContext<NotificationUserHub> hubContext,
-		IUserConnectionManager userConnectionManager)
-	{
-		_hubContext = hubContext;
-		_userConnectionManager = userConnectionManager;
-	}
+	private readonly IHubContext<NotificationUserHub> _hubContext = hubContext;
+	private readonly IUserConnectionManager _userConnectionManager = userConnectionManager;
 
 	public async Task SendNotification(string userId, string message)
 	{

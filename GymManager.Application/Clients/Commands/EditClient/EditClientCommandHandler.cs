@@ -5,13 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace GymManager.Application.Clients.Commands.EditClient;
 
 // komenda zapisujaca zmiany w bazie
-public class EditClientCommandHandler : IRequestHandler<EditClientCommand>
+public class EditClientCommandHandler(IApplicationDbContext context) : IRequestHandler<EditClientCommand>
 {
-	private readonly IApplicationDbContext _context;
-
-	public EditClientCommandHandler(IApplicationDbContext context) =>
-		_context = context;
-
 	public async Task Handle(EditClientCommand request, CancellationToken cancellationToken)
 	{
 		if (request.IsPrivateAccount)
@@ -20,37 +15,31 @@ public class EditClientCommandHandler : IRequestHandler<EditClientCommand>
 		}
 
 		// pobranie użytkownika który będzie aktualizowany
-		var user = await _context.Users
+		var user = await context.Users
 			.Include(x => x.Client)
 			.Include(x => x.Address)
-			.FirstOrDefaultAsync(x => x.Id == request.Id);
+			.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 
 		user.FirstName = request.FirstName;
 		user.LastName = request.LastName;
 
 		// jeśli dane klienta jeszcze nie są uzupełnione, to zainicjalizuj je nowym obiektem
-		if (user.Client == null)
-		{
-			user.Client = new Domain.Entities.Client();
-		}
+		user.Client ??= new Domain.Entities.Client();
+		
 		user.Client.IsPrivateAccount = request.IsPrivateAccount;
 		user.Client.NipNumber = request.NipNumber;
-		user.Client.UserId = request.Id;
+		user.Client.UserId = request.UserId;
 
 		// jeśli dane adresowe jeszcze nie są uzupełnione, to zainicjalizuj je nowym obiektem
-		if (user.Address == null)
-		{
-			user.Address = new Domain.Entities.Address();
-		}
+		user.Address ??= new Domain.Entities.Address();
+
 		user.Address.Country = request.Country;
 		user.Address.City = request.City;
 		user.Address.Street = request.Street;
 		user.Address.ZipCode = request.ZipCode;
 		user.Address.StreetNumber = request.StreetNumber;
-		user.Address.UserId = request.Id;
+		user.Address.UserId = request.UserId;
 
-		await _context.SaveChangesAsync(cancellationToken);
-
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

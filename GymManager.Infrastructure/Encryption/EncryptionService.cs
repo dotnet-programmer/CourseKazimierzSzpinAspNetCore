@@ -3,12 +3,9 @@ using GymManager.Application.Common.Interfaces;
 
 namespace GymManager.Infrastructure.Encryption;
 
-public class EncryptionService : IEncryptionService
+public class EncryptionService(KeyInfo keyInfo) : IEncryptionService
 {
-	private readonly KeyInfo _keyInfo;
-
-	public EncryptionService(KeyInfo keyInfo)
-		=> _keyInfo = keyInfo;
+	private readonly KeyInfo _keyInfo = keyInfo;
 
 	public string Encrypt(string input)
 		=> Convert.ToBase64String(EncryptStringToBytesAes(input, _keyInfo.Key, _keyInfo.Iv));

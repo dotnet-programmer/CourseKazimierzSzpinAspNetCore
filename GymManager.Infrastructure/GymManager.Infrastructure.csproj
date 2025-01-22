@@ -16,7 +16,7 @@
 		<PackageReference Include="Rotativa.AspNetCore" Version="1.3.2" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
 		
-		<!-- INFO - zastąpienie pakietu Microsoft.AspNetCore.Http.Abstractions dla IApplicationBuilder-->
+		<!-- zastąpienie pakietu Microsoft.AspNetCore.Http.Abstractions dla IApplicationBuilder-->
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 

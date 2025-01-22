@@ -52,7 +52,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 			{
 				SettingsPositionId = 5,
 				Key = SettingsDict.SenderName,
-				Value = "Kazimierz Szpin",
+				Value = "GymManager",
 				Description = "Nazwa nadawcy",
 				Type = Domain.Enums.SettingsType.Text,
 				SettingsId = 1,
@@ -83,7 +83,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 				SettingsPositionId = 8,
 				Key = SettingsDict.FooterColor,
 				Value = "#dc3545",
-				Description = "Folor footera strona głównej",
+				Description = "Kolor footera strony głównej",
 				Type = Domain.Enums.SettingsType.Color,
 				SettingsId = 2,
 				Order = 2
@@ -92,7 +92,7 @@ public static class ModelBuilderExtensionsSettingsPosition
 			{
 				SettingsPositionId = 9,
 				Key = SettingsDict.AdminEmail,
-				Value = "kazimierz.szpin@modestprogrammer.pl",
+				Value = "",
 				Description = "Główny adres e-mail administratora",
 				Type = Domain.Enums.SettingsType.Text,
 				SettingsId = 2,

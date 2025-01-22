@@ -34,7 +34,7 @@ public static class UserExtensions
 		null :
 		new EditClientCommand
 		{
-			Id = user.Id,
+			UserId = user.Id,
 			City = user.Address?.City,
 			Country = user.Address?.Country,
 			Street = user.Address?.Street,
@@ -65,7 +65,7 @@ public static class UserExtensions
 			? null
 			: new EditAdminClientCommand
 			{
-				Id = user.Id,
+				UserId = user.Id,
 				City = user.Address?.City,
 				Country = user.Address?.Country,
 				Street = user.Address?.Street,

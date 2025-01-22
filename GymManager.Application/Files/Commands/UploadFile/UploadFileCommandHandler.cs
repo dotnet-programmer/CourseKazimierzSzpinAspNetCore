@@ -5,16 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Files.Commands.UploadFile;
 
-public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand>
+public class UploadFileCommandHandler(IApplicationDbContext context, IFileManagerService fileManagerService) : IRequestHandler<UploadFileCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IFileManagerService _fileManagerService;
-
-	public UploadFileCommandHandler(IApplicationDbContext context, IFileManagerService fileManagerService)
-	{
-		_context = context;
-		_fileManagerService = fileManagerService;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IFileManagerService _fileManagerService = fileManagerService;
 
 	// wszystkie szczegółowe informacje o pliku są w bazie danych, ale sam plik będzie w folderze na serwerze
 	// dodanie wybranych plików na serwer do konkretnego folderu
@@ -28,7 +22,7 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand>
 		foreach (var file in request.Files)
 		{
 			// sprawdzenie czy istnieje taki plik w bazie danych
-			var fileInDb = await _context.Files.FirstOrDefaultAsync(x => x.Name == file.FileName);
+			var fileInDb = await _context.Files.FirstOrDefaultAsync(x => x.Name == file.FileName, cancellationToken);
 
 			// jeśli nie istnieje, to dodanie do bazy
 			if (fileInDb == null)
@@ -44,21 +38,15 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand>
 
 		// zapis zmian w bazie
 		await _context.SaveChangesAsync(cancellationToken);
-
-		return;
 	}
 
-	private void AddFile(IFormFile file)
-	{
-		var newFile = new Domain.Entities.File
+	private void AddFile(IFormFile file) => 
+		_context.Files.Add(new()
 		{
 			Bytes = file.Length,
 			Description = file.FileName,
 			Name = file.FileName
-		};
-
-		_context.Files.Add(newFile);
-	}
+		});
 
 	private void UpdateFile(IFormFile file, Domain.Entities.File fileInDb)
 	{

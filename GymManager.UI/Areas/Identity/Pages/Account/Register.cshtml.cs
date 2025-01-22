@@ -136,7 +136,7 @@ public class RegisterModel : PageModel
 				var userId = await _userManager.GetUserIdAsync(user);
 
 				// każdy użytkownik na starcie ma rolę klienta
-				await _userManager.AddToRoleAsync(user, RolesDict.Klient);
+				await _userManager.AddToRoleAsync(user, RolesDict.Client);
 
 				// generowanie kodu potwierdzającego wysyłanego emailem
 				var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

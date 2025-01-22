@@ -4,16 +4,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GymManager.Infrastructure.Services;
 
-public class UserRoleManagerService : IUserRoleManagerService
+public class UserRoleManagerService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : IUserRoleManagerService
 {
-	private readonly UserManager<ApplicationUser> _userManager;
-	private readonly RoleManager<IdentityRole> _roleManager;
-
-	public UserRoleManagerService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-	{
-		_userManager = userManager;
-		_roleManager = roleManager;
-	}
+	private readonly UserManager<ApplicationUser> _userManager = userManager;
+	private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
 	// na podstawie nazwy roli zwróci listę użytkowników należących do tej roli
 	public async Task<IEnumerable<ApplicationUser>> GetUsersInRoleAsync(string roleName) =>

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManager.UI.Controllers;
 
-[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Pracownik}")]
+[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 public class CalendarController : BaseController
 {
 	public async Task<IActionResult> Calendar() =>

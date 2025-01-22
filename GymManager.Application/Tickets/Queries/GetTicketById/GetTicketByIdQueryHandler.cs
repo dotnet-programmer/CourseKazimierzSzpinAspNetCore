@@ -2,7 +2,7 @@
 
 namespace GymManager.Application.Tickets.Queries.GetTicketById;
 
-// INFO - Kwerenda - QueryHandler
+// Kwerenda - QueryHandler
 // zgodnie z konwencją ta klasa będzie zawsze miała w nazwie przyrostek QueryHandler
 // musi implementować interfejs IRequestHandler<T, TResult>
 // T - klasa implementująca interfejs IRequest

@@ -10,12 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymManager.UI.Controllers;
 
 [Authorize(Roles = RolesDict.Administrator)]
-public class EmployeeController : BaseController
+public class EmployeeController(IDateTimeService dateTimeService) : BaseController
 {
-	private readonly IDateTimeService _dateTimeService;
-
-	public EmployeeController(IDateTimeService dateTimeService) =>
-		_dateTimeService = dateTimeService;
+	private readonly IDateTimeService _dateTimeService = dateTimeService;
 
 	public async Task<IActionResult> Employees() =>
 		View(await Mediator.Send(new GetEmployeeBasicsQuery()));

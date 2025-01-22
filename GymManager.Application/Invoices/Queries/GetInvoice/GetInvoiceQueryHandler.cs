@@ -5,18 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Invoices.Queries.GetInvoice;
 
-public class GetInvoiceQueryHandler : IRequestHandler<GetInvoiceQuery, InvoiceDto>
+public class GetInvoiceQueryHandler(IApplicationDbContext context) : IRequestHandler<GetInvoiceQuery, InvoiceDto>
 {
-	private readonly IApplicationDbContext _context;
-
-	public GetInvoiceQueryHandler(IApplicationDbContext context) => _context = context;
-
 	public async Task<InvoiceDto> Handle(GetInvoiceQuery request, CancellationToken cancellationToken)
-		=> (await _context
-			.Invoices
+		=> (await context.Invoices
 			.Include(x => x.Ticket).ThenInclude(x => x.TicketType)
 			.Include(x => x.User).ThenInclude(x => x.Address)
 			.AsNoTracking()
-			.FirstOrDefaultAsync(x => x.InvoiceId == request.Id && x.UserId == request.UserId))
+			.FirstOrDefaultAsync(x => x.InvoiceId == request.Id && x.UserId == request.UserId, cancellationToken))
 			.ToDto();
 }

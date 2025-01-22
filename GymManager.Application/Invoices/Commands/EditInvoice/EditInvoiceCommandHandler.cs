@@ -4,30 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Invoices.Commands.EditInvoice;
 
-public class EditInvoiceCommandHandler : IRequestHandler<EditInvoiceCommand>
+public class EditInvoiceCommandHandler(IApplicationDbContext context) : IRequestHandler<EditInvoiceCommand>
 {
-	private readonly IApplicationDbContext _context;
-
-	public EditInvoiceCommandHandler(IApplicationDbContext context) => _context = context;
-
 	public async Task Handle(EditInvoiceCommand request, CancellationToken cancellationToken)
 	{
-		// pobranie faktury do aktualizacji
-		var invoice = await _context
-			.Invoices
-			.FirstOrDefaultAsync(x => x.InvoiceId == request.Id && x.UserId == request.UserId);
-
-		// jeśli brak faktury o podanym ID to wyjątek
-		if (invoice == null)
-		{
-			throw new Exception("Invoice NotFound");
-		}
+		// pobranie faktury do aktualizacji, jeśli brak faktury o podanym ID to wyjątek
+		var invoice = await context.Invoices
+			.FirstOrDefaultAsync(x => x.InvoiceId == request.Id && x.UserId == request.UserId, cancellationToken)
+			?? throw new Exception("Invoice NotFound");
 
 		// aktualizacja danych
 		invoice.Value = request.Value;
 
 		// zapis zmian
-		await _context.SaveChangesAsync(cancellationToken);
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

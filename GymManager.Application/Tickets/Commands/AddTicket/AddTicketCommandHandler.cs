@@ -9,24 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Tickets.Commands.AddTicket;
 
-public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand, string>
+public class AddTicketCommandHandler(
+	IApplicationDbContext context,
+	IDateTimeService dateTimeService,
+	IPrzelewy24 przelewy24,
+	IHttpContext httpContext) : IRequestHandler<AddTicketCommand, string>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IDateTimeService _dateTimeService;
-	private readonly IPrzelewy24 _przelewy24;
-	private readonly IHttpContext _httpContext;
-
-	public AddTicketCommandHandler(
-		IApplicationDbContext context,
-		IDateTimeService dateTimeService,
-		IPrzelewy24 przelewy24,
-		IHttpContext httpContext)
-	{
-		_context = context;
-		_dateTimeService = dateTimeService;
-		_przelewy24 = przelewy24;
-		_httpContext = httpContext;
-	}
+	private readonly IApplicationDbContext _context = context;
+	private readonly IDateTimeService _dateTimeService = dateTimeService;
+	private readonly IPrzelewy24 _przelewy24 = przelewy24;
+	private readonly IHttpContext _httpContext = httpContext;
 
 	public async Task<string> Handle(AddTicketCommand request, CancellationToken cancellationToken)
 	{
@@ -34,14 +26,15 @@ public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand, string>
 		var sessionId = Guid.NewGuid().ToString();
 
 		// dodanie nowej transakcji przez system płatności
-		var token = await AddTransactionPrzelewy24(request, sessionId);
+		var token = await AddTransactionPrzelewy24Async(request, sessionId);
 
 		// po dodaniu nowej transakcji do systemu Przelewy24 dodanie do bazy danych informacji o nowym karnecie
-		await AddToDatabase(request, sessionId, token, cancellationToken);
+		await AddToDatabaseAsync(request, sessionId, token, cancellationToken);
+
 		return token;
 	}
 
-	private async Task<string> AddTransactionPrzelewy24(AddTicketCommand request, string sessionId)
+	private async Task<string> AddTransactionPrzelewy24Async(AddTicketCommand request, string sessionId)
 	{
 		var user = await _context.Users
 			.AsNoTracking()
@@ -78,7 +71,7 @@ public class AddTicketCommandHandler : IRequestHandler<AddTicketCommand, string>
 		return token;
 	}
 
-	private async Task AddToDatabase(AddTicketCommand request, string sessionId, string token, CancellationToken cancellationToken)
+	private async Task AddToDatabaseAsync(AddTicketCommand request, string sessionId, string token, CancellationToken cancellationToken)
 	{
 		var ticketType = _context.TicketTypes
 			.AsNoTracking()

@@ -6,34 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Employees.Commands.AddEmployee;
 
-public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand>
+public class AddEmployeeCommandHandler(
+	IApplicationDbContext context,
+	IUserManagerService userManagerService,
+	IDateTimeService dateTimeService) : IRequestHandler<AddEmployeeCommand>
 {
-	private readonly IApplicationDbContext _context;
-	private readonly IUserManagerService _userManagerService;
-	private readonly IDateTimeService _dateTimeService;
-
-	public AddEmployeeCommandHandler(
-		IApplicationDbContext context,
-		IUserManagerService userManagerService,
-		IDateTimeService dateTimeService)
-	{
-		_context = context;
-		_userManagerService = userManagerService;
-		_dateTimeService = dateTimeService;
-	}
-
 	public async Task Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
 	{
-		var userId = await _userManagerService.CreateAsync(request.Email, request.Password, RolesDict.Pracownik);
+		var userId = await userManagerService.CreateAsync(request.Email, request.Password, RolesDict.Employee);
 
-		var user = await _context.Users
+		var user = await context.Users
 			.Include(x => x.Employee)
 			.Include(x => x.Address)
-			.FirstOrDefaultAsync(x => x.Id == userId);
+			.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
 
 		user.FirstName = request.FirstName;
 		user.LastName = request.LastName;
-		user.RegisterDateTime = _dateTimeService.Now;
+		user.RegisterDateTime = dateTimeService.Now;
 		user.EmailConfirmed = true;
 
 		user.Employee = new Domain.Entities.Employee
@@ -57,7 +46,6 @@ public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand>
 			UserId = userId
 		};
 
-		await _context.SaveChangesAsync(cancellationToken);
-		return;
+		await context.SaveChangesAsync(cancellationToken);
 	}
 }

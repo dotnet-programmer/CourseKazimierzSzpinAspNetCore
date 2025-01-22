@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace GymManager.Application.Files.Commands.UploadFile;
 
+// przez to, że modelem jest lista obiektów IFormFile, trzeba zdefiniować osobną klasę, która będzie walidować osobno każdy typ
 public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 {
-	// przez to, że modelem jest lista obiektów IFormFile, trzeba zdefiniować osobną klasę, która będzie walidować osobno każdy typ
-
-	public UploadFileCommandValidator() => RuleForEach(x => x.Files).SetValidator(new IFormValidator());
+	public UploadFileCommandValidator() => 
+		RuleForEach(x => x.Files).SetValidator(new IFormValidator());
 }
 
 public class IFormValidator : AbstractValidator<IFormFile>
@@ -30,12 +30,7 @@ public class IFormValidator : AbstractValidator<IFormFile>
 	{
 		var dotCount = fileName.Where(x => x == '.').Count();
 
-		if (dotCount > 1)
-		{
-			return false;
-		}
-
-		if (fileName.Contains("\\") || fileName.Contains("/") || fileName.Contains(":") || fileName.Contains(" "))
+		if (dotCount > 1 || fileName.Contains('\\') || fileName.Contains('/') || fileName.Contains(':') || fileName.Contains(' '))
 		{
 			return false;
 		}
@@ -43,9 +38,6 @@ public class IFormValidator : AbstractValidator<IFormFile>
 		return true;
 	}
 
-	private bool ValidExtensions(string fileName)
-	{
-		var fileExtensions = Path.GetExtension(fileName).ToUpper();
-		return _extensions.Contains(fileExtensions);
-	}
+	private bool ValidExtensions(string fileName) => 
+		_extensions.Contains(Path.GetExtension(fileName).ToUpper());
 }
