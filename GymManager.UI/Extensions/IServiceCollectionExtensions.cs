@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace GymManager.UI.Extensions;
@@ -9,7 +10,8 @@ public static class IServiceCollectionExtensions
 	// Konfiguracja silnika Razor jak i gdzie szukać widoków dla poszczególnych klientów
 	public static void DefineViewLocation(this IServiceCollection services, IConfiguration configuration)
 	{
-		// pobranie wartości klucza TemplateKey z configa
+		// pobranie wartości klucza TemplateKey z configa appsettings.json
+		// w pliku Program.cs konfiguracje pobiera się z builder.Configuration.GetSection("TemplateKey").Value;
 		string templateKey = configuration.GetSection("TemplateKey").Value;
 
 		// deklaracja jak ma działać silnik Razor
@@ -37,14 +39,14 @@ public static class IServiceCollectionExtensions
 	public static void AddCulture(this IServiceCollection services)
 	{
 		// lista przechowująca informacje o językach, które są wspierane
-		var supportedCultures = new List<CultureInfo> { new("pl"), new("en") };
+		List<CultureInfo> supportedCultures = [new("pl"), new("en")];
 
 		CultureInfo.DefaultThreadCurrentCulture = supportedCultures[0];
 		CultureInfo.DefaultThreadCurrentUICulture = supportedCultures[0];
 
 		services.Configure<RequestLocalizationOptions>(options =>
 			{
-				options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(supportedCultures[0]);
+				options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
 				options.SupportedCultures = supportedCultures;
 				options.SupportedUICultures = supportedCultures;
 			});

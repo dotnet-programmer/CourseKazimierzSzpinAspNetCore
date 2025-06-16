@@ -15,14 +15,16 @@ public class ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionH
 	{
 		try
 		{
-			// wywołanie requesta, dzięki czemu można przechwycić ewentualne błędy
-			// czyli tutaj podpinamy własnego middleware gdzie w tym miejscu będzie przekazany cały request
+			// wywołanie każdego requesta w bloku try-catch, dzięki czemu można przechwycić ewentualne błędy
+			// czyli tutaj podpinamy własnego middleware
 			await _next.Invoke(context);
 		}
 		catch (Exception exception)
 		{
 			// za Name będzie podstawiony context.Request.Path
 			_logger.LogError(exception, "GymManager Request: Nieobsłużony wyjątek - Request {Name}", context.Request.Path);
+
+			// metoda obsługująca wyjątek i zwracająca odpowiedź do klienta
 			await HandleExceptionAsync(context, exception).ConfigureAwait(false);
 		}
 	}

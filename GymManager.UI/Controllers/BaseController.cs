@@ -11,16 +11,17 @@ public abstract class BaseController : Controller
 	// pole Mediator w bazowym kontrolerze
 	// na tym polu są bezpośrednio wywoływane kwerendy i komendy w kontrolerach dziedziczących po tej klasie
 	private ISender _mediator;
-	protected ISender Mediator =>
-		//since C# 8.0 the ??= null coalescing assignment operator: some_Value ??= some_Value2;
-		//Which is a more concise version of: some_Value = some_Value ?? some_Value2;
-		_mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
-	protected string UserId 
+	// Since C# 8.0 the ??= null coalescing assignment operator: some_Value ??= some_Value2;
+	// Which is a more concise version of: some_Value = some_Value ?? some_Value2;
+	protected ISender Mediator
+		=> _mediator ??= HttpContext.RequestServices.GetService<ISender>();
+
+	protected string UserId
 		=> User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 	// globalizacja - wersje językowe
-	protected string CurrentLanguage 
+	protected string CurrentLanguage
 		=> CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
 	// walidacja danych przed wysłaniem komendy

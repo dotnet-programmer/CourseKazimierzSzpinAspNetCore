@@ -8,6 +8,8 @@
       "sslPort": 44340
     }
   },
+  // wartość "ASPNETCORE_ENVIRONMENT" określa środowisko, w którym działa aplikacja, np. "Development", "Staging", "Production"
+  // w zależności od tego ustawienia, aplikacja korzysta z innych plików konfuguracyjnych, np. appsettings.Development.json, appsettings.Staging.json, appsettings.Production.json
   "profiles": {
     "http": {
       "commandName": "Project",

@@ -15,8 +15,10 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 	private readonly IDateTimeService _dateTimeService = dateTimeService;
 
 	// widok strona główna
-	public IActionResult Index() 
-		=> View();
+	public IActionResult Index()
+	{
+		return View();
+	}
 
 	// widok polityka prywatności
 	public IActionResult Privacy() 

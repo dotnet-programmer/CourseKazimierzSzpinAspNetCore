@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 // AddSingleton - jedna instancja tej klasy w całej aplikacji
 // AddScoped - jedna instancja tej klasy będzie wspólna dla całego requesta
 // AddTransient - nowa instancja dla każdego kontrolera czy każdego serwisu, czyli zawsze jest nowa instancja
+// tutaj przykład wstrzyknięcia klasy Email, wszędzie tam gdzie będzie używany interfejs IEmail
 //builder.Services.AddScoped<IEmail, Email>();
 
 builder.Services
@@ -95,6 +96,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 // testowe zalogowanie który tryb aplikacji jest ustawiony - produkcja/dev
+// pobranie serwisu ILogger<Program> z kontenera Dependency Injection
 var logger = app.Services.GetService<ILogger<Program>>();
 if (app.Environment.IsDevelopment())
 {
@@ -114,7 +116,6 @@ app.UseStaticFiles();
 app.UseRouting();
 // Authorizes a user to access secure resources. This app doesn't use authorization, therefore this line could be removed.
 app.UseAuthorization();
-
 // dodanie własnego middleware do globalnej obsługi wyjątków
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 

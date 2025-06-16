@@ -107,7 +107,7 @@ public static class DependencyInjection
 		// serwis do obsługi plików na serwerze
 		services.AddSingleton<IFileManagerService, FileManagerService>();
 
-		// serwis do generowania losowego koloru 
+		// serwis do generowania losowego koloru
 		services.AddScoped<IRandomService, RandomService>();
 
 		// serwis do generowania tokena JWT
@@ -129,7 +129,7 @@ public static class DependencyInjection
 		services.AddSingleton<IUserNotificationService, UserNotificationService>();
 
 		// zarejestrowanie klas subskrybujących eventy w kontenerze Dependency Injection
-		// za pomocą refleksji dodanie wszystkich instancji implementujących interfejs IEventHandler 
+		// za pomocą refleksji dodanie wszystkich instancji implementujących interfejs IEventHandler
 		RegisterEvents(services);
 
 		return services;
