@@ -10,7 +10,6 @@ public class ApplicationUser : IdentityUser
 	public DateTime RegisterDateTime { get; set; }
 	public bool IsDeleted { get; set; }
 
-
 	// 3x relacje 1:1, to jest klasa nadrzędna
 
 	// klucze obce w tabelach zależnych od Usera - np. nie doda się adresu bez użytkownika
@@ -21,7 +20,6 @@ public class ApplicationUser : IdentityUser
 
 	// jeśeli użytkownik jest pracownikiem to tutaj będą dodatkowe informacje jakich potrzebuje pracownik
 	public Employee Employee { get; set; }
-
 
 	// relacja 1:wiele, lista karnetów
 	public ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();

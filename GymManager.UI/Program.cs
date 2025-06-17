@@ -119,7 +119,7 @@ app.UseAuthorization();
 // dodanie własnego middleware do globalnej obsługi wyjątków
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-// routing
+// wstępnie zdefiniowany podstawowy routing
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");

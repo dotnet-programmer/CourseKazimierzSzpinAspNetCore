@@ -131,7 +131,7 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 	//[Route("{test}")]
 
 	// tutaj adres będzie wyglądał www.adres.pl/indextest/wartosc
-	//[Route("indextest{test}")]
+	//[Route("indextest/{test}")]
 
 	// oczekiwanie że w adresie zostanie przekazana też nazwa kontrolera i nazwa akcji
 	// tutaj adres będzie wyglądał www.adres.pl/home/index2/wartosc

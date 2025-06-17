@@ -17,14 +17,20 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<TRequest> logger, ICur
 		string userId = currentUserService.UserId ?? string.Empty;
 		string userName = currentUserService.UserName ?? string.Empty;
 
-		logger.LogInformation($"Handling {requestName}");
+		//logger.LogInformation($"Handling {requestName}");
+		logger.LogInformation("Handling {Name}", requestName);
+
+		// bez dodania @ loguje się taki wpis: INFO GymManager Request: GetTicketByIdQuery   GymManager.Application.Tickets.Queries.GetTicketById.GetTicketByIdQuery
+		// po dodaniu @ loguje się taki wpis: INFO GymManager Request: "GetTicketByIdQuery" "" "" {"TicketId":1}
+		logger.LogInformation("GymManager Request: {Name} {UserId} {UserName} {Request}", requestName, userId, userName, request);
 		logger.LogInformation("GymManager Request: {@Name} {@UserId} {@UserName} {@Request}", requestName, userId, userName, request);
 
 		// przypisanie do responsa odpowiedzi obsłużonego requesta
 		var response = await next();
 
 		// informacja, że request został obsłużony
-		logger.LogInformation($"Handled {typeof(TResponse).Name}");
+		logger.LogInformation("Handled {Name}", typeof(TResponse).Name);
+		logger.LogInformation("Handled {@Name}", typeof(TResponse).Name);
 
 		// zwrócenie odpowiedzi
 		return response;

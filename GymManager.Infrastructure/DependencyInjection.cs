@@ -37,12 +37,11 @@ public static class DependencyInjection
 		// jednorazowe wywołanie żeby zaszyfrować, później można usunąć
 		//var encryptedConnectionString = encryptionService.Encrypt("Server=(local)\\SQLEXPRESS;Database=GymManager;User Id=DBUser;Password=;TrustServerCertificate=True;");
 
-		// pobranie connection stringa z ustawień
-		var connectionString = encryptionService.Decrypt(configuration.GetConnectionString("DefaultConnection"));
-
+		// konfiguracja Entity Framework Core i DbContext
 		// dependency injection - używaj ApplicationDbContext wszędzie tam gdzie jest IApplicationDbContext
 		services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-
+		// pobranie connection stringa z ustawień
+		var connectionString = encryptionService.Decrypt(configuration.GetConnectionString("DefaultConnection"));
 		// ApplicationDbContext - klasa kontekstu, czyli tej dziedziczącej po DbContext
 		services.AddDbContext<ApplicationDbContext>(options => options
 			// ustawienie żeby DbContext używał bazy danych Sql Server o podanym connection stringu
