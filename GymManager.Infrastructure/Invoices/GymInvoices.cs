@@ -47,7 +47,7 @@ public class GymInvoices : IGymInvoices
 		_httpClient.BaseAddress = new Uri(_baseUrl);
 		_httpClient.Timeout = new TimeSpan(0, 0, 30);
 
-		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 	}
 
 	// dodanie nowej faktury poprzez Api

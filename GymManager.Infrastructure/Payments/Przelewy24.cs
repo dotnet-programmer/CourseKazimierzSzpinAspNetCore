@@ -38,7 +38,7 @@ public class Przelewy24 : IPrzelewy24
 		InitHttpClient();
 		InitJsonSettings();
 
-		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 	}
 
 	public async Task<P24TransactionResponse> NewTransactionAsync(P24TransactionRequest data)

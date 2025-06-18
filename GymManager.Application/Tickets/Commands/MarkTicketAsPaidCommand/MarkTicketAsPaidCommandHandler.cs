@@ -13,8 +13,8 @@ public class MarkTicketAsPaidCommandHandler(
 	IApplicationDbContext context,
 	IPrzelewy24 przelewy24,
 	ILogger<MarkTicketAsPaidCommandHandler> logger,
-	IGymInvoices gymInvoices,
-	IUserNotificationService userNotificationService,
+	//IGymInvoices gymInvoices,
+	//IUserNotificationService userNotificationService,
 	IEventDispatcher eventDispatcher) : IRequestHandler<MarkTicketAsPaidCommand>
 {
 	private readonly IApplicationDbContext _context = context;
