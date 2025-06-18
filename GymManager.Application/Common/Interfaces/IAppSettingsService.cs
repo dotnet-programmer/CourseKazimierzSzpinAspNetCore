@@ -7,5 +7,5 @@ public interface IAppSettingsService
 	Task<string> GetValueByKeyAsync(string key);
 
 	// aktualizacja słownika danymi z bazy danych
-	Task Update(IApplicationDbContext context);
+	Task UpdateValuesAsync(IApplicationDbContext context);
 }

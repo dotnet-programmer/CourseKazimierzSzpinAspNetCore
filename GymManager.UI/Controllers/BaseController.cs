@@ -25,29 +25,32 @@ public abstract class BaseController : Controller
 		=> CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
 	// walidacja danych przed wysłaniem komendy
-	protected async Task<MediatorValidateResponse<T>> MediatorSendValidate<T>(IRequest<T> request)
+	protected async Task<MediatorValidateResponse<TResponse>> MediatorSendValidate<TResponse>(IRequest<TResponse> request)
 	{
 		// na początku budowana jest odpowiedź
-		var response = new MediatorValidateResponse<T> { IsValid = false };
+		MediatorValidateResponse<TResponse> response = new() { IsValid = false };
 
 		try
 		{
 			if (ModelState.IsValid)
 			{
+				// response.Model będzie zawierało wynik działania komendy, jeżeli ta będzie zawierała dane do zwrócenia
 				response.Model = await Mediator.Send(request);
 				response.IsValid = true;
+				// zwrócenie odpowiedzi z ewentualną zawartością
 				return response;
 			}
 		}
 		catch (Application.Common.Exceptions.ValidationException exception)
 		{
+			// przekazanie wszystkich błędów z powrotem do widoku
 			foreach (var item in exception.Errors)
 			{
-				// przekazanie wszystkich błędów z powrotem do widoku
 				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
 			}
 		}
 
+		// zwrócenie odpowiedzi z ustawieniem IsValid = false
 		return response;
 	}
 }

@@ -70,20 +70,39 @@ var app = builder.Build();
 app.UseSession();
 
 // w tym miejscu trzeba dodać UseInfrastructure, żeby wykonywać działania podczas uruchamiania aplikacji
-// jako parametry metody będą użyte wstrzyknięte implementacje
+// jako parametry metody będą użyte już wstrzyknięte implementacje
 using (var scope = app.Services.CreateScope())
 {
 	// dodanie globalizacji
 	app.UseRequestLocalization(
 		app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
-	// wstrzykiwanie odpowiednich serwisów
+	// używanie wstrzykniętych implementacji serwisów
 	app.UseInfrastructure(
+		// Używaj GetRequiredService<T>(), gdy usługa jest krytyczna dla działania komponentu i jej brak powinien zgłosić błąd.
+		/*
+		scope.ServiceProvider.GetRequiredService<T>():
+		Używana w kontekście zakresu (np. wewnątrz bloku using z CreateScope()).
+		Służy do pobierania usługi typu T z zakresu, w którym jest ona tworzona.
+		Zgłasza wyjątek InvalidOperationException, jeśli usługa typu T nie jest zarejestrowana w kontenerze lub w danym zakresie.
+		Zapewnia, że usługa jest zawsze dostępna, co jest przydatne w sytuacjach, gdy jej brak byłby poważnym błędem. 
+		 */
 		scope.ServiceProvider.GetRequiredService<IApplicationDbContext>(),
+
+		// Używaj GetService<T>(), gdy usługa jest opcjonalna i chcesz obsłużyć przypadek jej braku.
+		/*
+		app.Services.GetService<T>():
+		Używana bezpośrednio z IServiceProvider dostarczanym przez aplikację.
+		Służy do pobierania usługi typu T z kontenera wstrzykiwania zależności.
+		Zwraca null, jeśli usługa typu T nie jest zarejestrowana w kontenerze.
+		Umożliwia obsługę braku usługi w sposób kontrolowany, na przykład poprzez zwrócenie domyślnej wartości lub podjęcie alternatywnej akcji.
+		 */
 		app.Services.GetService<IAppSettingsService>(),
 		app.Services.GetService<IEmailService>(),
 		app.Services.GetService<IWebHostEnvironment>()
-		);
+	);
+	// GetRequiredService<T>() jest metodą "bezpieczną", która zgłasza błąd w przypadku niepowodzenia,
+	// GetService<T>() zwraca null, pozwalając na bardziej elastyczną obsługę braku zależności. 
 }
 
 // ustawienia zależne od wartości klucza ASPNETCORE_ENVIRONMENT - czyli przełączanie między trybem produkcyjnym a deweloperskim

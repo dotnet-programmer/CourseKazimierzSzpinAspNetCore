@@ -4,7 +4,7 @@ using MediatR;
 namespace GymManager.Application.Contacts.Commands.SendContactEmail;
 
 // model dla formularza w widoku Contact.cshtml
-public class SendContactEmailCommand : IRequest
+public class SendContactEmailCommand : IRequest<Unit>
 {
 	// walidacja danych za pomocą DataAnnotation
 	[Required(ErrorMessage = "Pole 'Imię i Nazwisko' jest wymagane.")]

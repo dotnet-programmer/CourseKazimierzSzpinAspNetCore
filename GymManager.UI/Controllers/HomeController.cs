@@ -16,19 +16,18 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 
 	// widok strona główna
 	public IActionResult Index()
-	{
-		return View();
-	}
+		=> View();
 
 	// widok polityka prywatności
-	public IActionResult Privacy() 
+	public IActionResult Privacy()
 		=> View();
 
 	// widok kontakt
-	public IActionResult Contact() 
+	public IActionResult Contact()
 		=> View(new SendContactEmailCommand());
 
-	// wysyłanie danych z formularza do kontrolera
+	// wysyłanie danych z formularza do kontrolera i wywołanie komendy
+	// w parametrze SendContactEmailCommand będą dane przesłane z formularza
 	[ValidateAntiForgeryToken]
 	[ValidateReCaptcha]
 	[HttpPost]
@@ -37,9 +36,8 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 		// zwykłe wysłanie maila
 		//await Mediator.Send(sendContactEmailCommand);
 
-		//var result = await MediatorSendValidate(sendContactEmailCommand);
 
-		// powinno być przeniesione do BaseController, ale wtedy nie działa
+		// przeniesione do BaseController
 		//try
 		//{
 		//	if (ModelState.IsValid)
@@ -48,44 +46,56 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 		//	}
 		//	else
 		//	{
+		//		// przekazanie wypełnionego modelu z powrotem do widoku, żeby usupełnić wcześniej wypełnione pola
 		//		return View(sendContactEmailCommand);
 		//	}
 		//}
 		//catch (Application.Common.Exceptions.ValidationException exception)
 		//{
+		//	// przekazanie wszystkich błędów z powrotem do widoku
 		//	foreach (var item in exception.Errors)
 		//	{
-		//		// przekazanie wszystkich błędów z powrotem do widoku
 		//		ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
 		//	}
+		//  // przekazanie wypełnionego modelu z powrotem do widoku, żeby usupełnić wcześniej wypełnione pola
 		//	return View(sendContactEmailCommand);
 		//}
 
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(sendContactEmailCommand);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
 
-		if (!isValid)
+		// po przeniesieniu do BaseController tak będzie wyglądało wywołanie komendy
+		var result = await MediatorSendValidate(sendContactEmailCommand);
+		if (!result.IsValid)
 		{
-			ModelState.AddModelError("AntySpamResult", "Wypełnij pole ReCaptcha (zabezpieczenie przez spamem)");
 			return View(sendContactEmailCommand);
 		}
 
-		TempData["Success"] = "Wiadomość została wysłana do administratora.";
+
+		//bool isValid = false;
+		//try
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		await Mediator.Send(sendContactEmailCommand);
+		//		isValid = true;
+		//	}
+		//}
+		//catch (Application.Common.Exceptions.ValidationException exception)
+		//{
+		//	// przekazanie wszystkich błędów z powrotem do widoku
+		//	foreach (var item in exception.Errors)
+		//	{
+		//		ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
+		//	}
+		//}
+
+		//if (!isValid)
+		//{
+		//	ModelState.AddModelError("AntySpamResult", "Wypełnij pole ReCaptcha (zabezpieczenie przez spamem)");
+		//	return View(sendContactEmailCommand);
+		//}
+
+		//TempData["Success"] = "Wiadomość została wysłana do administratora.";
+
 
 		return RedirectToAction("Contact");
 	}

@@ -20,6 +20,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
 		builder.Property(x => x.TicketId)
 			.IsRequired();
 
+		builder.Property(x => x.Value)
+			.HasPrecision(18, 2);
+
 		// konfiguracja relacji 1:wiele, zrobiona dla klasy, w której znajduje się klucz obcy a nie kolekcja
 		builder
 			.HasOne(x => x.User)

@@ -289,6 +289,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Salary")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserId")
@@ -395,6 +396,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Value")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Year")
@@ -471,14 +473,14 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         new
                         {
                             SettingsId = 1,
-                            Description = "Ogólne",
-                            Order = 1
+                            Description = "E-mail",
+                            Order = 2
                         },
                         new
                         {
                             SettingsId = 2,
-                            Description = "E-mail",
-                            Order = 2
+                            Description = "Ogólne",
+                            Order = 1
                         });
                 });
 
@@ -526,7 +528,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Host",
                             Key = "HostSmtp",
                             Order = 1,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = "smtp.gmail.com"
                         },
@@ -536,7 +538,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Port",
                             Key = "Port",
                             Order = 2,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 2,
                             Value = "587"
                         },
@@ -546,7 +548,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Adres e-mail nadawcy",
                             Key = "SenderEmail",
                             Order = 3,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = ""
                         },
@@ -556,7 +558,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Hasło",
                             Key = "SenderEmailPassword",
                             Order = 4,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 4,
                             Value = ""
                         },
@@ -566,9 +568,9 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Nazwa nadawcy",
                             Key = "SenderName",
                             Order = 5,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
-                            Value = "Kazimierz Szpin"
+                            Value = "GymManager"
                         },
                         new
                         {
@@ -576,7 +578,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Login nadawcy",
                             Key = "SenderLogin",
                             Order = 6,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = ""
                         },
@@ -586,17 +588,17 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Czy wyświetlać banner na stronie głównej?",
                             Key = "BannerVisible",
                             Order = 1,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 1,
                             Value = "True"
                         },
                         new
                         {
                             SettingsPositionId = 8,
-                            Description = "Folor footera strona głównej",
+                            Description = "Kolor footera strony głównej",
                             Key = "FooterColor",
                             Order = 2,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 5,
                             Value = "#dc3545"
                         },
@@ -606,9 +608,9 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Główny adres e-mail administratora",
                             Key = "AdminEmail",
                             Order = 3,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 0,
-                            Value = "kazimierz.szpin@modestprogrammer.pl"
+                            Value = ""
                         });
                 });
 
@@ -627,6 +629,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("StartDate")
@@ -662,6 +665,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketTypeId"));
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TicketTypeEnum")

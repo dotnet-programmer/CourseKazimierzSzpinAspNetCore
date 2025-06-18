@@ -28,7 +28,7 @@ public class EditSettingsCommandHandler(
 	// odświeżenie ustawień zapisanych w Cahce
 	private async Task UpdateAppSettingsAsync()
 	{
-		await _appSettingsService.Update(_context);
-		await _emailService.Update(_appSettingsService);
+		await _appSettingsService.UpdateValuesAsync(_context);
+		await _emailService.UpdateAsync(_appSettingsService);
 	}
 }

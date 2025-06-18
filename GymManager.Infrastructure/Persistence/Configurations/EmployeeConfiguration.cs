@@ -19,5 +19,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
 		builder.Property(x => x.UserId)
 			.IsRequired();
+
+		builder.Property(x=>x.Salary)
+			.HasPrecision(18, 2);
 	}
 }

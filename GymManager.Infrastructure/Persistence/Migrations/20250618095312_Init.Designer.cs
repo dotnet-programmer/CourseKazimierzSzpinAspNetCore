@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManager.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240215133200_Init")]
+    [Migration("20250618095312_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -166,8 +166,22 @@ namespace GymManager.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("GymManager.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Property<string>("ApplicationUserId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)
@@ -180,12 +194,53 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("RegisterDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ApplicationUserId");
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ApplicationUser");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("GymManager.Domain.Entities.Client", b =>
@@ -237,6 +292,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Salary")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserId")
@@ -343,6 +399,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Value")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Year")
@@ -419,14 +476,14 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         new
                         {
                             SettingsId = 1,
-                            Description = "Ogólne",
-                            Order = 1
+                            Description = "E-mail",
+                            Order = 2
                         },
                         new
                         {
                             SettingsId = 2,
-                            Description = "E-mail",
-                            Order = 2
+                            Description = "Ogólne",
+                            Order = 1
                         });
                 });
 
@@ -474,7 +531,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Host",
                             Key = "HostSmtp",
                             Order = 1,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = "smtp.gmail.com"
                         },
@@ -484,7 +541,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Port",
                             Key = "Port",
                             Order = 2,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 2,
                             Value = "587"
                         },
@@ -494,7 +551,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Adres e-mail nadawcy",
                             Key = "SenderEmail",
                             Order = 3,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = ""
                         },
@@ -504,7 +561,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Hasło",
                             Key = "SenderEmailPassword",
                             Order = 4,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 4,
                             Value = ""
                         },
@@ -514,9 +571,9 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Nazwa nadawcy",
                             Key = "SenderName",
                             Order = 5,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
-                            Value = "Kazimierz Szpin"
+                            Value = "GymManager"
                         },
                         new
                         {
@@ -524,7 +581,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Login nadawcy",
                             Key = "SenderLogin",
                             Order = 6,
-                            SettingsId = 2,
+                            SettingsId = 1,
                             Type = 0,
                             Value = ""
                         },
@@ -534,17 +591,17 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Czy wyświetlać banner na stronie głównej?",
                             Key = "BannerVisible",
                             Order = 1,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 1,
                             Value = "True"
                         },
                         new
                         {
                             SettingsPositionId = 8,
-                            Description = "Folor footera strona głównej",
+                            Description = "Kolor footera strony głównej",
                             Key = "FooterColor",
                             Order = 2,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 5,
                             Value = "#dc3545"
                         },
@@ -554,9 +611,9 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                             Description = "Główny adres e-mail administratora",
                             Key = "AdminEmail",
                             Order = 3,
-                            SettingsId = 1,
+                            SettingsId = 2,
                             Type = 0,
-                            Value = "kazimierz.szpin@modestprogrammer.pl"
+                            Value = ""
                         });
                 });
 
@@ -575,6 +632,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("StartDate")
@@ -610,6 +668,7 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketTypeId"));
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TicketTypeEnum")
@@ -731,6 +790,162 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "C854A873-3D75-4973-AD7E-A83C95726133",
+                            ConcurrencyStamp = "C778085D-D407-4936-8A19-350C6817AA5D",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "EC23C152-A1C5-4D9A-B8D4-FAE62D5F059D",
+                            ConcurrencyStamp = "A1277894-E24D-490E-A3BA-83F9CF5F838D",
+                            Name = "Klient",
+                            NormalizedName = "KLIENT"
+                        },
+                        new
+                        {
+                            Id = "ADE32A3F-6149-475A-8155-CFE5D69ACA42",
+                            ConcurrencyStamp = "B50B7D83-F6E6-4DE3-8346-7D0E8501EEB5",
+                            Name = "Pracownik",
+                            NormalizedName = "PRACOWNIK"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("GymManager.Domain.Entities.Address", b =>
                 {
                     b.HasOne("GymManager.Domain.Entities.ApplicationUser", "User")
@@ -841,6 +1056,57 @@ namespace GymManager.Infrastructure.Persistence.Migrations
                     b.Navigation("Language");
 
                     b.Navigation("TicketType");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("GymManager.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("GymManager.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymManager.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("GymManager.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GymManager.Domain.Entities.ApplicationUser", b =>

@@ -1,7 +1,7 @@
 ﻿namespace GymManager.UI.Models;
 
-public class MediatorValidateResponse<T>
+public class MediatorValidateResponse<TResponse>
 {
 	public bool IsValid { get; set; }
-	public T Model { get; set; }
+	public TResponse Model { get; set; }
 }

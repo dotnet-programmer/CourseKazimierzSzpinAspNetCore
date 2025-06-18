@@ -141,13 +141,12 @@ public static class DependencyInjection
 		IEmailService emailService,
 		IWebHostEnvironment webHostEnvironment)
 	{
-		// wywołując metodę asynchroniczną w metodzie, która nie jest asynchroniczna, trzeba dodać .GetAwaiter().GetResult()
-
 		// na starcie aplikacji wywołana metoda Update i uzupełnienie słownika z ustawieniami
-		appSettingsService.Update(context).GetAwaiter().GetResult();
+		// wywołując metodę asynchroniczną w metodzie, która nie jest asynchroniczna, trzeba dodać .GetAwaiter().GetResult()
+		appSettingsService.UpdateValuesAsync(context).GetAwaiter().GetResult();
 
 		// na starcie aplikacji wywołana metoda Update i uzupełnienie danych do wysyłki maili z ustawień
-		emailService.Update(appSettingsService).GetAwaiter().GetResult();
+		emailService.UpdateAsync(appSettingsService).GetAwaiter().GetResult();
 
 		// konfiguracja Rotativy do generowania PDF
 		RotativaConfiguration.Setup(webHostEnvironment.WebRootPath, "Rotativa");

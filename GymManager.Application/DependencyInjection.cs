@@ -23,7 +23,7 @@ public static class DependencyInjection
 		// badanie wydajności aplikacji
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
 
-		// dodanie FluentValidator do dependency injection
+		// dodanie FluentValidator do dependency injection (informacje o walidatorach)
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 

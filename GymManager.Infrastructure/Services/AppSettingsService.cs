@@ -21,10 +21,12 @@ public class AppSettingsService : IAppSettingsService
 
 	// metody pomocnicze
 	// jeżeli ktoś chce pobrać dane to wywołuje metodę WaitAsync, co blokuje dostęp do tego miejsca innym użytkownikom
-	private async Task Wait() => await _semaphore.WaitAsync();
+	private async Task Wait() 
+		=> await _semaphore.WaitAsync();
 
 	// jak ktoś dane już pobierze to wywołuje metodę Release, co zwalnia blokadę wątku
-	private void Release() => _semaphore.Release();
+	private void Release() 
+		=> _semaphore.Release();
 	#endregion
 
 	// pobieranie wartości ze słownika na podstawie klucza
@@ -42,7 +44,7 @@ public class AppSettingsService : IAppSettingsService
 	}
 
 	// aktualizacja słownika danymi z bazy danych
-	public async Task Update(IApplicationDbContext context)
+	public async Task UpdateValuesAsync(IApplicationDbContext context)
 	{
 		try
 		{

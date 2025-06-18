@@ -7,10 +7,10 @@ namespace GymManager.Application.Contacts.Commands.SendContactEmail;
 public class SendContactEmailCommandHandler(
 	IEmailService email,
 	IAppSettingsService appSettings,
-	IBackgroundWorkerQueue backgroundWorkerQueue) : IRequestHandler<SendContactEmailCommand>
+	IBackgroundWorkerQueue backgroundWorkerQueue) : IRequestHandler<SendContactEmailCommand, Unit>
 {
 	// wysłanie email do administratora poprzez formularz Contact.cshtml
-	public async Task Handle(SendContactEmailCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(SendContactEmailCommand request, CancellationToken cancellationToken)
 	{
 		string body =
 			$"Nazwa: {request.Name}.<br><br>" +
@@ -23,7 +23,7 @@ public class SendContactEmailCommandHandler(
 		//await _email.SendAsync(
 		//	$"Wiadomość z GymManager: {request.Title}",
 		//	body,
-		//	await _appSettings.Get(SettingsDict.AdminEmail));
+		//	await _appSettings.GetValueByKeyAsync(SettingsDict.AdminEmail));
 
 		// wywołanie komendy w tle z użyciem zadań w tle
 		backgroundWorkerQueue.QueueBackgroundWorkItem(async x =>
@@ -35,5 +35,6 @@ public class SendContactEmailCommandHandler(
 			},
 			$"Kontakt. E-mail: {request.Email}"
 		);
+		return Unit.Value;
 	}
 }

@@ -16,6 +16,9 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 		builder.Property(x => x.TicketTypeId)
 			.HasDefaultValue(1);
 
+		builder.Property(x => x.Price)
+			.HasPrecision(18, 2);
+
 		// konfiguracja relacji 1:wiele, zrobiona dla klasy, w której znajduje się klucz obcy a nie kolekcja
 		builder
 			.HasOne(x => x.User)

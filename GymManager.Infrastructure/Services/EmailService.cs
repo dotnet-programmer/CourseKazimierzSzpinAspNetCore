@@ -15,8 +15,8 @@ public class EmailService : IEmailService
 	private string _senderName;
 	private string _senderLogin;
 
-	// pola wypełniane danymi pobranymi z serwisu IAppSettingsService
-	public async Task Update(IAppSettingsService appSettingsService)
+	// na starcie aplikacji wywołana metoda Update i uzupełnienie danych do wysyłki maili z ustawień z serwisu IAppSettingsService
+	public async Task UpdateAsync(IAppSettingsService appSettingsService)
 	{
 		_port = Convert.ToInt32(await appSettingsService.GetValueByKeyAsync(SettingsDict.Port));
 		_hostSmtp = await appSettingsService.GetValueByKeyAsync(SettingsDict.HostSmtp);
@@ -35,7 +35,7 @@ public class EmailService : IEmailService
 		message.To.Add(MailboxAddress.Parse(to));
 		message.Subject = subject;
 
-		BodyBuilder builder = new()
+		BodyBuilder bodyBuilder = new()
 		{
 			HtmlBody = @$"
 					<html>
@@ -51,10 +51,10 @@ public class EmailService : IEmailService
 		// sprawdzanie czy dodano załącznik
 		if (!string.IsNullOrEmpty(attachmentPath))
 		{
-			builder.Attachments.Add(attachmentPath);
+			bodyBuilder.Attachments.Add(attachmentPath);
 		}
 
-		message.Body = builder.ToMessageBody();
+		message.Body = bodyBuilder.ToMessageBody();
 
 		using (SmtpClient client = new())
 		{

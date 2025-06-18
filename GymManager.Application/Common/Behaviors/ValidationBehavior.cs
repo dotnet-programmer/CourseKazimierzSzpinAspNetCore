@@ -7,9 +7,11 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
 {
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 	{
+		// sprawdzenie czy jest jakiś walidator
 		if (validators.Any())
 		{
-			var context = new ValidationContext<TRequest>(request);
+			// pobranie kontekstu walidacji
+			ValidationContext<TRequest> context = new(request);
 
 			// walidacja kontekstu
 			var validationResults = await Task.WhenAll(validators.Select(x => x.ValidateAsync(context, cancellationToken)));
