@@ -36,8 +36,8 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 		// zwykłe wysłanie maila
 		//await Mediator.Send(sendContactEmailCommand);
 
-
 		// przeniesione do BaseController
+		// wysłanie maila używając walidacji danych w ModelState
 		//try
 		//{
 		//	if (ModelState.IsValid)
@@ -61,41 +61,15 @@ public class HomeController(ILogger<HomeController> logger, IDateTimeService dat
 		//	return View(sendContactEmailCommand);
 		//}
 
-
 		// po przeniesieniu do BaseController tak będzie wyglądało wywołanie komendy
 		var result = await MediatorSendValidate(sendContactEmailCommand);
 		if (!result.IsValid)
 		{
+			ModelState.AddModelError("AntySpamResult", "Wypełnij pole ReCaptcha (zabezpieczenie przed spamem)");
 			return View(sendContactEmailCommand);
 		}
 
-
-		//bool isValid = false;
-		//try
-		//{
-		//	if (ModelState.IsValid)
-		//	{
-		//		await Mediator.Send(sendContactEmailCommand);
-		//		isValid = true;
-		//	}
-		//}
-		//catch (Application.Common.Exceptions.ValidationException exception)
-		//{
-		//	// przekazanie wszystkich błędów z powrotem do widoku
-		//	foreach (var item in exception.Errors)
-		//	{
-		//		ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-		//	}
-		//}
-
-		//if (!isValid)
-		//{
-		//	ModelState.AddModelError("AntySpamResult", "Wypełnij pole ReCaptcha (zabezpieczenie przez spamem)");
-		//	return View(sendContactEmailCommand);
-		//}
-
-		//TempData["Success"] = "Wiadomość została wysłana do administratora.";
-
+		TempData["Success"] = "Wiadomość została wysłana do administratora.";
 
 		return RedirectToAction("Contact");
 	}

@@ -5,6 +5,8 @@ namespace GymManager.UI.Extensions;
 // dynamiczna aktywacja zakładki
 public static class IUrlHelperExtensions
 {
+	// przekazywanie nazwy kontrolera i akcji;
+	// jeżeli kontroler i akcja są takie same jak w obecnym adresie wywołania (URL) to zwróci klasę "active" 
 	public static string MakeActiveClass(this IUrlHelper urlHelper, string controller, string action)
 	{
 		try
@@ -33,10 +35,14 @@ public static class IUrlHelperExtensions
 				return null;
 			}
 
-			// porównanie czy nazwy się zgadzają
+			// porównanie czy nazwy kontrolerów się zgadzają
+			// controllerName - nazwa kontrolera z adresu URL
+			// controller - przekazany parametr
 			if (controllerName.Equals(controller, StringComparison.OrdinalIgnoreCase))
 			{
-				// sprawdzenie czy jest taka akcja w parametrze
+				// sprawdzenie czy lista akcji przekazanych w parametrze zawiera nazwę metody z URL
+				// methodName - nazwa akcji z adresu URL
+				// actions - lista akcji przekazana jako parametr
 				if (actions.Contains(methodName.ToUpper()))
 				{
 					return result;

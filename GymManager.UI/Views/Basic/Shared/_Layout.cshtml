@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="~/GymManager.UI.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
 
-	<partial name="_FaviconsPartial" />
+	<partial name="Partials/_FaviconsPartial" />
 
 	@await RenderSectionAsync("Styles", required: false)
 	
@@ -50,7 +50,7 @@
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 collapse">
 
 					@* widok częściowy *@
-					<partial name="_NavigationPartial" />
+					<partial name="Partials/_NavigationPartial" />
 
 				</div>
 			</div>
@@ -106,7 +106,7 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
-	<partial name="_NotificationPartial" />
+    <partial name="Scripts/_NotificationPartial" />
 
 	@* SignalR - biblioteki i skrypty *@
 	<script>

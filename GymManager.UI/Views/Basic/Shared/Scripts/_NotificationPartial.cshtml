@@ -1,0 +1,9 @@
+﻿@* Wyskakujące powiadomienia - Toastr *@
+
+<script src="~/lib/toastr.js/toastr.min.js"></script>
+
+<script>
+	if ('@TempData["Success"]') {
+		toastr.success('@TempData["Success"]')
+	}
+</script>
