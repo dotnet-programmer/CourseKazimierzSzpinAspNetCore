@@ -7,15 +7,13 @@ namespace GymManager.Infrastructure.Persistence.Extensions;
 public static class ModelBuilderExtensionsRoles
 {
 	public static void SeedRoles(this ModelBuilder modelBuilder) =>
-		modelBuilder.Entity<IdentityRole>()
-		.HasData(
+		modelBuilder.Entity<IdentityRole>().HasData(
 			new IdentityRole
 			{
 				// Tools -> Create GUID
 				Id = "C854A873-3D75-4973-AD7E-A83C95726133",
 				Name = "Administrator",
 				NormalizedName = "ADMINISTRATOR",
-				// Tools -> Create GUID
 				ConcurrencyStamp = "C778085D-D407-4936-8A19-350C6817AA5D"
 			},
 			new IdentityRole

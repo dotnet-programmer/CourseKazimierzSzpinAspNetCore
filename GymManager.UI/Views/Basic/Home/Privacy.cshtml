@@ -1,14 +1,8 @@
-﻿@* wstrzyknięcie interfejsu IConfiguration, żeby używać appsettings.json *@
-@inject IConfiguration configuration
+﻿@inject IConfiguration configuration
 
 @{
-	// pobranie wartości klucza z appsettings.json
-	var templateKey = configuration.GetSection("TemplateKey").Value;
-
-	// wskazanie gdzie znajduje się Layout
-	Layout = $"/Views/{templateKey}/Shared/_LayoutMain.cshtml";
-
 	ViewData["Title"] = "Polityka Prywatności";
+    Layout = $"/Views/{configuration.GetSection("TemplateKey").Value}/Shared/_LayoutMain.cshtml";
 }
 
 <div class="container">

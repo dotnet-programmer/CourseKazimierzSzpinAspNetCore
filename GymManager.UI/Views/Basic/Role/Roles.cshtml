@@ -36,7 +36,7 @@
 			<thead>
 				<tr>
 					<th>Nazwa roli</th>
-					@* class="desktop" oznacza, że kolumna jest widoczna na dyżych ekranach, a jeżeli będzie telefon to będą widoczne kolumny bez tej klasy *@
+					@* class="desktop" oznacza, że kolumna jest widoczna na dużych ekranach, a jeżeli będzie telefon to będą widoczne kolumny bez tej klasy *@
 					<th class="desktop"></th>
 				</tr>
 			</thead>
@@ -48,6 +48,7 @@
 							<a class="edit-link" href='/Role/EditRole?id=@role.Id'>@role.Name</a>
 						</td>
 						<td>
+							@* po znaku zapytania przekazuje się parametr do kontrolera *@
 							<a class="btn btn-success btn-sm" role="button" href="/Role/EditRole?id=@role.Id">
 								<i class="fas fa-solid fa-magnifying-glass"></i>Edytuj
 							</a>
@@ -70,25 +71,25 @@
 	<script>
 		var selectedRow;
 		var selectedRoleId = 0;
-		var roles;
+		var tableWithRoles;
 
 		// wywołanie funkcji po załadowaniu się strony
 		$(document).ready(function () 
 		{
-			roles = $('#roles').DataTable({
+			// odwołanie się do tabeli HTML z id=roles, to zamienia zwykłą tabelę na DataTable
+			tableWithRoles = $('#roles').DataTable({
 				paging: true,
 				ordering: true,
 				info: true,
-
 				// to ustawienie oznacza wersję na telefon
 				responsive: true,
-
 				autoWidth: false,
 				lengthChange: true,
 				language: {
 					// https://datatables.net/plug-ins/i18n/
 					url: `/lib/datatables/lang/${'@locale'}.json`
 				},
+				// sortowanie po pierwszej kolumnie rosnąco
 				order: [[0, "asc"]]
 			});
 		});
@@ -107,16 +108,18 @@
 			$.ajax({
 				type: "POST",
 				url: "/Role/DeleteRole",
+				// przekazanie jako JSON id roli do usunięcia
 				data: {
 					id: selectedRoleId
 				},
 				success: function (data) {
 					if (data.success) {
-						roles.rows(selectedRow).remove().draw();
+						tableWithRoles.rows(selectedRow).remove().draw();
 						toastr.success('Role zostały zaktualizowane.')
 					}
-					else
+					else {
 						toastr.error('Błąd. ' + data.message);
+					}
 					$('.loading-overlay').hide();
 				},
 				error: function (data) {
@@ -144,6 +147,7 @@
 				},
 
 				// gdy wszystko się powiedzie to zostanie wywołana ta metoda:
+				// w data będzie przekazany obiekt z danymi, które zwróci kontroler
 				success: function (data) {
 				},
 

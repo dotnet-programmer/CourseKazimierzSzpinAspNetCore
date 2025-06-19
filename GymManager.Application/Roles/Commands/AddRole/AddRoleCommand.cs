@@ -4,7 +4,7 @@ using MediatR;
 
 namespace GymManager.Application.Roles.Commands.AddRole;
 
-public class AddRoleCommand : IRequest
+public class AddRoleCommand : IRequest<Unit>
 {
 	[Required(ErrorMessage = "Pole 'Nazwa' jest wymagane.")]
 	[DisplayName("Nazwa")]

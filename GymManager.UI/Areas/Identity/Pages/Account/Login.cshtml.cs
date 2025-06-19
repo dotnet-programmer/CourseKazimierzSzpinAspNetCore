@@ -11,16 +11,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GymManager.UI.Areas.Identity.Pages.Account;
 
-public class LoginModel : PageModel
+public class LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger) : PageModel
 {
-	private readonly SignInManager<ApplicationUser> _signInManager;
-	private readonly ILogger<LoginModel> _logger;
-
-	public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
-	{
-		_signInManager = signInManager;
-		_logger = logger;
-	}
+	private readonly ILogger<LoginModel> _logger = logger;
 
 	/// <summary>
 	///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -91,7 +84,7 @@ public class LoginModel : PageModel
 		// Clear the existing external cookie to ensure a clean login process
 		await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-		ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+		ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
 		ReturnUrl = returnUrl;
 	}
@@ -107,14 +100,14 @@ public class LoginModel : PageModel
 		{
 			// This doesn't count login failures towards account lockout
 			// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-			var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+			var result = await signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
 			if (result.Succeeded)
 			{
-				var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+				var user = await signInManager.UserManager.FindByEmailAsync(Input.Email);
 				if (user.IsDeleted)
 				{
-					await _signInManager.SignOutAsync();
+					await signInManager.SignOutAsync();
 					ModelState.AddModelError("Input.Email", "Nieprawidłowe dane logowania.");
 					return Page();
 				}
@@ -133,6 +126,7 @@ public class LoginModel : PageModel
 			//            }
 			// else
 			// {
+			// obok adresu email będzie taki komunikat o błędzie
 			ModelState.AddModelError("Input.Email", "Nieprawidłowe dane logowania.");
 			//return Page();
 			//}

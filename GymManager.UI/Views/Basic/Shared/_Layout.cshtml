@@ -1,6 +1,9 @@
-﻿@using GymManager.Application.Common.Interfaces
+﻿@* Layout strony głównej dla zalogowanych użytkowników - panel klienta i panel administratora *@
+
+@using GymManager.Application.Common.Interfaces
 
 @inject ICurrentUserService currentUserService
+@inject IDateTimeService dateTimeService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +16,7 @@
 	<link rel="stylesheet" href="~/GymManager.UI.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css" />
 
-	<partial name="Partials/_FaviconsPartial" />
+	<partial name="Styles/_FaviconsPartial" />
 
 	@await RenderSectionAsync("Styles", required: false)
 	
@@ -38,9 +41,7 @@
 
 </head>
 
-@* Layout strony głównej dla zalogowanych użytkowników - panel klienta i panel administratora *@
-
-<body style="background-color: rgb(244, 246, 249);">
+<body class="layout-body">
 
 	<div class="container-fluid">
 		<div class="row flex-nowrap">
@@ -99,7 +100,7 @@
 
 	<footer class="border-top footer bg-white">
 		<div class="container text-dark my-2 text-center">
-			&copy; @DateTime.Now.Year - GymManager - <a asp-controller="Home" asp-action="Privacy" class="text-dark">Polityka Prywatności</a>
+            &copy; @dateTimeService.Now.Year - GymManager - <a asp-controller="Home" asp-action="Privacy" class="text-dark">Polityka Prywatności</a>
 		</div>
 	</footer>
 

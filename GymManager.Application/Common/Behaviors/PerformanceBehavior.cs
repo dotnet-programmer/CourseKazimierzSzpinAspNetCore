@@ -19,12 +19,13 @@ public class PerformanceBehavior<TRequest, TResponse>(ILogger<TRequest> logger, 
 		if (_timer.ElapsedMilliseconds > 500)
 		{
 			logger.LogInformation(
-				"GymManager Long Running Request: {@Name} ({@ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
+				"GymManager Long Running Request: {@Name} ({@ElapsedMilliseconds} milliseconds) {@Request} {@UserId} {@UserName}",
 				typeof(TRequest).Name,
 				_timer.ElapsedMilliseconds,
+				request,
 				currentUserService.UserId ?? string.Empty,
-				currentUserService.UserName ?? string.Empty,
-				request);
+				currentUserService.UserName ?? string.Empty
+			);
 		}
 
 		return response;

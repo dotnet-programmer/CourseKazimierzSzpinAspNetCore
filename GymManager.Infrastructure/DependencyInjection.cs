@@ -64,13 +64,23 @@ public static class DependencyInjection
 		})
 		// zarządzanie rolami
 		.AddRoleManager<RoleManager<IdentityRole>>()
+		// przekazanie DbContext do Identity
 		.AddEntityFrameworkStores<ApplicationDbContext>()
-		// zdefiniowanie wiadomości walidacyjnych
+		// zdefiniowanie wiadomości walidacyjnych - komunikaty poprawności danych
 		.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
 		.AddDefaultUI()
 		.AddDefaultTokenProviders();
+		// Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
+		services.AddHttpContextAccessor();
+		services.AddSingleton<ICurrentUserService, CurrentUserService>();
+		// abstrakcja / nakładka na RoleManager z Identity
+		services.AddScoped<IRoleManagerService, RoleManagerService>();
+		// abstrakcja / nakładka na UserRoleManager z Identity
+		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
+		// abstrakcja / nakładka na UserManager z Identity
+		services.AddScoped<IUserManagerService, UserManagerService>();
 
-		// dependency injection - używaj AppSettingsService wszędzie tam gdzie jest IAppSettingsService,
+
 		// singleton, bo aplikacja będzie pracować tylko na 1 słowniku z ustawieniami
 		services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
@@ -79,19 +89,6 @@ public static class DependencyInjection
 
 		// dodanie serwisu z datą
 		services.AddScoped<IDateTimeService, DateTimeService>();
-
-		// Pobieranie informacji o zalogowanym użytkowniku bez zapytań na bazie danych
-		services.AddHttpContextAccessor();
-		services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
-		// abstrakcja / nakładka na RoleManager z Identity
-		services.AddScoped<IRoleManagerService, RoleManagerService>();
-
-		// abstrakcja / nakładka na UserRoleManager z Identity
-		services.AddScoped<IUserRoleManagerService, UserRoleManagerService>();
-
-		// abstrakcja / nakładka na UserManager z Identity
-		services.AddScoped<IUserManagerService, UserManagerService>();
 
 		// zewnętrzne płatności Przelewy24, ten zapis powoduje użycie fabryki HttpClient
 		services.AddHttpClient<IPrzelewy24, Przelewy24>();

@@ -13,48 +13,27 @@ namespace GymManager.UI.Controllers;
 [Authorize(Roles = RolesDict.Administrator)]
 public class RoleController(ILogger<RoleController> logger) : BaseController
 {
-	private readonly ILogger _logger = logger;
+	public async Task<IActionResult> Roles()
+		=> View(await Mediator.Send(new GetRolesQuery()));
+	// poprawienie przepływu aplikacji – MVC jak SPA
+	//{
+	//await Task.Delay(2000);
+	//var roles = await Mediator.Send(new GetRolesQuery());
+	//return string.IsNullOrWhiteSpace(Request.Headers["X-PJAX"]) 
+	//	? View(roles) 
+	//	: PartialView(roles);
+	//}
 
-	public async Task<IActionResult> Roles() =>
-		// poprawienie przepływu aplikacji – MVC jak SPA
-		//await Task.Delay(2000);
-		//var roles = await Mediator.Send(new GetRolesQuery());
-		//return string.IsNullOrWhiteSpace(Request.Headers["X-PJAX"]) 
-		//	? View(roles) 
-		//	: PartialView(roles);
-
-		View(await Mediator.Send(new GetRolesQuery()));
-
-	public IActionResult AddRole() =>
-		View(new AddRoleCommand());
+	public IActionResult AddRole()
+		=> View(new AddRoleCommand());
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> AddRole(AddRoleCommand command)
 	{
-		//var result = await MediatorSendValidate(command);
+		var result = await MediatorSendValidate(command);
 
-		//if (!result.IsValid)
-		//	return View(command);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(command);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(command);
 		}
@@ -66,36 +45,17 @@ public class RoleController(ILogger<RoleController> logger) : BaseController
 	}
 
 	// pobranie roli o podanym Id z bazy danych
-	public async Task<IActionResult> EditRole(string id) =>
-		View(await Mediator.Send(new GetEditRoleQuery { Id = id }));
+	public async Task<IActionResult> EditRole(string id)
+		// najpierw jest pobieranie danych dla roli o przekazanym ID żeby wyświetlić dane w formularzu
+		=> View(await Mediator.Send(new GetEditRoleQuery { Id = id }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> EditRole(EditRoleCommand command)
 	{
-		//var result = await MediatorSendValidate(command);
+		var result = await MediatorSendValidate(command);
 
-		//if (!result.IsValid)
-		//	return View(command);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(command);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(command);
 		}
@@ -105,6 +65,7 @@ public class RoleController(ILogger<RoleController> logger) : BaseController
 		return RedirectToAction("Roles");
 	}
 
+	// akcja używana przez ajax do usuwania roli
 	[HttpPost]
 	public async Task<IActionResult> DeleteRole(string id)
 	{
@@ -116,11 +77,15 @@ public class RoleController(ILogger<RoleController> logger) : BaseController
 		}
 		catch (ValidationException exception)
 		{
-			return Json(new { success = false, message = string.Join(". ", exception.Errors.Select(x => string.Join(". ", x.Value.Select(y => y)))) });
+			return Json(new 
+			{ 
+				success = false, 
+				message = string.Join(". ", exception.Errors.Select(x => string.Join(". ", x.Value.Select(y => y)))) 
+			});
 		}
 		catch (Exception exception)
 		{
-			_logger.LogError(exception, null);
+			logger.LogError(exception, null);
 			return Json(new { success = false });
 		}
 	}

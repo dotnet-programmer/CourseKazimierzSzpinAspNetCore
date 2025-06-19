@@ -12,5 +12,6 @@ namespace GymManager.UI.Areas.Identity.Pages.Account;
 public class RegisterConfirmationModel : PageModel
 {
 	// ta akcja zostanie wykonana przy HttpGet
-	public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null) => Page();
+	public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
+		=> Page();
 }

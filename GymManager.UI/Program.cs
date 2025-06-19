@@ -143,7 +143,7 @@ app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// dodanie Identity poprzez Scaffolding - potrzebne �eby widoki zosta�y wczytane po wpisaniu adresu URL
+// dodanie Identity poprzez Scaffolding - potrzebne żeby widoki zostały wczytane po wpisaniu odpowiedniego adresu URL
 // Configures endpoint routing for Razor Pages.
 app.MapRazorPages();
 

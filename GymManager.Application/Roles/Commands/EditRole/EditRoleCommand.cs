@@ -4,7 +4,7 @@ using MediatR;
 
 namespace GymManager.Application.Roles.Commands.EditRole;
 
-public class EditRoleCommand : IRequest
+public class EditRoleCommand : IRequest<Unit>
 {
 	public string Id { get; set; }
 

@@ -117,7 +117,7 @@ public class RegisterModel : PageModel
 		if (ModelState.IsValid)
 		{
 			// tworzenie użytkownika - nowa instancja ApplicationUser
-			var user = CreateUser();
+			ApplicationUser user = CreateUser();
 			user.RegisterDateTime = _dateTimeService.Now;
 
 			// ustawianie nazwy użytkownika
@@ -127,12 +127,13 @@ public class RegisterModel : PageModel
 			await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
 			// _userManager tworzy użytkownika w bazie danych i zwraca jakąś odpowiedź
-			var result = await _userManager.CreateAsync(user, Input.Password);
+			IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
 
 			if (result.Succeeded)
 			{
 				_logger.LogInformation("User created a new account with password.");
 
+				// pobranie Id nowo utworzonego użytkownika
 				var userId = await _userManager.GetUserIdAsync(user);
 
 				// każdy użytkownik na starcie ma rolę klienta
@@ -141,7 +142,7 @@ public class RegisterModel : PageModel
 				// generowanie kodu potwierdzającego wysyłanego emailem
 				var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-				// ustawienie kodowania
+				// ustawienie kodowania tego kodu potwierdzającego, aby był bezpieczny do wysłania w URL
 				code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
 				// generowanie linka zwrotnego, który potwierdzi email
