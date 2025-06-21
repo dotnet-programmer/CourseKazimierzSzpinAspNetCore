@@ -7,9 +7,17 @@ public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageS
 {
 	// lista generyczna z elementami listy
 	public List<T> Items { get; } = items;
+
+	// indeks aktualnej strony
 	public int PageIndex { get; } = pageIndex;
+
+	// ile łącznie stron 
 	public int TotalPages { get; } = (int)Math.Ceiling(count / (double)pageSize);
+
+	// ile jest wszystkich elementów
 	public int TotalCount { get; } = count;
+
+	// czy jest poprzednia strona i czy jest następna strona
 	public bool HasPreviousPage => PageIndex > 1;
 	public bool HasNextPage => PageIndex < TotalPages;
 

@@ -5,8 +5,8 @@ namespace GymManager.Application.Tickets.Extensions;
 
 public static class TicketTypeExtensions
 {
-	public static TicketTypeDto ToDto(this TicketType ticket) =>
-		ticket == null ?
+	public static TicketTypeDto ToDto(this TicketType ticket)
+		=> ticket == null ?
 		null :
 		new TicketTypeDto
 		{

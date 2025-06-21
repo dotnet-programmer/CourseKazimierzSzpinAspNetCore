@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using GymManager.Application.Common.Interfaces;
@@ -16,6 +17,7 @@ public class Przelewy24 : IPrzelewy24
 	private readonly IConfiguration _configuration;
 	private readonly ILogger _logger;
 	private readonly IEncryptionService _encryptionService;
+
 	private string _crc;
 	private string _userName;
 	private string _userSecret;
@@ -34,11 +36,26 @@ public class Przelewy24 : IPrzelewy24
 		_configuration = configuration;
 		_logger = logger;
 		_encryptionService = encryptionService;
+
 		GetConfiguration();
 		InitHttpClient();
 		InitJsonSettings();
 
-		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+	}
+
+	public async Task<P24TestAccessResponse> TestConnectionAsync()
+	{
+		// użycie zewnętrznego WebApi poprzez HttpClient
+		var response = await _httpClient.GetAsync("/api/v1/testAccess");
+
+		if (!response.IsSuccessStatusCode)
+		{
+			_logger.LogError(response.RequestMessage.ToString(), null);
+		}
+
+		// zwrócenie zawartości odpowiedzi + zdeserializowanie go na obiekt P24TestAccessResponse
+		return JsonConvert.DeserializeObject<P24TestAccessResponse>(await response.Content.ReadAsStringAsync());
 	}
 
 	public async Task<P24TransactionResponse> NewTransactionAsync(P24TransactionRequest data)
@@ -61,15 +78,18 @@ public class Przelewy24 : IPrzelewy24
 		return JsonConvert.DeserializeObject<P24TransactionResponse>(await response.Content.ReadAsStringAsync());
 	}
 
-	public async Task<P24TestAccessResponse> TestConnectionAsync()
+	public async Task<P24TransactionVerifyResponse> TransactionVerifyAsync(P24TransactionVerifyRequest data)
 	{
-		var response = await _httpClient.GetAsync("/api/v1/testAccess");
+		string signString = $"{{\"sessionId\":\"{data.SessionId}\",\"orderId\":{data.OrderId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
+		data.Sign = GenerateSign(signString);
+		string jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
+		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
+		var response = await _httpClient.PutAsync("/api/v1/transaction/verify", stringContent);
 		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError(response.RequestMessage.ToString(), null);
 		}
-
-		return JsonConvert.DeserializeObject<P24TestAccessResponse>(await response.Content.ReadAsStringAsync());
+		return JsonConvert.DeserializeObject<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
 	}
 
 	private void GetConfiguration()
@@ -85,11 +105,12 @@ public class Przelewy24 : IPrzelewy24
 		_httpClient.BaseAddress = new Uri(_baseUrl);
 		_httpClient.Timeout = new TimeSpan(0, 0, 30);
 		_httpClient.DefaultRequestHeaders.Clear();
-		_httpClient.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_userName}:{_userSecret}")));
+		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_userName}:{_userSecret}")));
 	}
 
-	private void InitJsonSettings() =>
-		_jsonSettings = new JsonSerializerSettings
+	// Przelewy24 wymagają ustawienia takiego formatu JSON, żeby działało poprawnie
+	private void InitJsonSettings()
+		=> _jsonSettings = new JsonSerializerSettings
 		{
 			ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() },
 			Formatting = Formatting.Indented,
@@ -104,19 +125,5 @@ public class Przelewy24 : IPrzelewy24
 			string hash = BitConverter.ToString(hashBytes).Replace("-", "");
 			return hash.ToLower();
 		}
-	}
-
-	public async Task<P24TransactionVerifyResponse> TransactionVerifyAsync(P24TransactionVerifyRequest data)
-	{
-		string signString = $"{{\"sessionId\":\"{data.SessionId}\",\"orderId\":{data.OrderId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
-		data.Sign = GenerateSign(signString);
-		string jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
-		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
-		var response = await _httpClient.PutAsync("/api/v1/transaction/verify", stringContent);
-		if (!response.IsSuccessStatusCode)
-		{
-			_logger.LogError(response.RequestMessage.ToString(), null);
-		}
-		return JsonConvert.DeserializeObject<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
 	}
 }

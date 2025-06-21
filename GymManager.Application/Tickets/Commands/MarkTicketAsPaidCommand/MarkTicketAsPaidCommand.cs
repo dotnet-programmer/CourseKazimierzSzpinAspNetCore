@@ -2,7 +2,8 @@
 
 namespace GymManager.Application.Tickets.Commands.MarkTicketAsPaidCommand;
 
-public class MarkTicketAsPaidCommand : IRequest
+// wszystkie właściwości zostaną przekazane z systemu Przelewy24
+public class MarkTicketAsPaidCommand : IRequest<Unit>
 {
 	public int MerchantId { get; set; }
 	public int PosId { get; set; }

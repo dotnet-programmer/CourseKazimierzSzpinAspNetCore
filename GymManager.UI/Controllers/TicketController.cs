@@ -16,19 +16,18 @@ namespace GymManager.UI.Controllers;
 public class TicketController(
 	IConfiguration configuration,
 	ILogger<TicketController> logger,
-	IStringLocalizer<CommonResources> localizer) : BaseController
+	IStringLocalizer<CommonResources> localizer
+	) : BaseController
 {
-	private readonly IConfiguration _configuration = configuration;
-	private readonly ILogger _logger = logger;
-	private readonly IStringLocalizer<CommonResources> _localizer = localizer;
-
 	public async Task<IActionResult> TicketsAsync()
 	{
 		bool isUserDataCompleted = !string.IsNullOrWhiteSpace((await Mediator.Send(new GetClientQuery { UserId = UserId })).FirstName);
 		return View(isUserDataCompleted);
 	}
 
-	// IDataTablesRequest - pakiet NuGet - DataTables.AspNet.Core
+	// IDataTablesRequest - model przekazany z tabeli do kontrolera, pakiet NuGet - DataTables.AspNet.Core
+	// tabele renderowane po stronie serwera, akcja wywoływana przez ajax do wypełnienia tabeli danymi
+	// typem zwracanym jest DataTablesJsonResult
 	public async Task<IActionResult> TicketsDataTable(IDataTablesRequest request)
 	{
 		// na podstawie requesta zostaną zwrócone odpowiednie dane
@@ -44,8 +43,8 @@ public class TicketController(
 		return request.GetResponse(tickets);
 	}
 
-	public async Task<IActionResult> AddTicket() =>
-		View(await Mediator.Send(new GetAddTicketQuery { Language = CurrentLanguage }));
+	public async Task<IActionResult> AddTicket()
+		=> View(await Mediator.Send(new GetAddTicketQuery { Language = CurrentLanguage }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
@@ -54,9 +53,9 @@ public class TicketController(
 		var result = await MediatorSendValidate(new AddTicketCommand
 		{
 			StartDate = vm.Ticket.StartDate,
+			Price = vm.Ticket.Price,
 			TicketTypeId = vm.Ticket.TicketTypeId,
 			UserId = UserId,
-			Price = vm.Ticket.Price,
 		});
 
 		if (!result.IsValid)
@@ -64,9 +63,11 @@ public class TicketController(
 			return View(vm);
 		}
 
-		TempData["Success"] = _localizer["TicketCreated"].Value;
+		TempData["Success"] = localizer["TicketCreated"].Value;
 
-		return Redirect($"{_configuration.GetValue<string>("Przelewy24:BaseUrl")}/trnRequest/{result.Model}");
+		// po wywołaniu komendy AddTicketCommand musi nastąpić przeniesienie klienta do płatności
+		// w result.Model będzie token do płatności zwrócony z komendy AddTicketCommand
+		return Redirect($"{configuration.GetValue<string>("Przelewy24:BaseUrl")}/trnRequest/{result.Model}");
 	}
 
 	public async Task<IActionResult> TicketPreview(string id)
@@ -102,7 +103,7 @@ public class TicketController(
 		}
 		catch (Exception exception)
 		{
-			_logger.LogError(exception, null);
+			logger.LogError(exception, null);
 			return Json(new { success = false });
 		}
 	}

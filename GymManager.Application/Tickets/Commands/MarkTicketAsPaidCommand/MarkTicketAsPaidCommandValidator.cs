@@ -19,7 +19,7 @@ public class MarkTicketAsPaidCommandValidator : AbstractValidator<MarkTicketAsPa
 	// sprawdzenie Ip z którego przychodzi request
 	private bool SendFromValidIpAddress(bool isProduction)
 	{
-		// lista adresów IP z dokumentacji
+		// z dokumentacji Przelewy24 - lista dozwolonych adresów IP, z których może przychodzić request
 		List<string> allowedIps =
 		[
 			"91.216.191.181",
@@ -36,6 +36,7 @@ public class MarkTicketAsPaidCommandValidator : AbstractValidator<MarkTicketAsPa
 			allowedIps.Add("::1");
 		}
 
+		// jeżeli adres IP z requestu jest na liście dozwolonych, to zwróć true
 		return allowedIps.Contains(_httpContext.IpAddress);
 	}
 }

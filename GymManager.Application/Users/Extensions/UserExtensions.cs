@@ -11,8 +11,8 @@ namespace GymManager.Application.Users.Extensions;
 
 public static class UserExtensions
 {
-	public static ClientDto ToClientDto(this ApplicationUser user) =>
-		user == null ?
+	public static ClientDto ToClientDto(this ApplicationUser user) 
+		=> user == null ?
 		null :
 		new ClientDto
 		{
@@ -29,8 +29,8 @@ public static class UserExtensions
 			IsPrivateAccount = user.Client?.IsPrivateAccount ?? true
 		};
 
-	public static EditClientCommand ToEditClientCommand(this ApplicationUser user) =>
-		user == null ?
+	public static EditClientCommand ToEditClientCommand(this ApplicationUser user) 
+		=> user == null ?
 		null :
 		new EditClientCommand
 		{
@@ -47,8 +47,8 @@ public static class UserExtensions
 			IsPrivateAccount = user.Client?.IsPrivateAccount ?? true
 		};
 
-	public static ClientBasicsDto ToClientBasicsDto(this ApplicationUser user) =>
-		user == null ?
+	public static ClientBasicsDto ToClientBasicsDto(this ApplicationUser user) 
+		=> user == null ?
 		null :
 		new ClientBasicsDto
 		{

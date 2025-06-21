@@ -6,8 +6,8 @@ namespace GymManager.Application.Tickets.Extensions;
 
 public static class TicketExtensions
 {
-	public static TicketBasicsDto ToBasicsDto(this Ticket ticket) =>
-		ticket == null ?
+	public static TicketBasicsDto ToBasicsDto(this Ticket ticket)
+		=> ticket == null ?
 		null :
 		new TicketBasicsDto
 		{
@@ -18,8 +18,8 @@ public static class TicketExtensions
 			Id = ticket.TicketId
 		};
 
-	public static PrintTicketDto ToPrintTicketDto(this Ticket ticket) =>
-		ticket == null ?
+	public static PrintTicketDto ToPrintTicketDto(this Ticket ticket)
+		=> ticket == null ?
 		null :
 		new PrintTicketDto
 		{

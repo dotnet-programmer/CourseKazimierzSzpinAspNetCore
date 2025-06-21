@@ -21,6 +21,9 @@
 	{
 		@Html.AntiForgeryToken()
 
+        // lista dostępnych typów karnetów, przechowana w ukrytych polach formularza
+        // w przypadku błędów walidacji i powrotu na formularz lista z typami byłaby pusta, bo nie zostałoby wykonane ponowne jej wczytanie i wypen
+        // dlatego te dane przekazane poprzez ukryte pola, żeby na ich podstawie móc z powrotem wypełnić listę rozwijaną
 		@for (int i = 0; i < Model.AvailableTicketTypes.Count(); i++)
 		{
 			@Html.HiddenFor(model => Model.AvailableTicketTypes[i].Id)
@@ -45,10 +48,10 @@
 				@Html.LabelFor(x => x.Ticket.TicketTypeId)
 				<div class="select2-blue">
 					@Html.DropDownList(
-										"Ticket.TicketTypeId",
-										@Model.AvailableTicketTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString())),
-										null,
-										htmlAttributes: new { @class = "form-control select2-TicketTypeId", style = "width: 100%;" })
+						"Ticket.TicketTypeId",
+						@Model.AvailableTicketTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString())),
+						null,
+						htmlAttributes: new { @class = "form-control select2-TicketTypeId", style = "width: 100%;" })
 					@Html.ValidationMessageFor(x => x.Ticket.TicketTypeId)
 				</div>
 			</div>
@@ -94,6 +97,8 @@
 			});
 		});
 
+        // ustawienie odpowiedniego formatu ceny na starcie
+        // podpięcie się pod zdarzenie globalizeHasBeenLoadedEvent i wykonanie funkcji
 		$(document).on("globalizeHasBeenLoadedEvent", function () {
 			updatePrice($('#Ticket_TicketTypeId').val());
 		});
@@ -101,8 +106,8 @@
 		// zapisanie informacji o liście dostępnych typów karnetów
 		var availableTickets = @Html.Raw(Json.Serialize(Model.AvailableTicketTypes));
 
-		function updatePrice(val) {
-			var price = availableTickets.find(element => element.id == val).price;
+		function updatePrice(idTicket) {
+            var price = availableTickets.find(element => element.id == idTicket).price;
 			var formatter = Globalize.numberFormatter();
 			price = formatter(price);
 			$('#Ticket_Price').val(price);

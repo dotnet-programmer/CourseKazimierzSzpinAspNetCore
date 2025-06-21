@@ -7,19 +7,8 @@ namespace GymManager.Application.Clients.Queries.GetClient;
 
 internal class GetClientQueryHandler(IApplicationDbContext context) : IRequestHandler<GetClientQuery, ClientDto>
 {
-	//public async Task<ClientDto> Handle(GetClientQuery request, CancellationToken cancellationToken)
-	//{
-	//	var user = await context.Users
-	//		.Include(x => x.Client)
-	//		.Include(x => x.Address)
-	//		.AsNoTracking()
-	//		.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
-
-	//	return user.ToClientDto();
-	//}
-
-	public async Task<ClientDto> Handle(GetClientQuery request, CancellationToken cancellationToken) =>
-		(await context.Users
+	public async Task<ClientDto> Handle(GetClientQuery request, CancellationToken cancellationToken)
+		=> (await context.Users
 			.Include(x => x.Client)
 			.Include(x => x.Address)
 			.AsNoTracking()

@@ -23,10 +23,9 @@ public class GetClientsTicketsQueryHandler(IApplicationDbContext context) : IReq
 		//}
 
 		// żeby OrderBy zadziałało, trzeba dodać NuGet - System.Linq.Dynamic.Core
-		// oraz: using System.Linq.Dynamic.Core;
 		tickets = !string.IsNullOrWhiteSpace(request.OrderInfo) ?
-			tickets = tickets.OrderBy(request.OrderInfo) :
-			tickets = tickets.OrderByDescending(x => x.EndDate);
+			tickets.OrderBy(request.OrderInfo) :
+			tickets.OrderByDescending(x => x.EndDate);
 
 		var paginatedList = await tickets
 			.Include(x => x.Invoice)

@@ -45,7 +45,7 @@ builder.Services.AddSession();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// paginacja po stronie serwera
+// paginacja po stronie serwera - zarejestrowanie dodatkowych typów używanych do obsługi tabel z DataTables
 builder.Services.RegisterDataTables();
 
 // jedna aplikacja (wiele różnych szablonów) dla wielu klientów

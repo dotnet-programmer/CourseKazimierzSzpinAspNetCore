@@ -2,7 +2,6 @@
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Payments;
 using GymManager.Application.Tickets.Events;
-using GymManager.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,8 @@ public class MarkTicketAsPaidCommandHandler(
 	ILogger<MarkTicketAsPaidCommandHandler> logger,
 	//IGymInvoices gymInvoices,
 	//IUserNotificationService userNotificationService,
-	IEventDispatcher eventDispatcher) : IRequestHandler<MarkTicketAsPaidCommand>
+	IEventDispatcher eventDispatcher
+	) : IRequestHandler<MarkTicketAsPaidCommand, Unit>
 {
 	private readonly IApplicationDbContext _context = context;
 	private readonly IPrzelewy24 _przelewy24 = przelewy24;
@@ -24,14 +24,27 @@ public class MarkTicketAsPaidCommandHandler(
 	//private readonly IUserNotificationService _userNotificationService = userNotificationService;
 	private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
 
-	public async Task Handle(MarkTicketAsPaidCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(MarkTicketAsPaidCommand request, CancellationToken cancellationToken)
 	{
+		// na początku zgodnie z dokumentacją Przelewy24 należy zwalidować adres IP z którego przychodzi request
+		// dlatego dodana jest walidacja w MarkTicketAsPaidCommandValidator
+
 		#region oznaczenie faktury jako opłaconej
+
+		// zalogowanie informacji o nadchodzącym requeście
 		_logger.LogInformation($"Przelewy24 - payment verification started - {request.SessionId}");
+		
+		// wywołanie metody weryfikacyjnej
 		await VerifyTransactionPrzelewy24Async(request);
-		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == request.SessionId, cancellationToken);
-		await UpdatePaymentInDbAsync(ticket, cancellationToken);
+
+		// jeżeli płatność się powiodła, to w bazie danych zostanie oznaczony karnet jako zapłacony
+		await UpdatePaymentInDbAsync(request.SessionId, cancellationToken);
+		
+		// zalogowanie informacji o poprawnej płatności
 		_logger.LogInformation($"Przelewy24 - payment verification finished - {request.SessionId}");
+
+		return Unit.Value;
+
 		#endregion oznaczenie faktury jako opłaconej
 
 		#region metody przeniesione do eventów dlatego w komentarzach
@@ -44,11 +57,11 @@ public class MarkTicketAsPaidCommandHandler(
 
 		// opublikowanie eventu TicketPaidEvent,
 		// dzięki temu zostaną wywołane handlery które podpięły się pod ten event
-		await _eventDispatcher.PublishAsync(new TicketPaidEvent
-		{
-			TicketId = ticket.TicketId,
-			UserId = ticket.UserId,
-		});
+		//await _eventDispatcher.PublishAsync(new TicketPaidEvent
+		//{
+		//	TicketId = ticket.TicketId,
+		//	UserId = ticket.UserId,
+		//});
 		#endregion metody przeniesione do eventów dlatego w komentarzach
 	}
 
@@ -72,8 +85,9 @@ public class MarkTicketAsPaidCommandHandler(
 	}
 
 	// oznaczenie karnetu w bazie jako zapłacony
-	private async Task UpdatePaymentInDbAsync(Ticket ticket, CancellationToken cancellationToken)
+	private async Task UpdatePaymentInDbAsync(string sessionId, CancellationToken cancellationToken)
 	{
+		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == sessionId, cancellationToken);
 		ticket.IsPaid = true;
 		await _context.SaveChangesAsync(cancellationToken);
 	}

@@ -7,12 +7,17 @@ public class MyHttpContext(IHttpContextAccessor httpContextAccessor) : IHttpCont
 {
 	private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-	private HttpContext Current => _httpContextAccessor.HttpContext;
+	// dostęp do kontekstu HTTP, który zawiera informacje o bieżącym żądaniu
+	private HttpContext Current
+		=> _httpContextAccessor.HttpContext;
 
-	public string AppBaseUrl => $"{Current.Request.Scheme}://{Current.Request.Host}{Current.Request.PathBase}";
+	public string AppBaseUrl
+		=> $"{Current.Request.Scheme}://{Current.Request.Host}{Current.Request.PathBase}";
 
-	public string IpAddress => Current.Connection.RemoteIpAddress.ToString();
+	public string IpAddress
+		=> Current.Connection.RemoteIpAddress.ToString();
 
 	// informacje o sesji, potrzebne to trzymania tokena z zewnętrznego Api
-	public ISession Session => Current.Session;
+	public ISession Session
+		=> Current.Session;
 }
