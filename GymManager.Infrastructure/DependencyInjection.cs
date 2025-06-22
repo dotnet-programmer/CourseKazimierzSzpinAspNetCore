@@ -132,6 +132,8 @@ public static class DependencyInjection
 	}
 
 	// tutaj będą wywoływane metody podczas startu aplikacji
+	// ta metoda musi być wywołana na zbudowanej aplikacji w Program.cs, czyli poniżej zapisu "var app = builder.Build();" - app.UseInfrastructure();
+	// zewnętrzne serwisy są przekazywane w postaci wstrzykniętych implementacji, dlatego wywołanie jest w bloku using (var scope = app.Services.CreateScope()) {} 
 	public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder appBuilder,
 		IApplicationDbContext context,
 		IAppSettingsService appSettingsService,
@@ -144,8 +146,8 @@ public static class DependencyInjection
 
 		// na starcie aplikacji wywołana metoda Update i uzupełnienie danych do wysyłki maili z ustawień
 		emailService.UpdateAsync(appSettingsService).GetAwaiter().GetResult();
-
 		// konfiguracja Rotativy do generowania PDF
+		// webHostEnvironment - pobiera pełną ścieżkę do folderu wwwroot z doklejeniem folderu "Rotativa" z plikami .exe
 		RotativaConfiguration.Setup(webHostEnvironment.WebRootPath, "Rotativa");
 
 		return appBuilder;

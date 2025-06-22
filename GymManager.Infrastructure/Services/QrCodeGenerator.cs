@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using GymManager.Application.Common.Interfaces;
+﻿using GymManager.Application.Common.Interfaces;
 using QRCoder;
 
 namespace GymManager.Infrastructure.Services;
@@ -11,16 +9,12 @@ public class QrCodeGenerator : IQrCodeGenerator
 	// zwraca zdjęcie QR w formacie Stream
 	public string Get(string message)
 	{
-		QRCodeGenerator qrGenerator = new();
-		QRCodeData qRCodeData = qrGenerator.CreateQrCode(message, QRCodeGenerator.ECCLevel.Q);
-		QRCode qRCode = new(qRCodeData);
-		Bitmap bitmap = qRCode.GetGraphic(20);
-
-		using (MemoryStream ms = new())
+		using (QRCodeGenerator qrGenerator = new())
+		using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(message, QRCodeGenerator.ECCLevel.Q))
+		using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
 		{
-			bitmap.Save(ms, ImageFormat.Png);
-			var byteImage = ms.ToArray();
-			return "data:image/png;base64," + Convert.ToBase64String(byteImage);
+			byte[] qrCodeImage = qrCode.GetGraphic(20);
+			return "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
 		}
 	}
 }

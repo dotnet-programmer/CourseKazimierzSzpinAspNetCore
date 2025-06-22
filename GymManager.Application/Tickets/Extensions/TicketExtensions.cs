@@ -24,7 +24,7 @@ public static class TicketExtensions
 		new PrintTicketDto
 		{
 			Id = ticket.TicketId,
-			CompanyContactEmail = "kazik@modestprogrammer.pl",
+			CompanyContactEmail = "mail@testowy.pl",
 			CompanyContactPhone = "500 500 500",
 			EndDate = ticket.EndDate,
 			StartDate = ticket.StartDate,

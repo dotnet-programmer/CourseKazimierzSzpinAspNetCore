@@ -74,8 +74,7 @@ app.UseSession();
 using (var scope = app.Services.CreateScope())
 {
 	// dodanie globalizacji
-	app.UseRequestLocalization(
-		app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+	app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 	// używanie wstrzykniętych implementacji serwisów
 	app.UseInfrastructure(

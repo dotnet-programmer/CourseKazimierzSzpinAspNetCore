@@ -81,10 +81,12 @@ public class TicketController(
 		return View(ticket);
 	}
 
+	// wygenerowanie pliku pdf za pomocą ajaxa
 	public async Task<IActionResult> TicketToPdf(string id)
 	{
 		try
 		{
+			// wygenerowanie pdf-a do tablicy bajtów
 			var ticketPdfVm = await Mediator.Send(new GetPdfTicketQuery
 			{
 				TicketId = id,
@@ -92,6 +94,7 @@ public class TicketController(
 				Context = ControllerContext
 			});
 
+			// umieszczenie ViewModelu w TempData, żeby przekazać tam taki obiekt to trzeba go najpierw zserializować, do tego zrobiona jest metoda rozszerzająca TempDataExtensions.Put
 			TempData.Put(ticketPdfVm.Handle, ticketPdfVm.PdfContent);
 
 			return Json(new
@@ -108,16 +111,14 @@ public class TicketController(
 		}
 	}
 
+	// pobranie pdf przez użytkownika
 	public IActionResult DownloadTicketPdf(string fileGuid, string fileName)
-	{
-		if (TempData[fileGuid] == null)
-		{
-			throw new Exception("Błąd przy próbie eksportu karnetu do PDF.");
-		}
+		=> TempData[fileGuid] == null ? 
+			throw new Exception("Błąd przy próbie eksportu karnetu do PDF.") :
+			// pdf zapisany w tablicy bajtów, dlatego używamy TempData.Get<byte[]>(), żeby pobrać tablicę bajtów z TempData i zwrócić ją jako plik
+			(IActionResult)File(TempData.Get<byte[]>(fileGuid), "application/pdf", fileName);
 
-		return File(TempData.Get<byte[]>(fileGuid), "application/pdf", fileName);
-	}
-
+	// wydruk karnetu
 	public async Task<IActionResult> PrintTicket(string id)
 	{
 		var ticket = await Mediator.Send(new GetPrintTicketQuery

@@ -12,9 +12,6 @@ namespace GymManager.Application.Clients.Queries.GetClientDashboard;
 
 public class GetClientDashboardQueryHandler(IApplicationDbContext context, IDateTimeService dateTimeService) : IRequestHandler<GetClientDashboardQuery, GetClientDashboardVm>
 {
-	private readonly IApplicationDbContext _context = context;
-	private readonly IDateTimeService _dateTimeService = dateTimeService;
-
 	public async Task<GetClientDashboardVm> Handle(GetClientDashboardQuery request, CancellationToken cancellationToken)
 	{
 		GetClientDashboardVm vm = new();
@@ -35,24 +32,24 @@ public class GetClientDashboardQueryHandler(IApplicationDbContext context, IDate
 		return vm;
 	}
 
-	private async Task<ApplicationUser> GetUser(GetClientDashboardQuery request) =>
-		await _context.Users
+	private async Task<ApplicationUser> GetUser(GetClientDashboardQuery request)
+		=> await context.Users
 			.Include(x => x.Tickets)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-	private Ticket GetActiveTicket(ApplicationUser user) =>
-		user.Tickets.FirstOrDefault(x => x.StartDate.Date <= _dateTimeService.Now.Date && x.EndDate.Date >= _dateTimeService.Now.Date);
+	private Ticket GetActiveTicket(ApplicationUser user)
+		=> user.Tickets.FirstOrDefault(x => x.StartDate.Date <= dateTimeService.Now.Date && x.EndDate.Date >= dateTimeService.Now.Date);
 
-	private async Task<PaginatedList<AnnouncementDto>> GetAnnouncements(GetClientDashboardQuery request) =>
-		await _context.Announcements
+	private async Task<PaginatedList<AnnouncementDto>> GetAnnouncements(GetClientDashboardQuery request)
+		=> await context.Announcements
 			.AsNoTracking()
 			.OrderByDescending(x => x.Date)
 			.Select(x => x.ToDto())
 			.PaginatedListAsync(request.PageNumber, request.PageSize);
 
-	private List<string> GetChartColors() =>
-		[
+	private List<string> GetChartColors()
+		=> [
 			"rgba(255, 99, 132, 0.2)",
 			"rgba(54, 162, 235, 0.2)",
 			"rgba(255, 206, 86, 0.2)",
@@ -61,8 +58,8 @@ public class GetClientDashboardQueryHandler(IApplicationDbContext context, IDate
 			"rgba(255, 159, 64, 0.2)"
 		];
 
-	private List<string> GetChartBorderColors() =>
-		[
+	private List<string> GetChartBorderColors()
+		=> [
 			"rgba(255, 99, 132, 1)",
 			"rgba(54, 162, 235, 1)",
 			"rgba(255, 206, 86, 1)",

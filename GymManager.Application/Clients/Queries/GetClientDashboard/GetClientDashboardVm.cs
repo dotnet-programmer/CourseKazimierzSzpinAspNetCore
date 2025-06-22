@@ -14,6 +14,6 @@ public class GetClientDashboardVm
 	// wykres na temat liczby treningów
 	public ChartDto TrainingCountChart { get; set; }
 
-	// statystyki  najlepszych treningów
+	// statystyki najlepszych treningów
 	public ChartDto TheBestTrainingsChart { get; set; }
 }

@@ -1,11 +1,12 @@
 ﻿@using GymManager.Application.Tickets.Queries.GetPrintTicket
+
 @inject IConfiguration configuration
+
 @model PrintTicketDto
 
 @{
-	var templateKey = configuration.GetSection("TemplateKey").Value;
-	Layout = $"/Views/{templateKey}/Shared/_LayoutMain.cshtml";
 	ViewData["Title"] = "Kontakt";
+    Layout = $"/Views/{configuration.GetSection("TemplateKey").Value}/Shared/_LayoutMain.cshtml";
 }
 
 @section Styles {

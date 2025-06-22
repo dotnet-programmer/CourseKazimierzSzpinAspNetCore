@@ -6,7 +6,7 @@ public class FileGeneratorParams
 {
 	public ActionContext Context { get; set; }
 
-	// szablon na podstawie którego będzie generowany PDF
+	// szablon-widok na podstawie którego będzie generowany PDF
 	public string ViewTemplate { get; set; }
 
 	// model, czyli dane, które mają być na tym widoku

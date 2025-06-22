@@ -120,6 +120,7 @@
 				},
 				success: function (data) {
 					if (data.success) {
+                        // jeżeli pdf zostanie wygenerowany to nastąpi przekierowanie na tą akcję, dzięki czemu zostanie zwrócony plik do zapisu 
 						window.location = '@Url.Action("DownloadTicketPdf", "Ticket")' + '?fileGuid=' + data.fileGuid + '&fileName=' + data.fileName;
 					}
 					else {
@@ -134,7 +135,6 @@
 				dataType: "json",
 				cache: false
 			});
-
 		}
 
 		function generateInvoice(id)
@@ -165,12 +165,15 @@
 			});
 		}
 
-
 		function printTicket(id) 
         {
+            // link do akcji w kontrolerze
 			var url = '@Url.Action("PrintTicket", "Ticket")' + '?id=' + id;
+
+            // okno podglądu drukowania
 			var myWindow = window.open(url, '', 'width=800,height=600');
 
+            // jeśli okno zostanie wczytane, to pojawi się ekran drukowania, a po wydrukowaniu okno zostanie zamknięte
 			myWindow.onload = function () {
 				myWindow.print();
 				myWindow.onafterprint = function () {

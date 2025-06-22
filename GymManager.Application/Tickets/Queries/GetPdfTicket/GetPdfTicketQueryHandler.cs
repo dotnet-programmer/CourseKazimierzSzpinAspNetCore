@@ -9,7 +9,8 @@ namespace GymManager.Application.Tickets.Queries.GetPdfTicket;
 public class GetPdfTicketQueryHandler(
 	IApplicationDbContext context,
 	IPdfFileGenerator pdfFileGenerator,
-	IQrCodeGenerator qrCodeGenerator) : IRequestHandler<GetPdfTicketQuery, TicketPdfVm>
+	IQrCodeGenerator qrCodeGenerator
+	) : IRequestHandler<GetPdfTicketQuery, TicketPdfVm>
 {
 	public async Task<TicketPdfVm> Handle(GetPdfTicketQuery request, CancellationToken cancellationToken)
 	{
@@ -18,6 +19,7 @@ public class GetPdfTicketQueryHandler(
 			Handle = Guid.NewGuid().ToString()
 		};
 
+		// pobranie informacji o karnecie, dla którego będzie generowany pdf
 		var ticket = (await context.Tickets
 			.AsNoTracking()
 			.Include(x => x.User)
@@ -29,9 +31,14 @@ public class GetPdfTicketQueryHandler(
 			return null;
 		}
 
+		// wygenerowanie kodu QR dla karnetu
 		ticket.QrCodeId = qrCodeGenerator.Get(request.TicketId);
+
+		// generowanie pliku PDF z danymi o karnecie
 		vm.PdfContent = await pdfFileGenerator.GetAsync(new FileGeneratorParams { Context = request.Context, Model = ticket, ViewTemplate = "TicketPreview" });
-		vm.FileName = $"Karnet_{ticket.Id}.pdf";
+
+		// ustawienie nazwy pliku, który będzie pobrany przez użytkownika
+		vm.FileName = $"Karnet_{ticket.Id}.pdf"; 
 
 		return vm;
 	}

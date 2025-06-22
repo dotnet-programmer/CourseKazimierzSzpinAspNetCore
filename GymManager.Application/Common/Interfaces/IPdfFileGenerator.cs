@@ -4,5 +4,5 @@ namespace GymManager.Application.Common.Interfaces;
 
 public interface IPdfFileGenerator
 {
-	Task<byte[]> GetAsync(FileGeneratorParams @params);
+	Task<byte[]> GetAsync(FileGeneratorParams fileGeneratorParams);
 }

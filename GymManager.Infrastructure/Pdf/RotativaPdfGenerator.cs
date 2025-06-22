@@ -7,14 +7,18 @@ namespace GymManager.Infrastructure.Pdf;
 
 public class RotativaPdfGenerator : IPdfFileGenerator
 {
-	public async Task<byte[]> GetAsync(FileGeneratorParams @params)
+	public async Task<byte[]> GetAsync(FileGeneratorParams fileGeneratorParams)
 	{
-		ViewAsPdf pdfResult = new(@params.ViewTemplate, @params.Model)
+		// na podstawie przekazanego widoku zostanie wygenerowany pdf
+		// ViewTemplate - nazwa widoku
+		// Model - model, który ma być na tym widoku
+		ViewAsPdf pdfResult = new(fileGeneratorParams.ViewTemplate, fileGeneratorParams.Model)
 		{
+			// dodatkowe ustawienia pdf-a
 			PageSize = Size.A4,
 			PageOrientation = Orientation.Portrait
 		};
 
-		return await pdfResult.BuildFile(@params.Context);
+		return await pdfResult.BuildFile(fileGeneratorParams.Context);
 	}
 }
