@@ -114,8 +114,7 @@
 						</div>
 
 						<button class="btn btn-danger btn-sm mb-4" onclick="deleteFile('@file.Id')">
-							<i class="fas fa-solid fa-trash-can mx-auto"></i>
-							Usuń
+							<i class="fas fa-solid fa-trash-can mx-auto"></i>Usuń
 						</button>
 
 					</div>
@@ -163,18 +162,17 @@
 			dictMaxFilesExceeded: "Przekroczono maksymalną ilość dodanych jednocześnie plików.",
 			paramName: 'files',
 			success: function (file, response) {
-
 				if (response.success) {
 					toastr.success('Plik został wysłany na serwer.');
-				} else {
-
+				} 
+                else {
 					if (response.message) {
 						toastr.error('Błąd. Nie udało się wysłać pliku. ' + response.message + '. Spróbuj ponownie lub skontaktuj się z administratorem.');
-					} else {
+					} 
+                    else {
 						toastr.error('Błąd. Nie udało się wysłać pliku. Spróbuj ponownie lub skontaktuj się z administratorem.');
 					}
 				}
-
 			}
 		});
 
@@ -210,8 +208,8 @@
 			$('#modal-confirm-delete').modal('show');
 		}
 
-		$('#modal-confirm-delete-btn').on('click', function (e) {
-
+		$('#modal-confirm-delete-btn').on('click', function (e) 
+        {
 			$('#modal-confirm-delete').modal('hide');
 
 			$.ajax({
@@ -225,15 +223,15 @@
 						$('#file_' + selectedFileId).remove();
 						toastr.success('Plik został usunięty.')
 					}
-					else
+					else {
 						toastr.error('Błąd. Nie udało się usunąć wybranego pliku. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+                    }
 				},
 				error: function (data) {
 					toastr.error('Błąd. Nie udało się usunąć wybranego pliku. Spróbuj ponownie lub skontaktuj sie z administratorem.');
 				},
 				dataType: "json"
 			});
-
 		});
 
 	</script>

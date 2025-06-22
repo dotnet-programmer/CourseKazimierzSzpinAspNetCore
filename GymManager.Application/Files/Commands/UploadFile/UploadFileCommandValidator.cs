@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace GymManager.Application.Files.Commands.UploadFile;
 
-// przez to, że modelem jest lista obiektów IFormFile, trzeba zdefiniować osobną klasę, która będzie walidować osobno każdy typ
+//Zabezpieczenie Przed Niewłaściwymi Plikami
+
+// przez to, że modelem jest lista obiektów IFormFile, trzeba zdefiniować osobną klasę, która będzie walidować osobno każdy typ - IFormValidator
 public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 {
-	public UploadFileCommandValidator() => 
-		RuleForEach(x => x.Files).SetValidator(new IFormValidator());
+	public UploadFileCommandValidator()
+		=> RuleForEach(x => x.Files).SetValidator(new IFormValidator());
 }
 
 public class IFormValidator : AbstractValidator<IFormFile>
@@ -18,7 +20,7 @@ public class IFormValidator : AbstractValidator<IFormFile>
 	{
 		// wielkość ustawiana w bajtach, 2mb to ok. 2 000 000 bajtów
 		RuleFor(x => x.Length)
-			.LessThan(2000000).WithMessage("Wybrany plik jest zbyt duży");
+			.LessThan(2_000_000).WithMessage("Wybrany plik jest zbyt duży");
 
 		RuleFor(x => x.FileName)
 			.Must(ValidName).WithMessage("Nieprawidłowa nazwa pliku")
@@ -38,6 +40,6 @@ public class IFormValidator : AbstractValidator<IFormFile>
 		return true;
 	}
 
-	private bool ValidExtensions(string fileName) => 
-		_extensions.Contains(Path.GetExtension(fileName).ToUpper());
+	private bool ValidExtensions(string fileName)
+		=> _extensions.Contains(Path.GetExtension(fileName).ToUpper());
 }

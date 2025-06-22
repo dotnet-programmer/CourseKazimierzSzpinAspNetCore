@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace GymManager.Application.Files.Commands.UploadFile;
 
-public class UploadFileCommand : IRequest
+// z kontrolera zostaną przekazane wybrane pliki
+public class UploadFileCommand : IRequest<Unit>
 {
 	public IEnumerable<IFormFile> Files { get; set; }
 }

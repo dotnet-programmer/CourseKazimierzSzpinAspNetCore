@@ -6,13 +6,12 @@ namespace GymManager.Infrastructure.Services;
 
 public class FileManagerService(IWebHostEnvironment webHostEnvironment) : IFileManagerService
 {
-	private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
-
 	public async Task Upload(IEnumerable<IFormFile> files)
 	{
 		// folder w którym będą trzymane pliki
 		// folder wwwroot - _webHostEnvironment.WebRootPath
-		var folderRoot = Path.Combine(_webHostEnvironment.WebRootPath, "Content", "Files");
+		// docelowa ścieżka - wwwroot/Content/Files
+		var folderRoot = Path.Combine(webHostEnvironment.WebRootPath, "Content", "Files");
 
 		if (!Directory.Exists(folderRoot))
 		{
@@ -30,7 +29,7 @@ public class FileManagerService(IWebHostEnvironment webHostEnvironment) : IFileM
 			{
 				var filePath = Path.Combine(folderRoot, file.FileName);
 
-				using (var stream = new FileStream(filePath, FileMode.Create))
+				using (FileStream stream = new(filePath, FileMode.Create))
 				{
 					await file.CopyToAsync(stream);
 				}
@@ -39,8 +38,5 @@ public class FileManagerService(IWebHostEnvironment webHostEnvironment) : IFileM
 	}
 
 	public void Delete(string name)
-	{
-		var fileFullPath = Path.Combine(_webHostEnvironment.WebRootPath, "Content", "Files", name);
-		File.Delete(fileFullPath);
-	}
+		=> File.Delete(Path.Combine(webHostEnvironment.WebRootPath, "Content", "Files", name));
 }

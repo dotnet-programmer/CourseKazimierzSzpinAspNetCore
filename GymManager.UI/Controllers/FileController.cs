@@ -13,10 +13,11 @@ public class FileController(ILogger<FileController> logger) : BaseController
 {
 	private readonly ILogger<FileController> _logger = logger;
 
-	public async Task<IActionResult> Files() =>
-		View(await Mediator.Send(new GetFilesQuery()));
+	public async Task<IActionResult> Files()
+		=> View(await Mediator.Send(new GetFilesQuery()));
 
 	[HttpPost]
+	// IEnumerable<IFormFile> - takie pliki zostaną przesłane z komponentu na widoku do kontrolera
 	public async Task<IActionResult> Upload(IEnumerable<IFormFile> files)
 	{
 		try
