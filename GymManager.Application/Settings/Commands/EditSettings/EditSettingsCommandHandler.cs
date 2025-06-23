@@ -6,21 +6,18 @@ namespace GymManager.Application.Settings.Commands.EditSettings;
 public class EditSettingsCommandHandler(
 	IApplicationDbContext context,
 	IAppSettingsService appSettingsService,
-	IEmailService emailService) : IRequestHandler<EditSettingsCommand>
+	IEmailService emailService
+	) : IRequestHandler<EditSettingsCommand>
 {
-	private readonly IApplicationDbContext _context = context;
-	private readonly IAppSettingsService _appSettingsService = appSettingsService;
-	private readonly IEmailService _emailService = emailService;
-
 	public async Task Handle(EditSettingsCommand request, CancellationToken cancellationToken)
 	{
 		foreach (var position in request.Positions)
 		{
-			var positionToUpdate = _context.SettingsPositions.Find(position.Id);
+			var positionToUpdate = context.SettingsPositions.Find(position.Id);
 			positionToUpdate.Value = position.Value;
 		}
 
-		await _context.SaveChangesAsync(cancellationToken);
+		await context.SaveChangesAsync(cancellationToken);
 
 		await UpdateAppSettingsAsync();
 	}
@@ -28,7 +25,7 @@ public class EditSettingsCommandHandler(
 	// odświeżenie ustawień zapisanych w Cahce
 	private async Task UpdateAppSettingsAsync()
 	{
-		await _appSettingsService.UpdateValuesAsync(_context);
-		await _emailService.UpdateAsync(_appSettingsService);
+		await appSettingsService.UpdateValuesAsync(context);
+		await emailService.UpdateAsync(appSettingsService);
 	}
 }

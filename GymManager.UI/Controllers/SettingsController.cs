@@ -9,8 +9,8 @@ namespace GymManager.UI.Controllers;
 [Authorize(Roles = $"{RolesDict.Administrator}")]
 public class SettingsController : BaseController
 {
-	public async Task<IActionResult> Settings() =>
-		View(await Mediator.Send(new GetSettingsQuery()));
+	public async Task<IActionResult> Settings()
+		=> View(await Mediator.Send(new GetSettingsQuery()));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
