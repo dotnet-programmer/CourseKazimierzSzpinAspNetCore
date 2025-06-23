@@ -1,25 +1,18 @@
 ﻿using GymManager.Application.Common.Interfaces;
+using GymManager.Application.EmployeeEvents.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.EmployeeEvents.Queries.GetEmployeeEvents;
 
-public class GetEmployeeEventsQueryHandler(IApplicationDbContext context, IRandomService randomService) : IRequestHandler<GetEmployeeEventsQuery, IEnumerable<EmployeeEventDto>>
+public class GetEmployeeEventsQueryHandler(IApplicationDbContext context, IRandomColorService randomColorService) : IRequestHandler<GetEmployeeEventsQuery, IEnumerable<EmployeeEventDto>>
 {
 	public async Task<IEnumerable<EmployeeEventDto>> Handle(GetEmployeeEventsQuery request, CancellationToken cancellationToken)
 	{
 		var employeeEvents = await context.EmployeeEvents
 			.Include(x => x.User)
 			.AsNoTracking()
-			.Select(x => new EmployeeEventDto
-			{
-				Id = x.EmployeeEventId,
-				Start = x.Start,
-				End = x.End,
-				IsFullDay = x.IsFullDay,
-				Title = $"{x.User.FirstName} {x.User.LastName}",
-				UserId = x.UserId
-			})
+			.Select(x => x.ToEmployeeEventDto())
 			.ToListAsync(cancellationToken);
 
 		// ustawienie kolorów dla kafelków
@@ -34,7 +27,7 @@ public class GetEmployeeEventsQueryHandler(IApplicationDbContext context, IRando
 	{
 		foreach (var item in employeeEvents)
 		{
-			item.ThemeColor = randomService.GetColor();
+			item.ThemeColor = randomColorService.GetColor();
 		}
 	}
 }

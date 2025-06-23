@@ -12,8 +12,8 @@ namespace GymManager.UI.Controllers;
 [Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 public class CalendarController : BaseController
 {
-	public async Task<IActionResult> Calendar() =>
-		View(await Mediator.Send(new GetEmployeeBasicsQuery()));
+	public async Task<IActionResult> Calendar()
+		=> View(await Mediator.Send(new GetEmployeeBasicsQuery()));
 
 	// pobranie informacji o wszystkich zdarzeniach pracowników, używana w widoku generowania całego kalendarza
 	public async Task<IActionResult> GetEmployeeEvents()

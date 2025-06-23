@@ -104,7 +104,7 @@ public static class DependencyInjection
 		services.AddSingleton<IFileManagerService, FileManagerService>();
 
 		// serwis do generowania losowego koloru
-		services.AddScoped<IRandomService, RandomService>();
+		services.AddScoped<IRandomColorService, RandomColorService>();
 
 		// serwis do generowania tokena JWT
 		services.AddScoped<IJwtService, JwtService>();
