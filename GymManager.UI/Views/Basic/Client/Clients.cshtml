@@ -14,14 +14,13 @@
 
 <partial name="Modals/_ModalConfirmPartial"
 		 model="@(new ModalParams
-    {
-        Id = "modal-confirm-delete",
-        Title = "Potwierdź proszę",
-        Description = "Czy na pewno chcesz usunąć wybranego klienta?"
-    })" />
+        {
+            Id = "modal-confirm-delete",
+            Title = "Potwierdź proszę",
+            Description = "Czy na pewno chcesz usunąć wybranego klienta?"
+        })"/>
 
 <div class="card card-primary card-border-top">
-
 	<div class="card-body">
 
 		<a href='/Client/AddClient' class="btn btn-primary mb-3" role="button">
@@ -49,7 +48,6 @@
 				</tr>
 			</thead>
 			<tbody>
-
 				@foreach (var client in Model)
 				{
 					<tr>
@@ -80,11 +78,9 @@
 									<i class="fas fa-solid fa-trash-can"></i>Usuń
 								</button>
 							}
-
 						</td>
 					</tr>
 				}
-
 			</tbody>
 		</table>
 
@@ -101,8 +97,8 @@
 		var selectedClientId = 0;
 		var clients;
 
-		$(document).ready(function () {
-
+		$(document).ready(function ()
+        {
 			$('#isActiveUserCb').prop('checked', Cookies.get('isActiveUserCb') === "1")
 			
 			$('#isActiveUserCb').change(function () {
@@ -121,6 +117,7 @@
 					url: `/lib/datatables/lang/${'@locale'}.json`
 				},
 				order: [[0, "asc"]],
+                // ukrycie 3 kolumny, która zawiera informację o tym czy user jest usunięty czy nie
 				columnDefs: [
 					{
 						targets: [2],
@@ -128,20 +125,15 @@
 						searchable: true
 					}]
 			});
-
 		});
 
+        // podpięcie pod funkcję wyszukiwania z DataTable, która jest wywoływana na każdym wierszu podczas wyszukiwania danych
 		$.fn.dataTable.ext.search.push(
 			function (settings, data, dataIndex) {
-
 				var isActiveUserCb = $('#isActiveUserCb').is(":checked");
-
 				var activeUserCol = parseInt(data[2]);
-
-				if (isActiveUserCb && activeUserCol == 1)
-					return false;
-
-				return true;
+                // wartość zwracana określa, czy dany wiersz zostanie wyświetlony czy nie
+                return !(isActiveUserCb && activeUserCol == 1);
 			}
 		);
 
@@ -155,10 +147,9 @@
 			$('#modal-confirm-delete').modal('show');
 		}
 
-		$('#modal-confirm-delete-btn').on('click', function (e) {
-
+		$('#modal-confirm-delete-btn').on('click', function (e) 
+        {
 			$('#modal-confirm-delete').modal('hide');
-
 			var errorMessage = 'Błąd. Nie udało się usunąć wybranego klienta. Spróbuj ponownie lub skontaktuj sie z administratorem.'
 
 			$.ajax({
@@ -172,17 +163,16 @@
 						clients.rows(selectedRow).remove().draw();
 						toastr.success('Dane zostały zaktualizowane.')
 					}
-					else
+					else {
 						toastr.error(errorMessage);
+                    }
 				},
 				error: function (data) {
 					toastr.error(errorMessage);
 				},
 				dataType: "json"
 			});
-
 		});
-
 
 	</script>
 }

@@ -10,8 +10,8 @@ public class GetClientsBasicsQueryHandler(IUserRoleManagerService userRoleManage
 	// pobranie wszystkich klientów,
 	// dzięki Identity można to pobrać z już istniejącej metody, która jest w user manager o nazwie GetUsersInRoleAsync
 	// czyli pobranie wszystkich userów którzy należą do danej roli
-	public async Task<IEnumerable<ClientBasicsDto>> Handle(GetClientsBasicsQuery request, CancellationToken cancellationToken) =>
-		(await userRoleManagerService
+	public async Task<IEnumerable<ClientBasicsDto>> Handle(GetClientsBasicsQuery request, CancellationToken cancellationToken)
+		=> (await userRoleManagerService
 			.GetUsersInRoleAsync(RolesDict.Client))
 			.Select(x => x.ToClientBasicsDto());
 }

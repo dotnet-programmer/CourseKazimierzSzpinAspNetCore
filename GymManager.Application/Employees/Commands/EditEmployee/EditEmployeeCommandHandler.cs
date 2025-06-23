@@ -10,13 +10,14 @@ namespace GymManager.Application.Employees.Commands.EditEmployee;
 public class EditEmployeeCommandHandler(
 	IApplicationDbContext context,
 	IUserRoleManagerService userRoleManagerService,
-	IRoleManagerService roleManagerService) : IRequestHandler<EditEmployeeCommand>
+	IRoleManagerService roleManagerService
+	) : IRequestHandler<EditEmployeeCommand, Unit>
 {
 	private readonly IApplicationDbContext _context = context;
 	private readonly IUserRoleManagerService _userRoleManagerService = userRoleManagerService;
 	private readonly IRoleManagerService _roleManagerService = roleManagerService;
 
-	public async Task Handle(EditEmployeeCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(EditEmployeeCommand request, CancellationToken cancellationToken)
 	{
 		var user = await _context.Users
 			.Include(x => x.Employee)
@@ -50,6 +51,8 @@ public class EditEmployeeCommandHandler(
 		{
 			await UpdateRoles(request.RoleIds, request.Id);
 		}
+
+		return Unit.Value;
 	}
 
 	private async Task UpdateRoles(List<string> newRoleIds, string userId)
@@ -96,6 +99,6 @@ public class EditEmployeeCommandHandler(
 		return newRoles;
 	}
 
-	private async Task<List<IdentityRole>> GetOldRoles(string userId) =>
-		(await _userRoleManagerService.GetRolesAsync(userId)).ToList();
+	private async Task<List<IdentityRole>> GetOldRoles(string userId)
+		=> (await _userRoleManagerService.GetRolesAsync(userId)).ToList();
 }

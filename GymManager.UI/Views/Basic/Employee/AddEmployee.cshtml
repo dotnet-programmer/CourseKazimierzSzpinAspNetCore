@@ -96,7 +96,7 @@
 				@Html.ValidationMessageFor(x => x.DateOfEmployment)
 			</div>
 
-			@* wynagrodzenie ma określony format, można wpisać tylko liczby *@
+			@* wynagrodzenie ma określony format, można wpisać tylko liczby + 2 miejsca po przecinku *@
 			<div class="form-group">
 				@Html.LabelFor(x => x.Salary)
 				@Html.TextBoxFor(x => x.Salary, "{0:n2}", new { @class = "form-control", placeholder = "Wprowadź wynagrodzenie" })
@@ -107,6 +107,7 @@
 				@Html.LabelFor(x => x.ImageUrl)
 				<div class="input-group">
 					@Html.TextBoxFor(x => x.ImageUrl, new { @class = "form-control", @readonly = "readonly", placeholder = "Wybierz zdjęcie profilowe" })
+                    @* return false żeby submit nie został wywołany *@
 					<span onclick="fileBrowse('ImageUrl'); return false" class="fileBrowse input-group-text bg-primary px-3 text-white"><i class="fas fa-solid fa-file-arrow-up"></i>Wybierz plik...</span>
 					<span onclick="clearFile('ImageUrl'); return false" class="fileBrowse input-group-text bg-danger px-3 text-white"><i class="fas fa-solid fa-file-excel"></i>Wyczyść</span>
 				</div>
@@ -178,6 +179,7 @@
 			$('#' + idName).val('');
 		}
 
+        // wybór pliku odbywa się na oknie modalnym
 		function fileBrowse(idName) {
 			// wyczyść zawartość diva o id=modal-files
 			$('#modal-files').empty();
@@ -185,6 +187,7 @@
 			// wyświetl okno modalne
 			$('#modal-choose-file').modal('show');
 
+            // adres url do pobrania pliku
 			var url = '@Url.Action("GetFiles", "File")';
 			var errorMessage = 'Błąd. Nie udało się pobrać zdjęć. Spróbuj ponownie lub skontaktuj się z administratorem.';
 
@@ -193,7 +196,6 @@
 				url: url,
 				success: function (data) {
 					if (data.success) {
-
 						var images = data.images;
 
 						if (images.length == 0) {
@@ -225,7 +227,6 @@
 					toastr.error(errorMessage);
 				},
 				dataType: "json"
-
 			});
 		}
 

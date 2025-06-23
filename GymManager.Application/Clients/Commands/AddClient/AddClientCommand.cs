@@ -4,7 +4,7 @@ using MediatR;
 
 namespace GymManager.Application.Clients.Commands.AddClient;
 
-public class AddClientCommand : IRequest
+public class AddClientCommand : IRequest<Unit>
 {
 	[Required(ErrorMessage = "Pole 'Adres e-mail' jest wymagane")]
 	[DisplayName("Adres e-mail")]

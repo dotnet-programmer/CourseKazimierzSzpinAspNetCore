@@ -90,6 +90,7 @@
 				@Html.ValidationMessageFor(x => x.Client.StreetNumber)
 			</div>
 
+            @* Select z wielokrotnym wyborem roli dla użytkownika jest dostępny tylko dla administratora. *@
 			@if (User.IsInRole(RolesDict.Administrator))
 			{
 				<div class="form-group">
@@ -118,7 +119,6 @@
 
 
 @section Scripts {
-
 	<partial name="Scripts/_ValidationScriptsPartial" />
 	<partial name="Scripts/_SelectScriptsPartial" />
 	<script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>

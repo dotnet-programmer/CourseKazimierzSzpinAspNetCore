@@ -9,21 +9,17 @@ namespace GymManager.Application.Clients.Commands.EditAdminClient;
 public class EditAdminClientCommandHandler(
 	IApplicationDbContext context,
 	IUserRoleManagerService userRoleManagerService,
-	IRoleManagerService roleManagerService) : IRequestHandler<EditAdminClientCommand>
+	IRoleManagerService roleManagerService
+	) : IRequestHandler<EditAdminClientCommand, Unit>
 {
-	private readonly IApplicationDbContext _context = context;
-	private readonly IUserRoleManagerService _userRoleManagerService = userRoleManagerService;
-	private readonly IRoleManagerService _roleManagerService = roleManagerService;
-
-	//public async Task<Unit> Handle(EditAdminClientCommand request, CancellationToken cancellationToken)
-	public async Task Handle(EditAdminClientCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(EditAdminClientCommand request, CancellationToken cancellationToken)
 	{
 		if (request.IsPrivateAccount)
 		{
 			request.NipNumber = null;
 		}
 
-		var user = await _context.Users
+		var user = await context.Users
 			.Include(x => x.Client)
 			.Include(x => x.Address)
 			.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
@@ -36,7 +32,6 @@ public class EditAdminClientCommandHandler(
 		//	user.Client = new Domain.Entities.Client();
 		//}
 		user.Client ??= new Domain.Entities.Client();
-
 		user.Client.IsPrivateAccount = request.IsPrivateAccount;
 		user.Client.NipNumber = request.NipNumber;
 		user.Client.UserId = request.UserId;
@@ -46,7 +41,6 @@ public class EditAdminClientCommandHandler(
 		//	user.Address = new Domain.Entities.Address();
 		//}
 		user.Address ??= new Domain.Entities.Address();
-
 		user.Address.Country = request.Country;
 		user.Address.City = request.City;
 		user.Address.Street = request.Street;
@@ -54,21 +48,20 @@ public class EditAdminClientCommandHandler(
 		user.Address.StreetNumber = request.StreetNumber;
 		user.Address.UserId = request.UserId;
 
-		await _context.SaveChangesAsync(cancellationToken);
+		await context.SaveChangesAsync(cancellationToken);
 
 		if (request.RoleIds != null && request.RoleIds.Any())
 		{
 			await UpdateRoles(request.RoleIds, request.UserId);
 		}
 
-		//	return Unit.Value;
-		return;
+		return Unit.Value;
 	}
 
 	private async Task UpdateRoles(List<string> newRoleIds, string userId)
 	{
 		// pobierz wszystkie role
-		var roles = _roleManagerService.GetRoles().Select(x => new IdentityRole { Id = x.Id, Name = x.Name });
+		var roles = roleManagerService.GetRoles().Select(x => new IdentityRole { Id = x.Id, Name = x.Name });
 
 		// sprawdź stare role użytkownika, czyli które ma obecnie przed zapisaniem do bazy danych
 		var oldRoles = await GetOldRoles(userId);
@@ -77,14 +70,14 @@ public class EditAdminClientCommandHandler(
 		var newRoles = GetNewRoles(newRoleIds, roles);
 
 		// usunięcie z bazy danych wcześniejszych ról użytkownika, które były a teraz ich nie ma
-		await RemoveRoles(userId, oldRoles, newRoles);
+		await RemoveOldRoles(userId, oldRoles, newRoles);
 
 		// dodaj nowe role, których wcześniej nie było a teraz są
 		await AddNewRoles(userId, oldRoles, newRoles);
 	}
 
-	private async Task<List<IdentityRole>> GetOldRoles(string userId) =>
-		(await _userRoleManagerService.GetRolesAsync(userId)).ToList();
+	private async Task<List<IdentityRole>> GetOldRoles(string userId)
+		=> (await userRoleManagerService.GetRolesAsync(userId)).ToList();
 
 	private List<IdentityRole> GetNewRoles(List<string> newRoleIds, IEnumerable<IdentityRole> roles)
 	{
@@ -98,13 +91,13 @@ public class EditAdminClientCommandHandler(
 		return newRoles;
 	}
 
-	private async Task RemoveRoles(string userId, List<IdentityRole> oldRoles, List<IdentityRole> newRoles)
+	private async Task RemoveOldRoles(string userId, List<IdentityRole> oldRoles, List<IdentityRole> newRoles)
 	{
 		var roleToRemove = oldRoles.Except(newRoles, x => x.Id);
 
 		foreach (var role in roleToRemove)
 		{
-			await _userRoleManagerService.RemoveFromRoleAsync(userId, role.Name);
+			await userRoleManagerService.RemoveFromRoleAsync(userId, role.Name);
 		}
 	}
 
@@ -114,7 +107,7 @@ public class EditAdminClientCommandHandler(
 
 		foreach (var role in roleToAdd)
 		{
-			await _userRoleManagerService.AddToRoleAsync(userId, role.Name);
+			await userRoleManagerService.AddToRoleAsync(userId, role.Name);
 		}
 	}
 }

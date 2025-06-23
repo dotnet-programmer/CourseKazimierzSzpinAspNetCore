@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace GymManager.UI.Areas.Identity.Pages.Account;
 
@@ -98,6 +99,8 @@ public class LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<Lo
 
 		if (ModelState.IsValid)
 		{
+			string incorrectLogin = "Nieprawidłowe dane logowania.";
+
 			// This doesn't count login failures towards account lockout
 			// To enable password failures to trigger account lockout, set lockoutOnFailure: true
 			var result = await signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -108,7 +111,7 @@ public class LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<Lo
 				if (user.IsDeleted)
 				{
 					await signInManager.SignOutAsync();
-					ModelState.AddModelError("Input.Email", "Nieprawidłowe dane logowania.");
+					ModelState.AddModelError("Input.Email", incorrectLogin);
 					return Page();
 				}
 
@@ -127,7 +130,7 @@ public class LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<Lo
 			// else
 			// {
 			// obok adresu email będzie taki komunikat o błędzie
-			ModelState.AddModelError("Input.Email", "Nieprawidłowe dane logowania.");
+			ModelState.AddModelError("Input.Email", incorrectLogin);
 			//return Page();
 			//}
 		}

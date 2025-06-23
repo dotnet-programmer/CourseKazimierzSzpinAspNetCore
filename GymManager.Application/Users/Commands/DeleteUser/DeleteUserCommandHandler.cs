@@ -8,11 +8,8 @@ public class DeleteUserCommandHandler(IApplicationDbContext context) : IRequestH
 {
 	public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
 	{
-		var user = await context.Users
-			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-
+		var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 		user.IsDeleted = true;
-
 		await context.SaveChangesAsync(cancellationToken);
 	}
 }

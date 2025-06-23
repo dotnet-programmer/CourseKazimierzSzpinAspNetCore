@@ -12,88 +12,42 @@ namespace GymManager.UI.Controllers;
 [Authorize(Roles = RolesDict.Administrator)]
 public class EmployeeController(IDateTimeService dateTimeService) : BaseController
 {
-	private readonly IDateTimeService _dateTimeService = dateTimeService;
+	public async Task<IActionResult> Employees()
+		=> View(await Mediator.Send(new GetEmployeeBasicsQuery()));
 
-	public async Task<IActionResult> Employees() =>
-		View(await Mediator.Send(new GetEmployeeBasicsQuery()));
-
-	public async Task<IActionResult> AddEmployee() =>
-		View(new AddEmployeeCommand { DateOfEmployment = _dateTimeService.Now });
+	public IActionResult AddEmployee()
+		=> View(new AddEmployeeCommand { DateOfEmployment = dateTimeService.Now });
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> AddEmployee(AddEmployeeCommand command)
 	{
-		//var result = await MediatorSendValidate(command);
+		var result = await MediatorSendValidate(command);
 
-		//if (!result.IsValid)
-		//	return View(command);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(command);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		// przesłanie z powrotem wypełnionych pól do formularza, dzięki temu nie będzie musiał wyepłniać całego od nowa
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(command);
 		}
 
 		TempData["Success"] = "Pracownik został dodany.";
-
 		return RedirectToAction("Employees");
 	}
 
-	public async Task<IActionResult> EditEmployee(string employeeId) =>
-		View(await Mediator.Send(new GetEditEmployeeQuery { UserId = employeeId }));
+	public async Task<IActionResult> EditEmployee(string employeeId)
+		=> View(await Mediator.Send(new GetEditEmployeeQuery { UserId = employeeId }));
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> EditEmployee(EditEmployeeVm viewModel)
 	{
-		//var result = await MediatorSendValidate(viewModel.Employee);
+		var result = await MediatorSendValidate(viewModel.Employee);
 
-		//if (!result.IsValid)
-		//	return View(viewModel);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(viewModel.Employee);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		// przesłanie z powrotem wypełnionych pól do formularza, dzięki temu nie będzie musiał wyepłniać całego od nowa
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(viewModel);
 		}
 
 		TempData["Success"] = "Dane pracownika zostały zaktualizowane.";
-
 		return RedirectToAction("Employees");
 	}
 
@@ -106,6 +60,6 @@ public class EmployeeController(IDateTimeService dateTimeService) : BaseControll
 		var page = await Mediator.Send(new GetEmployeePageQuery { Url = employeePageUrl });
 
 		// jeśli taka strona istnieje, to zwróć tą stronę, jeśli nie, to NotFound
-		return page != null ? View(page) : (IActionResult)NotFound();
+		return page != null ? View(page) : NotFound();
 	}
 }

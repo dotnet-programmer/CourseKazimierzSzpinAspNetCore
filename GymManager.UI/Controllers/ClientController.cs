@@ -39,11 +39,11 @@ public class ClientController : BaseController
 	}
 
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
-	public async Task<IActionResult> Clients() 
+	public async Task<IActionResult> Clients()
 		=> View(await Mediator.Send(new GetClientsBasicsQuery()));
 
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
-	public async Task<IActionResult> AddClient() 
+	public IActionResult AddClient()
 		=> View(new AddClientCommand());
 
 	[HttpPost]
@@ -51,36 +51,14 @@ public class ClientController : BaseController
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 	public async Task<IActionResult> AddClient(AddClientCommand command)
 	{
-		//var result = await MediatorSendValidate(command);
+		var result = await MediatorSendValidate(command);
 
-		//if (!result.IsValid)
-		//	return View(command);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(command);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		// przesłanie z powrotem wypełnionych pól do formularza, dzięki temu nie będzie musiał wyepłniać całego od nowa
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(command);
 		}
 
 		TempData["Success"] = "Dane o klientach zostały zaktualizowane";
-
 		return RedirectToAction("Clients");
 	}
 
@@ -93,36 +71,14 @@ public class ClientController : BaseController
 	[Authorize(Roles = $"{RolesDict.Administrator},{RolesDict.Employee}")]
 	public async Task<IActionResult> EditAdminClient(EditAdminClientVm vm)
 	{
-		//var result = await MediatorSendValidate(vm.Client);
+		var result = await MediatorSendValidate(vm.Client);
 
-		//if (!result.IsValid)
-		//	return View(vm);
-
-		bool isValid = false;
-		try
-		{
-			if (ModelState.IsValid)
-			{
-				await Mediator.Send(vm.Client);
-				isValid = true;
-			}
-		}
-		catch (Application.Common.Exceptions.ValidationException exception)
-		{
-			foreach (var item in exception.Errors)
-			{
-				// przekazanie wszystkich błędów z powrotem do widoku
-				ModelState.AddModelError(item.Key, string.Join(". ", item.Value));
-			}
-		}
-		// przesłanie z powrotem wypełnionych pól do formularza, dzięki temu nie będzie musiał wyepłniać całego od nowa
-		if (!isValid)
+		if (!result.IsValid)
 		{
 			return View(vm);
 		}
 
 		TempData["Success"] = "Dane o klientach zostały zaktualizowane";
-
 		return RedirectToAction("Clients");
 	}
 }

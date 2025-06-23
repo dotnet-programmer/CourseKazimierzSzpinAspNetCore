@@ -4,7 +4,7 @@ using MediatR;
 
 namespace GymManager.Application.Employees.Commands.EditEmployee;
 
-public class EditEmployeeCommand : IRequest
+public class EditEmployeeCommand : IRequest<Unit>
 {
 	public string Id { get; set; }
 

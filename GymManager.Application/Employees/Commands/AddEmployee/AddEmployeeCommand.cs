@@ -4,7 +4,7 @@ using MediatR;
 
 namespace GymManager.Application.Employees.Commands.AddEmployee;
 
-public class AddEmployeeCommand : IRequest
+public class AddEmployeeCommand : IRequest<Unit>
 {
 	[Required(ErrorMessage = "Pole 'Adres e-mail' jest wymagane")]
 	[DisplayName("Adres e-mail")]

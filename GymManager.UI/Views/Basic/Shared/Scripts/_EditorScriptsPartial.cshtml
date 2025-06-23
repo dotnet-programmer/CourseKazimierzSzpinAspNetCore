@@ -64,14 +64,13 @@
 				$(id).summernote("insertNode", files[0]);
 			},
 			error: function (data) {
-
-				if (data.responseJSON.error)
+				if (data.responseJSON.error) {
 					toastr.error('Błąd. ' + data.responseJSON.error);
-				else
-					toastr.error('Błąd. Nie udało sikę wysłać pliku. Spróbuj ponownie lub skontaktuj się z administartorem.');
+                }
+				else {
+					toastr.error('Błąd. Nie udało się wysłać pliku. Spróbuj ponownie lub skontaktuj się z administartorem.');
+                }
 			}
 		});
-
 	}
-
 </script>

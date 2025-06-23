@@ -8,7 +8,8 @@ namespace GymManager.Application.Employees.Queries.GetEditEmployee;
 public class GetEditEmployeeQueryHandler(
 	IApplicationDbContext context,
 	IRoleManagerService roleManagerService,
-	IUserRoleManagerService userRoleManagerService) : IRequestHandler<GetEditEmployeeQuery, EditEmployeeVm>
+	IUserRoleManagerService userRoleManagerService
+	) : IRequestHandler<GetEditEmployeeQuery, EditEmployeeVm>
 {
 	public async Task<EditEmployeeVm> Handle(GetEditEmployeeQuery request, CancellationToken cancellationToken)
 	{
@@ -26,7 +27,8 @@ public class GetEditEmployeeQueryHandler(
 
 		vm.Employee.RoleIds = (await userRoleManagerService
 			.GetRolesAsync(request.UserId))
-			.Select(x => x.Id).ToList();
+			.Select(x => x.Id)
+			.ToList();
 
 		if (!string.IsNullOrWhiteSpace(vm.Employee.ImageUrl))
 		{

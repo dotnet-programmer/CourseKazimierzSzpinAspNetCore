@@ -9,9 +9,10 @@ namespace GymManager.Application.Employees.Commands.AddEmployee;
 public class AddEmployeeCommandHandler(
 	IApplicationDbContext context,
 	IUserManagerService userManagerService,
-	IDateTimeService dateTimeService) : IRequestHandler<AddEmployeeCommand>
+	IDateTimeService dateTimeService
+	) : IRequestHandler<AddEmployeeCommand, Unit>
 {
-	public async Task Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
 	{
 		var userId = await userManagerService.CreateAsync(request.Email, request.Password, RolesDict.Employee);
 
@@ -47,5 +48,6 @@ public class AddEmployeeCommandHandler(
 		};
 
 		await context.SaveChangesAsync(cancellationToken);
+		return Unit.Value;
 	}
 }

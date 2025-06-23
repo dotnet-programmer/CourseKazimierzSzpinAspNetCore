@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MediatR;
 
 namespace GymManager.Application.Clients.Commands.EditAdminClient;
 
-public class EditAdminClientCommand : IRequest
+// na widoku edycji uzupełnienie tej komendy
+public class EditAdminClientCommand : IRequest<Unit>
 {
 	public string UserId { get; set; }
 

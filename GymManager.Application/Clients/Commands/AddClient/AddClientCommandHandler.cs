@@ -8,9 +8,10 @@ namespace GymManager.Application.Clients.Commands.AddClient;
 public class AddClientCommandHandler(
 	IApplicationDbContext context,
 	IUserManagerService userManagerService,
-	IDateTimeService dateTimeService) : IRequestHandler<AddClientCommand>
+	IDateTimeService dateTimeService
+	) : IRequestHandler<AddClientCommand, Unit>
 {
-	public async Task Handle(AddClientCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle(AddClientCommand request, CancellationToken cancellationToken)
 	{
 		if (request.IsPrivateAccount)
 		{
@@ -51,5 +52,7 @@ public class AddClientCommandHandler(
 		};
 
 		await context.SaveChangesAsync(cancellationToken);
+
+		return Unit.Value;
 	}
 }

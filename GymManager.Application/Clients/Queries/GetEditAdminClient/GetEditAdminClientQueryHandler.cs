@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManager.Application.Clients.Queries.GetEditAdminClient;
 
+// pobranie danych klienta, który będzie aktualizowany przez administratora
 public class GetEditAdminClientQueryHandler(
 	IApplicationDbContext context,
 	IRoleManagerService roleManagerService,
-	IUserRoleManagerService userRoleManagerService) : IRequestHandler<GetEditAdminClientQuery, EditAdminClientVm>
+	IUserRoleManagerService userRoleManagerService
+	) : IRequestHandler<GetEditAdminClientQuery, EditAdminClientVm>
 {
 	public async Task<EditAdminClientVm> Handle(GetEditAdminClientQuery request, CancellationToken cancellationToken)
 	{
@@ -29,9 +31,6 @@ public class GetEditAdminClientQueryHandler(
 			.GetRolesAsync(request.UserId))
 			.Select(x => x.Id)
 			.ToList();
-
-		//// wszystkie role z bazy danych
-		//vm.AvailableRoles = roleManagerService.GetRoles().ToList();
 
 		return vm;
 	}
