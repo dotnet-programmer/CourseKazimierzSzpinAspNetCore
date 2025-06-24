@@ -49,7 +49,7 @@ public class MarkTicketAsPaidCommandHandler(
 
 		#region metody przeniesione do eventów dlatego w komentarzach
 		// jeśli płatność została zweryfikowana to dodanie nowej faktury poprzez Api
-		//await _gymInvoices.AddInvoice(ticket.TicketId);
+		//await _gymInvoices.AddInvoice(request.SessionId);
 
 		// SingalR - jeśli karnet zostanie opłacony to wyślij notyfikację dla klienta
 		//await Task.Delay(2000);

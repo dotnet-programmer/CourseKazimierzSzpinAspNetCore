@@ -11,11 +11,7 @@ public static class IServiceCollectionExtensions
 {
 	public static void AddCulture(this IServiceCollection service)
 	{
-		var supportedCultures = new List<CultureInfo>
-		{
-			new("pl"),
-			new("en")
-		};
+		List<CultureInfo> supportedCultures = [new("pl"), new("en")];
 
 		CultureInfo.DefaultThreadCurrentCulture = supportedCultures[0];
 		CultureInfo.DefaultThreadCurrentUICulture = supportedCultures[0];
@@ -28,8 +24,10 @@ public static class IServiceCollectionExtensions
 		});
 	}
 
+	// Microsoft.AspNetCore.Mvc.Versioning
 	// wersjonowanie API umożliwia wydawanie kolejnych wersji bez utraty działania poprzednich wersji
 	// wersjonowanie dokumentacji, żeby swagger poprawnie działał
+	// dodatkowo zaimplementowane uwierzytelnianie
 	public static void AddSwaggerBearerAuthorization(this IServiceCollection service)
 		=> service.AddSwaggerGen(swagger =>
 			{
@@ -37,18 +35,20 @@ public static class IServiceCollectionExtensions
 				swagger.SwaggerDoc("v1", new OpenApiInfo
 				{
 					Version = "v1",
-					Title = "ASP.NET 6 GymManager Web API 1"
+					Title = "ASP.NET GymManager Web API 1"
 				});
 				swagger.SwaggerDoc("v2", new OpenApiInfo
 				{
 					Version = "v2",
-					Title = "ASP.NET 6 GymManager Web API 2"
+					Title = "ASP.NET GymManager Web API 2"
 				});
 
 				// jeśli będą konflikty, to ustaw pierwszą akcję
 				swagger.ResolveConflictingActions(x => x.First());
 				swagger.OperationFilter<RemoveVersionFromParameter>();
 				swagger.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+
+				// ************************************************************************************
 
 				// JWT - implementacja uwierzytelnienia w swaggerze
 				swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -77,7 +77,8 @@ public static class IServiceCollectionExtensions
 			}
 		);
 
-	// JWT - implementacja uwierzytelnienia w WebApi
+	// JWT - implementacja uwierzytelnienia w WebApi,
+	// tyle wystarczy dla samego ASP.NET, ale żeby testować metody wymagające autoryzacji przez swaggera trzeba dodać dodatkowe opcje, tutaj są w AddSwaggerBearerAuthorization()
 	public static void AddBearerAuthentication(this IServiceCollection service, IConfiguration configuration)
 	{
 		// IConfiguration - potrzebne do pobierania informacji o kluczu z pliku konfiguracyjnego

@@ -23,7 +23,7 @@ public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
 	public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
 	{
 		var paths = swaggerDoc.Paths;
-		swaggerDoc.Paths = [];
+		swaggerDoc.Paths = new OpenApiPaths();
 
 		foreach (var path in paths)
 		{

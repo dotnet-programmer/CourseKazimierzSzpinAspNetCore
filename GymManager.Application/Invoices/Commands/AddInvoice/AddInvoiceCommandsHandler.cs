@@ -10,8 +10,7 @@ public class AddInvoiceCommandsHandler(IApplicationDbContext context, IDateTimeS
 	public async Task<int> Handle(AddInvoiceCommand request, CancellationToken cancellationToken)
 	{
 		// pobierz informacje o karnecie
-		var ticket = await context.Tickets
-			.FirstOrDefaultAsync(x => x.TicketId == request.TicketId, cancellationToken);
+		var ticket = await context.Tickets.FirstOrDefaultAsync(x => x.TicketId == request.TicketId, cancellationToken);
 
 		// utwórz nową fakturę
 		Invoice invoice = new()

@@ -47,7 +47,7 @@ public class GymInvoices : IGymInvoices
 		_httpClient.BaseAddress = new Uri(_baseUrl);
 		_httpClient.Timeout = new TimeSpan(0, 0, 30);
 
-		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 	}
 
 	// dodanie nowej faktury poprzez Api
@@ -119,8 +119,7 @@ public class GymInvoices : IGymInvoices
 			}
 
 			// pobranie informacji o zalogowanym użytkowniku
-			var user = await _context
-				.Users
+			var user = await _context.Users
 				.Select(x => new { Id = x.Id, UserName = x.UserName, Password = x.PasswordHash })
 				.FirstOrDefaultAsync(x => x.Id == userId);
 
@@ -157,7 +156,7 @@ public class GymInvoices : IGymInvoices
 	{
 		var jsonContent = JsonConvert.SerializeObject(authenticateRequest);
 		_logger.LogInformation(jsonContent);
-		var stringContent = new StringContent(jsonContent, UnicodeEncoding.UTF8, "application/json");
+		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
 
 		// wywołanie endpointa z Api
 		// adres w tym parametrze zostanie doklejony do "_baseUrl"

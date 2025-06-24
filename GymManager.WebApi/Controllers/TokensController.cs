@@ -1,5 +1,6 @@
 ﻿using GymManager.Application.Users.Queries.GetUserToken;
 using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
 
 namespace GymManager.WebApi.Controllers;
 

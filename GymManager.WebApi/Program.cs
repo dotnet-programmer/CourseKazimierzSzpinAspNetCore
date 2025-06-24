@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using GymManager.Application;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Infrastructure;
@@ -10,20 +11,30 @@ using NLog.Web;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// Swagger - Swashbuckle - narzêdzie do generowania dokumentacji API, innym rozwi¹zaniem do testowania API jest np. Insomnia
+// zakomentowane, poniewa¿ wersjonowanie API wymaga dodatkowej konfiguracji Swaggera, która znajduje sie w builder.Services.AddSwaggerBearerAuthorization();
+//builder.Services.AddSwaggerGen(); 
 
+// Microsoft.AspNetCore.Mvc.Versioning
 // wersjonowanie - zmiana tego wpisu potrzebna do poprawnego dzia³ania wersjonowania
-//builder.Services.AddSwaggerGen();
+// jest to metoda rozszerzaj¹ca IServiceCollection, która dodaje Swaggera i wersjonowanie, zastêpuje metodê builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerBearerAuthorization();
-
 // wersjonowanie API - umo¿liwia wydawanie kolejnych wersji bez utraty dzia³ania poprzednich wersji
 builder.Services.AddApiVersioning(options =>
 {
+	options.ReportApiVersions = true;
+	options.DefaultApiVersion = new ApiVersion(1);
+	//options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
 	options.AssumeDefaultVersionWhenUnspecified = true;
-	options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
 });
+
+// dodanie tokena JWT (JSON Web Token) - mechanizm uwierzytelniania, który jest u¿ywany do zabezpieczania API
+builder.Services.AddBearerAuthentication(builder.Configuration);
 
 // CORS - mechanizm umo¿liwiaj¹cy wspó³dzielenie zasobów miêdzy serwerami znajduj¹cymi siê w ró¿nych domenach
 builder.Services.AddCors();
@@ -39,9 +50,6 @@ builder.Logging.AddNLogWeb();
 
 // dodanie globalizacji
 builder.Services.AddCulture();
-
-// dodanie JWT 
-builder.Services.AddBearerAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -66,8 +74,11 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+	// Swagger - narzêdzie do generowania dokumentacji API
 	app.UseSwagger();
+	//app.UseSwaggerUI();
 
+	// Microsoft.AspNetCore.Mvc.Versioning
 	// wersjonowanie API - umo¿liwia wydawanie kolejnych wersji bez utraty dzia³ania poprzednich wersji
 	app.UseSwaggerUI(options =>
 	{

@@ -5,6 +5,6 @@ namespace GymManager.Application.GymInvoices.Queries.GetPdfGymInvoice;
 
 public class GetPdfGymInvoiceQueryHandler(IGymInvoices gymInvoices) : IRequestHandler<GetPdfGymInvoiceQuery, InvoicePdfVm>
 {
-	public async Task<InvoicePdfVm> Handle(GetPdfGymInvoiceQuery request, CancellationToken cancellationToken) =>
-		await gymInvoices.GetPdfInvoice(request.Id);
+	public async Task<InvoicePdfVm> Handle(GetPdfGymInvoiceQuery request, CancellationToken cancellationToken)
+		=> await gymInvoices.GetPdfInvoice(request.Id);
 }

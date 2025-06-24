@@ -34,6 +34,6 @@ public class InvoiceController(ILogger<InvoiceController> logger) : BaseControll
 
 	public IActionResult DownloadInvoicePdf(string fileGuid, string fileName)
 		=> TempData[fileGuid] != null
-			? (IActionResult)File(TempData.Get<byte[]>(fileGuid), "application/pdf", fileName)
+			? File(TempData.Get<byte[]>(fileGuid), "application/pdf", fileName)
 			: throw new Exception("Błąd przy próbie eksportu faktury do PDF.");
 }
