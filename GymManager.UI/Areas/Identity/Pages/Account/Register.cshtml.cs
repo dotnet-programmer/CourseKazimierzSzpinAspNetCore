@@ -28,10 +28,10 @@ public class RegisterModel : PageModel
 	private readonly IBackgroundWorkerQueue _backgroundWorkerQueue;
 
 	public RegisterModel(
-			UserManager<ApplicationUser> userManager,
-			IUserStore<ApplicationUser> userStore,
-			SignInManager<ApplicationUser> signInManager,
-			ILogger<RegisterModel> logger,
+		UserManager<ApplicationUser> userManager,
+		IUserStore<ApplicationUser> userStore,
+		SignInManager<ApplicationUser> signInManager,
+		ILogger<RegisterModel> logger,
 		IEmailService emailService,
 		IDateTimeService dateTimeService,
 		IBackgroundWorkerQueue backgroundWorkerQueue)
@@ -149,25 +149,30 @@ public class RegisterModel : PageModel
 				var callbackUrl = Url.Page(
 					   "/Account/ConfirmEmail",
 					   pageHandler: null,
-					   values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+					   // jeśli nazwa właściwości jest taka sama jak nazwa parametru, to nie trzeba tego powtarzać
+					   //values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+					   values: new { area = "Identity", userId, code, returnUrl },
 					   protocol: Request.Scheme);
 
 				// wysłanie emaila z potwierdzeniem konta
 
 				// to jest domyślna wysyłka, ale w tym projekcie jest własny EmailService i z niego będą wysyłane maile
 				//await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+				// wysłanie emaila w tle z użyciem zadań w tle
 				_backgroundWorkerQueue.QueueBackgroundWorkItem(async x =>
 					{
 						await _emailService.SendAsync(
-						"Potwierdź e-mail",
-						$"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
-						Input.Email);
+							"Potwierdź e-mail",
+							$"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
+							Input.Email);
 					},
 					$"Aktywacja konta. E-mail: {Input.Email}"
 				);
 
 				// jeśli wszystko się powiedzie, to przekierowanie do widoku z info że należy potwierdzić adres email
-				return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+				// jeśli nazwa właściwości jest taka sama jak nazwa parametru, to nie trzeba tego powtarzać i tworzyć takich zapisów: returnUrl = returnUrl
+				//return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+				return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
 			}
 			foreach (var error in result.Errors)
 			{

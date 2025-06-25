@@ -7,7 +7,6 @@ namespace GymManager.Infrastructure.Services;
 // serwis, który będzie cały czas uruchomiony i wykonywał w tle zadania które są zakolejkowane
 public class LongRunningService(IBackgroundWorkerQueue queue, ILogger<LongRunningService> logger) : BackgroundService
 {
-	private readonly IBackgroundWorkerQueue _queue = queue;
 	private readonly ILogger _logger = logger;
 
 	// metoda która startuje zaraz po starcie aplikacji,
@@ -19,11 +18,11 @@ public class LongRunningService(IBackgroundWorkerQueue queue, ILogger<LongRunnin
 			try
 			{
 				// pobierz z kolejki zadanie do wykonania
-				var workItem = await _queue.DequeueAsync(stoppingToken);
+				var workItem = await queue.DequeueAsync(stoppingToken);
 
 				_logger.LogInformation("ExecuteAsync Start...");
 
-				// wywołanie delegata, czyli metody pobranej z kolejki
+				// wywołanie delegata, czyli metody pobranej z kolejki do wykonania w tle
 				await workItem(stoppingToken);
 
 				_logger.LogInformation("ExecuteAsync Stop...");
