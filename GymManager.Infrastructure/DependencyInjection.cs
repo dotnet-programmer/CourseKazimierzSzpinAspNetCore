@@ -126,7 +126,8 @@ public static class DependencyInjection
 		// SignalR - serwis do wysyłania powiadomień userowi
 		services.AddSingleton<IUserNotificationService, UserNotificationService>();
 
-		// zarejestrowanie klas subskrybujących eventy w kontenerze Dependency Injection
+		// enevty
+		// 7. zarejestrowanie klas subskrybujących eventy w kontenerze Dependency Injection
 		// za pomocą refleksji dodanie wszystkich instancji implementujących interfejs IEventHandler
 		RegisterEvents(services);
 
@@ -155,6 +156,7 @@ public static class DependencyInjection
 		return appBuilder;
 	}
 
+	// enevty
 	private static void RegisterEvents(IServiceCollection services)
 	{
 		// dodanie informacji o EventDispatcher

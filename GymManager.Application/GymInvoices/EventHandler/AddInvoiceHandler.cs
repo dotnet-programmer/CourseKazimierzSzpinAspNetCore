@@ -4,7 +4,8 @@ using GymManager.Application.Tickets.Events;
 
 namespace GymManager.Application.GymInvoices.EventHandler;
 
-// Klasa implementująca IEventHandler, czyli klasa której metody zostaną wywołane po opublikowaniu eventa.
+// eventy
+// 6. Klasa implementująca IEventHandler, czyli klasa której metody zostaną wywołane po opublikowaniu eventa.
 // Czyli handler, który zostanie podpięty pod zdarzenie TicketPaidEvent
 // (jeśli ten event zostanie opublikowany to wykona się metoda HandleAsync, w tym przypadku doda się nowa faktura za pomocą WebApi).
 public class AddInvoiceHandler(IGymInvoices gymInvoices) : IEventHandler<TicketPaidEvent>

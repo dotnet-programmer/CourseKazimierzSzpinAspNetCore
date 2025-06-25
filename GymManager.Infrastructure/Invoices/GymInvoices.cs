@@ -24,6 +24,10 @@ public class GymInvoices : IGymInvoices
 	private readonly ICurrentUserService _currentUserService;
 	private readonly IApplicationDbContext _context;
 	private readonly string _baseUrl;
+	// eventy
+	// dodatkowe pole do przekazania Id użytkownika, jeżeli jest inne niż aktualnie zalogowany
+	// w przypadku użycia eventów nie ma możliwości pobrania Id użytkownika z kontekstu requesta,
+	// dlatego zostanie przekazane jako parametr do metody AddInvoice
 	private string _explicitUserId;
 
 	public GymInvoices(

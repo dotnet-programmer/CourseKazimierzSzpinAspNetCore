@@ -1,7 +1,8 @@
-﻿//using GymManager.Application.Common.Events;
+﻿using GymManager.Application.Common.Events;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Payments;
-//using GymManager.Application.Tickets.Events;
+using GymManager.Domain.Entities;
+using GymManager.Application.Tickets.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,10 +13,10 @@ namespace GymManager.Application.Tickets.Commands.MarkTicketAsPaidCommand;
 public class MarkTicketAsPaidCommandHandler(
 	IApplicationDbContext context,
 	IPrzelewy24 przelewy24,
-	ILogger<MarkTicketAsPaidCommandHandler> logger
+	ILogger<MarkTicketAsPaidCommandHandler> logger,
 	//IGymInvoices gymInvoices,
 	//IUserNotificationService userNotificationService,
-	//IEventDispatcher eventDispatcher
+	IEventDispatcher eventDispatcher
 	) : IRequestHandler<MarkTicketAsPaidCommand, Unit>
 {
 	private readonly IApplicationDbContext _context = context;
@@ -23,8 +24,14 @@ public class MarkTicketAsPaidCommandHandler(
 	private readonly ILogger _logger = logger;
 	//private readonly IGymInvoices _gymInvoices = gymInvoices;
 	//private readonly IUserNotificationService _userNotificationService = userNotificationService;
-	//private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
+	private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
 
+	// eventy
+	// w tej metodzie były 3 odpowiedzialności:
+	// 1. weryfikacja płatności w systemie Przelewy24 i aktualizacja bazy danych z oznaczeniem karnetu jako zapłacony
+	// 2. dodanie nowej faktury poprzez Api
+	// 3. wysłanie notyfikacji do klienta poprzez SignalR
+	// żeby być zgodnym z zasadą pojedynczej odpowiedzialności (Single Responsibility Principle) pkt 2 i 3 zostały przeniesione do eventów,
 	public async Task<Unit> Handle(MarkTicketAsPaidCommand request, CancellationToken cancellationToken)
 	{
 		// na początku zgodnie z dokumentacją Przelewy24 należy zwalidować adres IP z którego przychodzi request
@@ -39,7 +46,7 @@ public class MarkTicketAsPaidCommandHandler(
 		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == request.SessionId, cancellationToken);
 
 		// jeżeli płatność się powiodła, to w bazie danych zostanie oznaczony karnet jako zapłacony
-		await UpdatePaymentInDbAsync(ticket.TicketId, cancellationToken);
+		await UpdatePaymentInDbAsync(ticket, cancellationToken);
 		
 		// zalogowanie informacji o poprawnej płatności
 		_logger.LogInformation($"Przelewy24 - payment verification finished - {request.SessionId}");
@@ -51,16 +58,18 @@ public class MarkTicketAsPaidCommandHandler(
 		// SingalR - jeśli karnet zostanie opłacony to wyślij notyfikację dla klienta
 		//await Task.Delay(2000); // sztuczne opóźnienie, żeby notyfikacja nie została wyświetlona od razu - czas na powrót na stronę klienta po płatności
 		//await _userNotificationService.SendNotification(ticket.UserId, "Płatność została potwierdzona, dziękujemy za zakup karnetu.");
-		
+
+		#endregion metody przeniesione do eventów dlatego w komentarzach
 
 		// opublikowanie eventu TicketPaidEvent,
 		// dzięki temu zostaną wywołane handlery które podpięły się pod ten event
-		//await _eventDispatcher.PublishAsync(new TicketPaidEvent
-		//{
-		//	TicketId = ticket.TicketId,
-		//	UserId = ticket.UserId,
-		//});
-		#endregion metody przeniesione do eventów dlatego w komentarzach
+		// to rozwiązanie ma jedną wadę - pracując na eveach nie ma dostępu do kontekstu z requesta,
+		// dlatego nie da się pobrać wewnątrz tych klas np. Id zalogowanego użytkownika
+		await _eventDispatcher.PublishAsync(new TicketPaidEvent
+		{
+			TicketId = ticket.TicketId,
+			UserId = ticket.UserId,
+		});
 
 		return Unit.Value;
 	}
@@ -85,9 +94,8 @@ public class MarkTicketAsPaidCommandHandler(
 	}
 
 	// oznaczenie karnetu w bazie jako zapłacony
-	private async Task UpdatePaymentInDbAsync(string sessionId, CancellationToken cancellationToken)
+	private async Task UpdatePaymentInDbAsync(Ticket ticket, CancellationToken cancellationToken)
 	{
-		var ticket = await _context.Tickets.FirstOrDefaultAsync(x => x.TicketId == sessionId, cancellationToken);
 		ticket.IsPaid = true;
 		await _context.SaveChangesAsync(cancellationToken);
 	}

@@ -4,7 +4,8 @@ using GymManager.Application.Tickets.Events;
 
 namespace GymManager.Application.Users.EventHandler;
 
-// handler, który zostanie podpięty pod zdarzenie TicketPaidEvent
+// eventy
+// 6. handler, który zostanie podpięty pod zdarzenie TicketPaidEvent
 // jego metoda HandleAsync zostanie wywołana gdy faktura zostanie opłacona,
 // wtedy zostanie również wysłane powiadomienie użytkownikowi
 public class SendUserNotificationHandler(IUserNotificationService userNotificationService) : IEventHandler<TicketPaidEvent>

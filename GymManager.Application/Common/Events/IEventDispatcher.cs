@@ -1,6 +1,7 @@
 ﻿namespace GymManager.Application.Common.Events;
 
-// helper, który umożliwia/jest odpowiedzialny za publikowanie eventów
+// eventy
+// 2. helper, który umożliwia/jest odpowiedzialny za publikowanie eventów
 public interface IEventDispatcher
 {
 	// wywołanie tej metody oznacza opublikowanie eventa

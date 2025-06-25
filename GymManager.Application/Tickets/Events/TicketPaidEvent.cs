@@ -2,7 +2,8 @@
 
 namespace GymManager.Application.Tickets.Events;
 
-// klasa oznaczona markerem jako event, będzie przekazywać parametry
+// eventy
+// 4. klasa oznaczona markerem jako IEvent, będzie przekazywać parametry
 public class TicketPaidEvent : IEvent
 {
 	public string TicketId { get; set; }
