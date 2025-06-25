@@ -147,7 +147,8 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 // SignalR - serwis do pobierania informacji o aktualnych użytkownikach i ich połączeniach
-// parametr /NotificationUserHub to adres URL, w którym jest nazwa klasy która będzie łącznikiem między JavaScript a C#
+// NotificationUserHub - klasa dziedzicząca po klasie Hub
+// parametr /NotificationUserHub to adres URL, w którym jest nazwa klasy, która będzie łącznikiem między JavaScript a C#
 app.MapHub<NotificationUserHub>("/NotificationUserHub");
 
 app.Run();

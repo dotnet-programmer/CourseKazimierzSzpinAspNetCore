@@ -12,12 +12,12 @@ public class UserConnectionManager : IUserConnectionManager
 
 	// słownik przechowujący info o wszystkich użytkownikach wraz z info o ich połączeniach
 	// Dictionary<string, List<string>>
-	// - string - Id usera,
-	// - List<string> - lista połączeń dla każdego usera
+	// - string - Id użytkownika,
+	// - List<string> - lista połączeń dla każdego użytkownika
 	private static readonly Dictionary<string, List<string>> _userConnectionMap = [];
 
 	// jeśli ktoś wejdzie na stronę, to zapisz informacje o Id usera oraz IdConnection z contextu
-	// trzeba przechować te informacje na serwerze, tak żwby wysłać odpowiednią wiadomość do odpowiedniego usera w przeglądarce
+	// trzeba przechować te informacje na serwerze, tak żeby wysłać odpowiednią wiadomość do odpowiedniego usera (klienta) w przeglądarce
 	public void KeepUserConnection(string userId, string connectionId)
 	{
 		// zablokuj wątek
@@ -26,6 +26,7 @@ public class UserConnectionManager : IUserConnectionManager
 			// jeżeli w słowniku nie ma żadnego połączenia dla usera to utwórz nową listę dla tego usera
 			if (!_userConnectionMap.ContainsKey(userId))
 			{
+				// w słowniku dodaje się nowy wpis z kluczem userId i pustą listą połączeń
 				_userConnectionMap[userId] = [];
 			}
 
@@ -44,21 +45,29 @@ public class UserConnectionManager : IUserConnectionManager
 			foreach (var userId in _userConnectionMap.Keys)
 			{
 				// jeżeli słownik zawiera info o tym userze
-				if (_userConnectionMap.ContainsKey(userId))
+				//if (_userConnectionMap.ContainsKey(userId))
+				//{
+				//	// jeżeli user zawiera połączenia
+				//	// to zakomentowane, bo .Remove() sam sprawdza czy element istnieje i czy może usunąć
+				//	//if (_userConnectionMap[userId].Contains(connectionId))
+				//	//{
+				//		// to usuń połączenia
+				//		_userConnectionMap[userId].Remove(connectionId);
+				//		break;
+				//	//}
+				//}
+
+				// to samo co wyżej, tylko z użyciem TryGetValue()
+				if (_userConnectionMap.TryGetValue(userId, out List<string> value))
 				{
-					// jeżeli user zawiera połączenia
-					if (_userConnectionMap[userId].Contains(connectionId))
-					{
-						// to usuń połączenia
-						_userConnectionMap[userId].Remove(connectionId);
-						break;
-					}
+					value.Remove(connectionId);
+					break;
 				}
 			}
 		}
 	}
 
-	// pobieranie informacji o połączeniach dla danego usera
+	// metoda pobierająca informacje o połączeniach użytkownika
 	public List<string> GetUserConnections(string userId)
 	{
 		List<string> connections = [];

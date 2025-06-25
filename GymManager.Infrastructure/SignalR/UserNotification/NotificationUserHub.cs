@@ -6,11 +6,10 @@ namespace GymManager.Infrastructure.SignalR.UserNotification;
 // klasa - hub - przez którą będą przechodzić wszystkie połączenia
 // tutaj są podpięcia pod metody wywoływane z poziomu JavaScript
 // takie połączenie między JavaScript a C#
+// żeby to zadziałało trzeba dodać w projekcie UI w Program.cs: app.MapHub<NotificationUserHub>("/NotificationUserHub");
 public class NotificationUserHub(IUserConnectionManager userConnectionManager) : Hub
 {
-	private readonly IUserConnectionManager _userConnectionManager = userConnectionManager;
-
-	// jeśli user wejdzie na stronę to potrzebna jest o tym informacja
+	// jeśli user wejdzie na stronę to potrzebna jest o tym informacja,
 	public string GetConnectionId()
 	{
 		// odwołanie do kontekstu
@@ -21,7 +20,7 @@ public class NotificationUserHub(IUserConnectionManager userConnectionManager) :
 
 		// wywołanie metody z IUserConnectionManager
 		// jeśli ktoś wejdzie na stronę, to zapisz informacje o Id usera oraz IdConnection z contextu
-		_userConnectionManager.KeepUserConnection(userId, Context.ConnectionId);
+		userConnectionManager.KeepUserConnection(userId, Context.ConnectionId);
 
 		// zwróć Id contextu
 		return Context.ConnectionId;
@@ -35,6 +34,6 @@ public class NotificationUserHub(IUserConnectionManager userConnectionManager) :
 
 		// wywołanie metody z IUserConnectionManager
 		// jeśli ktoś opuszcza stronę to trzeba usunąć informacje z listy
-		_userConnectionManager.RemoveUserConnection(connectionId);
+		userConnectionManager.RemoveUserConnection(connectionId);
 	}
 }
