@@ -4,13 +4,13 @@
 @using Microsoft.Extensions.Options
 
 @* wstrzyknięcie informacji o językach które są obsługiwane *@
-@inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IOptions<RequestLocalizationOptions> localizationOptions
 
 @{
 	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
 
 	// pobranie informacji o wszystkich językach które są obsługiwane w aplikacji
-	var cultureItems = LocOptions.Value.SupportedUICultures
+	var cultureItems = localizationOptions.Value.SupportedUICultures
 		.Select(x => new SelectListItem { Value = x.Name })
 		.ToList();
 

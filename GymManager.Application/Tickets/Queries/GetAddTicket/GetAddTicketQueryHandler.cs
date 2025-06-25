@@ -21,7 +21,6 @@ public class GetAddTicketQueryHandler(IApplicationDbContext context, IDateTimeSe
 				// Globalizacja - pobieranie odpowiednich tłumaczeń z bazy danych
 				.Include(x => x.Translations.Where(y => y.Language.Key == request.Language))
 				.ThenInclude(x => x.Language)
-
 				.AsNoTracking()
 				.Select(x => x.ToDto())
 				.ToListAsync(cancellationToken)

@@ -8,6 +8,8 @@ namespace GymManager.Application.Tickets.Commands.AddTicket;
 // tutaj typ zwracany TResponse ustawione na string, bo będzie zwracane Id karnetu
 public class AddTicketCommand : IRequest<string>
 {
+	// Globalizacja - tłumaczenia brane są z pliku Resources - CommonResources.resx
+	// zamiast tekstu wpisanego na sztywno, używany jest klucz z pliku Resources
 	[Required(ErrorMessage = "FieldStartDateTicketIsRequired")]
 	[DisplayName("StartDateTicket")]
 	public DateTime StartDate { get; set; }

@@ -16,7 +16,11 @@ namespace GymManager.UI.Controllers;
 public class TicketController(
 	IConfiguration configuration,
 	ILogger<TicketController> logger,
+	// wstrzyknięcie IStringLocalizer<CommonResources> do kontrolera, żeby móc używać ogólnych tłumaczeń z plików CommonResources.pl.resx i CommonResources.en.resx
+	// CommonResources jest klasą pustą, która grupuje wspólne zasoby
 	IStringLocalizer<CommonResources> localizer
+	// w przypadku używania dedykowanych plików zasobów (w folderze resources odwzorowuje się strukturę projektu i dla każdego tłumaczonego pliku tworzy się osobny plik zasobów, np. dla kontrolera TicketController będzie to TicketController.pl.resx i TicketController.en.resx)
+	// IStringLocalizer<TicketController> localizer
 	) : BaseController
 {
 	public async Task<IActionResult> TicketsAsync()

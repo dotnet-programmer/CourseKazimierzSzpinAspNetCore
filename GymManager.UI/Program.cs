@@ -29,7 +29,7 @@ builder.Services
 	.AddSessionStateTempDataProvider()
 	// Globalizacja - wiele wersji językowych
 	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-	// Globalizacja - wiele wersji językowych - dołączenie innych projektów
+	// Globalizacja - wiele wersji językowych - dołączenie tłumaczeń z innych projektów, tutaj dodany projekt GymManager.Application
 	.AddDataAnnotationsLocalization(x =>
 	{
 		x.DataAnnotationLocalizerProvider = (type, factory) =>
