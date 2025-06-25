@@ -27,10 +27,12 @@ public static class DependencyInjection
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 	{
 		// szyfrowanie
-		// po uruchomieniu wygeneruje klucze, wystarczy uruchomić raz i skopiować klucze
-		//var keyInfo = new KeyInfo();
+		// po uruchomieniu wygeneruje klucze, wystarczy uruchomić raz w debugerze, skopiować klucze i usunąć wywołanie
+		// var keyInfo = new KeyInfo();
 		// klucze można również pobierać z pliku konfiguracyjnego
+		// poniżej jest użycie tych kluczy:
 		EncryptionService encryptionService = new(new KeyInfo("kk3zd3HAIZjiZnDUhuU9OMASs4eljyPBZ1WbFdgC3UE=", "4ITbLvvo3BWGObJRFH4wDg=="));
+		// skonfigurowanie i przekazanie instancji zawsze gdy będzie potrzebny IEncryptionService
 		services.AddSingleton<IEncryptionService>(encryptionService);
 
 		// zaszyfrowanie connection stringa - ustawić tu brakepoint, uruchomić debugerem i skopiować zaszyfrowany string
@@ -40,7 +42,7 @@ public static class DependencyInjection
 		// konfiguracja Entity Framework Core i DbContext
 		// dependency injection - używaj ApplicationDbContext wszędzie tam gdzie jest IApplicationDbContext
 		services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-		// pobranie connection stringa z ustawień
+		// pobranie connection stringa z ustawień, który jest zaszyfrowany dlatego trzeba go najpierw odszyfrować
 		var connectionString = encryptionService.Decrypt(configuration.GetConnectionString("DefaultConnection"));
 		// ApplicationDbContext - klasa kontekstu, czyli tej dziedziczącej po DbContext
 		services.AddDbContext<ApplicationDbContext>(options => options

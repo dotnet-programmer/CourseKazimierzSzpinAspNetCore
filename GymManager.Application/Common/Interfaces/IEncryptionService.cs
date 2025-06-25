@@ -3,9 +3,9 @@
 // szyfrowanie danych
 public interface IEncryptionService
 {
-	// szyfrowanie
+	// szyfrowanie tekstu
 	string Encrypt(string input);
 
-	// deszyfrowanie
+	// deszyfrowanie zaszyfrowanego tekstu
 	string Decrypt(string cipherText);
 }

@@ -5,13 +5,13 @@ namespace GymManager.Infrastructure.Encryption;
 
 public class EncryptionService(KeyInfo keyInfo) : IEncryptionService
 {
-	private readonly KeyInfo _keyInfo = keyInfo;
-
+	// szyfrowanie tekstu
 	public string Encrypt(string input)
-		=> Convert.ToBase64String(EncryptStringToBytesAes(input, _keyInfo.Key, _keyInfo.Iv));
+		=> Convert.ToBase64String(EncryptStringToBytesAes(input, keyInfo.Key, keyInfo.Iv));
 
+	// deszyfrowanie zaszyfrowanego tekstu
 	public string Decrypt(string cipherText)
-		=> DecryptStringFromBytesAes(Convert.FromBase64String(cipherText), _keyInfo.Key, _keyInfo.Iv);
+		=> DecryptStringFromBytesAes(Convert.FromBase64String(cipherText), keyInfo.Key, keyInfo.Iv);
 
 	private static byte[] EncryptStringToBytesAes(string plainText, byte[] key, byte[] iv)
 	{
