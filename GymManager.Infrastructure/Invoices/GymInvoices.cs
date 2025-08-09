@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Inovices;
 using GymManager.Application.GymInvoices.Queries.GetPdfGymInvoice;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace GymManager.Infrastructure.Invoices;
 
@@ -50,8 +49,6 @@ public class GymInvoices : IGymInvoices
 
 		_httpClient.BaseAddress = new Uri(_baseUrl);
 		_httpClient.Timeout = new TimeSpan(0, 0, 30);
-
-		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 	}
 
 	// dodanie nowej faktury poprzez Api
@@ -64,7 +61,7 @@ public class GymInvoices : IGymInvoices
 		await SetHeader();
 
 		// przygotowanie obiektu który będzie przesłany do Api
-		var jsonContent = JsonConvert.SerializeObject(new AddInvoiceCommand { TicketId = ticketId });
+		var jsonContent = JsonSerializer.Serialize(new AddInvoiceCommand { TicketId = ticketId });
 
 		// zmiana jsonContent na StringContent
 		var stringContent = new StringContent(jsonContent, UnicodeEncoding.UTF8, "application/json");
@@ -93,7 +90,7 @@ public class GymInvoices : IGymInvoices
 			throw new Exception(response.RequestMessage.ToString());
 		}
 
-		return JsonConvert.DeserializeObject<InvoicePdfVm>(await response.Content.ReadAsStringAsync());
+		return JsonSerializer.Deserialize<InvoicePdfVm>(await response.Content.ReadAsStringAsync());
 	}
 
 	private async Task SetHeader()
@@ -158,7 +155,7 @@ public class GymInvoices : IGymInvoices
 	// w tej metodzie musi być wywołany endpoint z TokenController z WebAppi
 	private async Task<AuthenticateResponse> GenerateToken(AuthenticateRequest authenticateRequest)
 	{
-		var jsonContent = JsonConvert.SerializeObject(authenticateRequest);
+		var jsonContent = JsonSerializer.Serialize(authenticateRequest);
 		_logger.LogInformation(jsonContent);
 		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
 
@@ -174,6 +171,6 @@ public class GymInvoices : IGymInvoices
 
 		// typ zwracany z endpointa to AuthenticateResponse zserializowany w Json,
 		// dlatego trzeba go deserializować i zwrócić obiekt tej klasy
-		return JsonConvert.DeserializeObject<AuthenticateResponse>(await response.Content.ReadAsStringAsync());
+		return JsonSerializer.Deserialize<AuthenticateResponse>(await response.Content.ReadAsStringAsync());
 	}
 }

@@ -2,13 +2,11 @@
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using GymManager.Application.Common.Interfaces;
 using GymManager.Application.Common.Models.Payments;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace GymManager.Infrastructure.Payments;
 public class Przelewy24 : IPrzelewy24
@@ -22,7 +20,7 @@ public class Przelewy24 : IPrzelewy24
 	private string _userName;
 	private string _userSecret;
 	private string _baseUrl;
-	private JsonSerializerSettings _jsonSettings;
+	private JsonSerializerOptions _jsonOptions;
 
 	// użycie HttpClient - najlepsze użycie to wstrzyknięcie przez konstruktor
 	// + w Dependency Injection dodać services.AddHttpClient<IPrzelewy24, Przelewy24>(); - to powoduje użycie fabryki HttpClient
@@ -40,8 +38,6 @@ public class Przelewy24 : IPrzelewy24
 		GetConfiguration();
 		InitHttpClient();
 		InitJsonSettings();
-
-		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 	}
 
 	public async Task<P24TestAccessResponse> TestConnectionAsync()
@@ -55,7 +51,7 @@ public class Przelewy24 : IPrzelewy24
 		}
 
 		// zwrócenie zawartości odpowiedzi + zdeserializowanie go na obiekt P24TestAccessResponse
-		return JsonConvert.DeserializeObject<P24TestAccessResponse>(await response.Content.ReadAsStringAsync());
+		return JsonSerializer.Deserialize<P24TestAccessResponse>(await response.Content.ReadAsStringAsync());
 	}
 
 	public async Task<P24TransactionResponse> NewTransactionAsync(P24TransactionRequest data)
@@ -66,7 +62,7 @@ public class Przelewy24 : IPrzelewy24
 		string signString = $"{{\"sessionId\":\"{data.SessionId}\",\"merchantId\":{data.MerchantId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
 		data.Sign = GenerateSign(signString);
 
-		string jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
+		string jsonContent = JsonSerializer.Serialize(data, _jsonOptions);
 		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
 
 		var response = await _httpClient.PostAsync("/api/v1/transaction/register", stringContent);
@@ -75,21 +71,21 @@ public class Przelewy24 : IPrzelewy24
 			_logger.LogError(response.RequestMessage.ToString(), null);
 		}
 
-		return JsonConvert.DeserializeObject<P24TransactionResponse>(await response.Content.ReadAsStringAsync());
+		return JsonSerializer.Deserialize<P24TransactionResponse>(await response.Content.ReadAsStringAsync());
 	}
 
 	public async Task<P24TransactionVerifyResponse> TransactionVerifyAsync(P24TransactionVerifyRequest data)
 	{
 		string signString = $"{{\"sessionId\":\"{data.SessionId}\",\"orderId\":{data.OrderId},\"amount\":{data.Amount},\"currency\":\"{data.Currency}\",\"crc\":\"{_crc}\"}}";
 		data.Sign = GenerateSign(signString);
-		string jsonContent = JsonConvert.SerializeObject(data, _jsonSettings);
+		string jsonContent = JsonSerializer.Serialize(data, _jsonOptions);
 		StringContent stringContent = new(jsonContent, UnicodeEncoding.UTF8, "application/json");
 		var response = await _httpClient.PutAsync("/api/v1/transaction/verify", stringContent);
 		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError(response.RequestMessage.ToString(), null);
 		}
-		return JsonConvert.DeserializeObject<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
+		return JsonSerializer.Deserialize<P24TransactionVerifyResponse>(await response.Content.ReadAsStringAsync());
 	}
 
 	private void GetConfiguration()
@@ -110,20 +106,18 @@ public class Przelewy24 : IPrzelewy24
 
 	// Przelewy24 wymagają ustawienia takiego formatu JSON, żeby działało poprawnie
 	private void InitJsonSettings()
-		=> _jsonSettings = new JsonSerializerSettings
-		{
-			ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() },
-			Formatting = Formatting.Indented,
-		};
+		=> _jsonOptions = new()
+			{
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				WriteIndented = true
+			};
 
 	private string GenerateSign(string signString)
 	{
-		using (SHA384 sha384Hash = SHA384.Create())
-		{
-			byte[] sourceBytes = Encoding.UTF8.GetBytes(signString);
-			byte[] hashBytes = sha384Hash.ComputeHash(sourceBytes);
-			string hash = BitConverter.ToString(hashBytes).Replace("-", "");
-			return hash.ToLower();
-		}
+		using SHA384 sha384Hash = SHA384.Create();
+		byte[] sourceBytes = Encoding.UTF8.GetBytes(signString);
+		byte[] hashBytes = sha384Hash.ComputeHash(sourceBytes);
+		string hash = BitConverter.ToString(hashBytes).Replace("-", "");
+		return hash.ToLower();
 	}
 }
