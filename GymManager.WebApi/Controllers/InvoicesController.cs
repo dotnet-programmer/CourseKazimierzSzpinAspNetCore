@@ -38,11 +38,11 @@ public class InvoicesController : BaseApiController
 	}
 
 	// wersjonowanie - określenie konkretnej wersji API dla wybranej akcji
-	[MapToApiVersion("2")]
-	[ApiExplorerSettings(GroupName = "v2")]
-	[HttpGet]
-	public IActionResult GetAllv2()
-		=> Ok(new List<InvoiceBasicsDto> { new() { Id = 100, CreatedDate = new DateTime(2000, 1, 1), Title = "1", UserId = "1", UserName = "Test", Value = 1 } });
+	//[MapToApiVersion("2")]
+	//[ApiExplorerSettings(GroupName = "v2")]
+	//[HttpGet]
+	//public IActionResult GetAllv2()
+	//	=> Ok(new List<InvoiceBasicsDto> { new() { Id = 100, CreatedDate = new DateTime(2000, 1, 1), Title = "1", UserId = "1", UserName = "Test", Value = 1 } });
 
 	// pobranie pojedynczej faktury dla podanego użytkownika
 	// określenie parametru w ścieżce endpointa, czyli adres API będzie wyglądał tak: adresStrony/api/invoices/id
