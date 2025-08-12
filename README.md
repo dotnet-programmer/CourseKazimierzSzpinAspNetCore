@@ -1,6 +1,6 @@
-### Video course by Kazimierz Szpin
+## Video course by Kazimierz Szpin
 
-#### Project GymManager
+### Project GymManager
 - ASP.NET Core
 - MVC
 - Onion architecture
